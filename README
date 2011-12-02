@@ -1,0 +1,1 @@
+SiDO is a Java API that allows the creation, generation and manipulation of objects from a very simple schema definition. Other schemas can be detected on the classpath and linked together.
