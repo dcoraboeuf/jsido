@@ -8,7 +8,7 @@ import org.parboiled.annotations.BuildParseTree;
 public class SidoParser extends BaseParser<Object> {
 
 	Rule schema() {
-		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0(), EOI);
+		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0());
 	}
 
 	Rule schema_decl() {
@@ -41,11 +41,15 @@ public class SidoParser extends BaseParser<Object> {
 	}
 
 	Rule whitespaces() {
-		return OneOrMore(AnyOf(" \t\f\r\n"));
+		return OneOrMore(whitespace());
 	}
 
 	Rule whitespaces0() {
-		return ZeroOrMore(AnyOf(" \t\f\r\n"));
+		return ZeroOrMore(whitespace());
+	}
+
+	Rule whitespace() {
+		return AnyOf(" \t\f\r\n");
 	}
 
 }
