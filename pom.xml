@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
@@ -12,7 +12,7 @@
 	<groupId>net.sf.sido</groupId>
 	<artifactId>sido-pom</artifactId>
 	<version>1.0.0.A0-SNAPSHOT</version>
-	
+
 	<packaging>pom</packaging>
 
 	<name>SiDO POM</name>
@@ -24,7 +24,7 @@
 			<email>damien.coraboeuf AT gmail COM</email>
 		</developer>
 	</developers>
-	
+
 	<licenses>
 		<license>
 			<name>GNU Library or Lesser General Public License (LGPL)</name>
@@ -34,7 +34,7 @@
 	</licenses>
 
 	<url>https://github.com/dcoraboeuf/jsido</url>
-	
+
 	<dependencies>
 		<!-- Testing with... -->
 		<dependency>
@@ -62,7 +62,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.parboiled</groupId>
+				<artifactId>parboiled-java</artifactId>
+				<version>1.0.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -90,7 +100,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<!-- Generation of the Javadoc for release -->
 		<profile>
@@ -114,4 +124,7 @@
 		</profile>
 	</profiles>
 
+	<modules>
+		<module>sido-parser</module>
+	</modules>
 </project>
