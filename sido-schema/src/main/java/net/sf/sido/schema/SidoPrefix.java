@@ -1,9 +1,21 @@
 package net.sf.sido.schema;
 
-public interface SidoPrefix {
-	
-	String getPrefix();
-	
-	String getUri();
+public class SidoPrefix {
+
+	private final String prefix;
+	private final String uri;
+
+	public SidoPrefix(String prefix, String uri) {
+		this.prefix = prefix;
+		this.uri = uri;
+	}
+
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public String getUri() {
+		return uri;
+	}
 
 }
