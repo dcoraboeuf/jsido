@@ -9,6 +9,8 @@ import org.parboiled.annotations.BuildParseTree;
 @BuildParseTree
 public class SidoParser extends BaseParser<String> {
 	
+	private static final String TERMINATOR = ".";
+	
 	final SidoParsingAction action;
 	
 	public SidoParser(SidoParsingAction action) {
@@ -16,11 +18,11 @@ public class SidoParser extends BaseParser<String> {
 	}
 
 	Rule schema() {
-		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0());
+		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0(), type_list());
 	}
 
 	Rule schema_decl() {
-		return Sequence("schema", whitespaces(), uid_ref(), action.schema(match()), whitespaces0(), ".");
+		return Sequence("schema", whitespaces(), uid_ref(), action.schema(match()), whitespaces0(), TERMINATOR);
 	}
 
 	Rule prefix_list() {
@@ -28,15 +30,27 @@ public class SidoParser extends BaseParser<String> {
 	}
 
 	Rule prefix() {
-		return Sequence("uses", whitespaces(), id(), push(match()), whitespaces(), "for", whitespaces(), uid_ref(), action.prefix(pop(), match()), whitespaces0(), ".");
+		return Sequence("uses", whitespaces(), id(), push(match()), whitespaces(), "for", whitespaces(), uid_ref(), action.prefix(pop(), match()), whitespaces0(), TERMINATOR);
+	}
+	
+	Rule type_list() {
+		return ZeroOrMore(type(), whitespaces0());
 	}
 
+	Rule type() {
+		return Sequence (a(), whitespaces(), id(), action.type(match()), TERMINATOR);
+	}
+	
 	Rule uid_ref() {
 		return Sequence("<", whitespaces0(), uid(), whitespaces0(), ">");
 	}
 
 	Rule uid() {
-		return Sequence(id(), ZeroOrMore(Sequence(".", id())));
+		return Sequence(id(), ZeroOrMore(Sequence(TERMINATOR, id())));
+	}
+	
+	Rule a() {
+		return FirstOf("a", "an");
 	}
 
 	Rule id() {

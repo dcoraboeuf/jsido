@@ -1,7 +1,7 @@
 package net.sf.sido.schema.builder;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +9,9 @@ import java.util.Map;
 import net.sf.sido.schema.SidoPrefix;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public class SchemaBuilder {
 
@@ -18,6 +21,7 @@ public class SchemaBuilder {
 
 	private final String uri;
 	private final Map<String, String> prefixes = new HashMap<String, String>();
+	private final Map<String, TypeBuilder> typeBuilders = new HashMap<String, TypeBuilder>();
 
 	protected SchemaBuilder(String uri) {
 		this.uri = uri;
@@ -43,9 +47,19 @@ public class SchemaBuilder {
 		return new SidoSchema(uri, buildPrefixes(), buildTypes());
 	}
 
-	private List<SidoType> buildTypes() {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+	private Collection<SidoType> buildTypes() {
+		return Collections2.transform(typeBuilders.values(), new Function<TypeBuilder, SidoType>() {
+			@Override
+			public SidoType apply(TypeBuilder o) {
+				return o.build();
+			}
+		});
+	}
+
+	public TypeBuilder addType(String name) {
+		TypeBuilder typeBuilder = TypeBuilder.create(name);
+		typeBuilders.put(name, typeBuilder);
+		return typeBuilder;
 	}
 
 }

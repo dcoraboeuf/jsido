@@ -1,6 +1,7 @@
 package net.sf.sido.parser.actions;
 
 import net.sf.sido.schema.builder.SchemaBuilder;
+import net.sf.sido.schema.builder.TypeBuilder;
 
 import org.apache.commons.lang3.StringUtils;
 import org.parboiled.Action;
@@ -9,6 +10,7 @@ import org.parboiled.Context;
 public class SidoParsingAction implements Action<Object> {
 	
 	private SchemaBuilder schemaBuilder;
+	private TypeBuilder typeBuilder;
 	
 	public SchemaBuilder getSchemaBuilder() {
 		return schemaBuilder;
@@ -36,6 +38,11 @@ public class SidoParsingAction implements Action<Object> {
 
 	public boolean prefix(String prefix, String uriRef) {
 		schemaBuilder.addPrefix(prefix, parseUri(uriRef));
+		return true;
+	}
+
+	public boolean type(String name) {
+		typeBuilder = schemaBuilder.addType(name);
 		return true;
 	}
 

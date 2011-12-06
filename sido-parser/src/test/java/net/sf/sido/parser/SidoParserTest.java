@@ -9,6 +9,7 @@ import java.util.Map;
 import net.sf.sido.parser.actions.SidoParsingAction;
 import net.sf.sido.schema.SidoPrefix;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.SidoType;
 import net.sf.sido.schema.builder.SchemaBuilder;
 
 import org.junit.Test;
@@ -62,6 +63,29 @@ public class SidoParserTest {
 			assertEquals("core", sidoPrefix.getPrefix());
 			assertEquals("sido.test.core", sidoPrefix.getUri());
 		}
+	}
+	
+	@Test
+	public void one_type() {
+		SidoParsingAction action = new SidoParsingAction();
+		SidoParser parser = Parboiled.createParser(SidoParser.class, action);
+		ReportingParseRunner<Object> runner = new ReportingParseRunner<Object>(parser.schema());
+		ParsingResult<Object> result = runner.run("schema <sido.test>.\na Person.");
+		assertParsingResult(result);
+		SchemaBuilder builder = action.getSchemaBuilder();
+		assertNotNull(builder);
+		SidoSchema schema = builder.build();
+		assertNotNull(schema);
+		assertEquals("sido.test", schema.getUri());
+		Map<String, SidoPrefix> prefixes = schema.getPrefixes();
+		assertNotNull(prefixes);
+		assertTrue(prefixes.isEmpty());
+		Map<String, SidoType> types = schema.getTypes();
+		assertNotNull(types);
+		assertEquals(1, types.size());
+		SidoType type = types.get("Person");
+		assertNotNull(type);
+		assertEquals("Person", type.getName());
 	}
 
 	protected void assertParsingResult(ParsingResult<Object> result) {

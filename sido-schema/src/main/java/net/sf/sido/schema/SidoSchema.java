@@ -1,6 +1,6 @@
 package net.sf.sido.schema;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 import com.google.common.base.Function;
@@ -12,7 +12,7 @@ public class SidoSchema {
 	private final Map<String, SidoPrefix> prefixes;
 	private final Map<String, SidoType> types;
 
-	public SidoSchema(String uri, List<SidoPrefix> prefixes, List<SidoType> types) {
+	public SidoSchema(String uri, Collection<SidoPrefix> prefixes, Collection<SidoType> types) {
 		this.uri = uri;
 		this.prefixes = Maps.uniqueIndex(prefixes, new Function<SidoPrefix, String>() {
 			@Override
