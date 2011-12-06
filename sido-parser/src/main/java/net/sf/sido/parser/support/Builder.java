@@ -3,6 +3,7 @@ package net.sf.sido.parser.support;
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.builder.SchemaBuilder;
 
 public class Builder {
 
@@ -17,8 +18,11 @@ public class Builder {
 	}
 
 	public SidoSchema build(XSchema xSchema) {
+		// Creates a builder
+		SchemaBuilder schemaBuilder = SchemaBuilder.create(context, xSchema.getUid());
 		// TODO Auto-generated method stub
-		return null;
+		// OK
+		return schemaBuilder.build();
 	}
 	
 }
