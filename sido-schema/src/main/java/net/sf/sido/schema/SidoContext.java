@@ -7,5 +7,7 @@ public interface SidoContext {
 	Collection<SidoSchema> getSchemas();
 	
 	SidoSchema getSchema (String uid, boolean required);
+	
+	void registerSchema (SidoSchema schema);
 
 }

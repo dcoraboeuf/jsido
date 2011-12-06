@@ -1,15 +1,17 @@
 package net.sf.sido.schema.support;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 
+import org.apache.commons.lang3.Validate;
+
 public class DefaultSidoContext implements SidoContext {
 	
-	private final Map<String, SidoSchema> schemas = new HashMap<String, SidoSchema>();
+	private final Map<String, SidoSchema> schemas = new ConcurrentHashMap<String, SidoSchema>();
 	
 	@Override
 	public Collection<SidoSchema> getSchemas() {
@@ -23,6 +25,18 @@ public class DefaultSidoContext implements SidoContext {
 			throw new SidoSchemaNotFoundException(name);
 		} else {
 			return schema;
+		}
+	}
+	
+	@Override
+	public synchronized void registerSchema(SidoSchema schema) {
+		Validate.notNull(schema, "The schema is required");
+		String uid = schema.getUid();
+		Validate.notBlank(uid, "The schema UID is required");
+		if (schemas.containsKey(uid)) {
+			throw new SidoSchemaUIDDuplicationException(uid);
+		} else {
+			schemas.put(uid, schema);
 		}
 	}
 
