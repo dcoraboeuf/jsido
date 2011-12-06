@@ -1,5 +1,7 @@
 package net.sf.sido.parser.support;
 
+import java.util.Collection;
+
 import net.sf.jstring.Localizable;
 import net.sf.jstring.MultiLocalizable;
 import net.sf.sido.parser.SidoParser;
@@ -11,7 +13,6 @@ import net.sf.sido.schema.SidoSchema;
 
 import org.parboiled.Parboiled;
 import org.parboiled.buffers.DefaultInputBuffer;
-import org.parboiled.buffers.InputBuffer;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ParseRunner;
 import org.parboiled.parserunners.ReportingParseRunner;
@@ -32,20 +33,23 @@ public class DefaultSidoParser implements SidoParser {
 	public SidoContext getContext() {
 		return context;
 	}
-
-	@Override
-	public SidoSchema parse(String input) {
-		return parse (new DefaultInputBuffer(input.toCharArray()));
-	}
 	
-	protected SidoSchema parse (InputBuffer buffer) {
-		// Parses the definition
-		XSchema xSchema = xparse(buffer);
-		// Extracts the schema
-		return buildSchema (xSchema);
+	@Override
+	public Collection<SidoSchema> parse(Collection<String> inputs) {
+		// Parses all inputs
+		Collection<XSchema> xSchemas = Collections2.transform(inputs, new Function<String, XSchema>() {
+			@Override
+			public XSchema apply(String input) {
+				return xparse(input);
+			}
+		});
+		// Creation of schemas
+		return build (xSchemas);
 	}
 
-	protected XSchema xparse (InputBuffer buffer) {
+	protected XSchema xparse (String input) {
+		// Input buffer
+		DefaultInputBuffer inputBuffer = new DefaultInputBuffer(input.toCharArray());
 		// Creates the action support
 		XAction action = new XAction();
 		// Creates the parser
@@ -53,7 +57,7 @@ public class DefaultSidoParser implements SidoParser {
 		// Creates the parser runner
 		ParseRunner<String> runner = new ReportingParseRunner<String>(parser.schema());
 		// Runs the parser
-		ParsingResult<String> result = runner.run(buffer);
+		ParsingResult<String> result = runner.run(inputBuffer);
 		// Checks the result
 		if (result.hasErrors()) {
 			MultiLocalizable list = new MultiLocalizable(Collections2.transform(result.parseErrors, new Function<ParseError, Localizable>() {
@@ -77,8 +81,8 @@ public class DefaultSidoParser implements SidoParser {
 		return new SidoParseExceptionDetail(error.getStartIndex(), error.getEndIndex(), error.getErrorMessage());
 	}
 
-	protected SidoSchema buildSchema(XSchema xSchema) {
-		return Builder.create(context).build(xSchema);
+	protected Collection<SidoSchema> build(Collection<XSchema> xSchemas) {
+		return Builder.create(context).build(xSchemas);
 	}
 
 }
