@@ -1,12 +1,14 @@
 package net.sf.sido.schema.builder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.sido.schema.SidoPrefix;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.SidoType;
 
 public class SchemaBuilder {
 
@@ -38,7 +40,12 @@ public class SchemaBuilder {
 	}
 
 	public SidoSchema build() {
-		return new SidoSchema(uri, buildPrefixes());
+		return new SidoSchema(uri, buildPrefixes(), buildTypes());
+	}
+
+	private List<SidoType> buildTypes() {
+		// TODO Auto-generated method stub
+		return Collections.emptyList();
 	}
 
 }

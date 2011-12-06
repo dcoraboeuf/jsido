@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
+import java.util.Map;
 
 import net.sf.sido.parser.actions.SidoParsingAction;
 import net.sf.sido.schema.SidoPrefix;
@@ -47,16 +47,18 @@ public class SidoParserTest {
 		SidoSchema schema = builder.build();
 		assertNotNull(schema);
 		assertEquals("sido.test.prefixes", schema.getUri());
-		List<SidoPrefix> prefixes = schema.getPrefixes();
+		Map<String, SidoPrefix> prefixes = schema.getPrefixes();
 		assertNotNull(prefixes);
 		assertEquals(2, prefixes.size());
 		{
-			SidoPrefix sidoPrefix = prefixes.get(0);
+			SidoPrefix sidoPrefix = prefixes.get("api");
+			assertNotNull(sidoPrefix);
 			assertEquals("api", sidoPrefix.getPrefix());
 			assertEquals("sido.test.api", sidoPrefix.getUri());
 		}
 		{
-			SidoPrefix sidoPrefix = prefixes.get(1);
+			SidoPrefix sidoPrefix = prefixes.get("core");
+			assertNotNull(sidoPrefix);
 			assertEquals("core", sidoPrefix.getPrefix());
 			assertEquals("sido.test.core", sidoPrefix.getUri());
 		}
