@@ -2,23 +2,41 @@ package net.sf.sido.parser.actions;
 
 import net.sf.sido.schema.builder.SchemaBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.parboiled.Action;
 import org.parboiled.Context;
-import org.parboiled.ContextAware;
 
-public class SidoParsingAction implements Action<Object>, ContextAware<Object> {
+public class SidoParsingAction implements Action<Object> {
 	
-	private Context<Object> context;
 	private SchemaBuilder schemaBuilder;
-
-	@Override
-	public void setContext(Context<Object> context) {
-		this.context = context;
+	
+	public SchemaBuilder getSchemaBuilder() {
+		return schemaBuilder;
 	}
 
 	@Override
 	public boolean run(Context<Object> context) {
 		return false;
+	}
+
+	public boolean schema(String uriRef) {
+		String uri = parseUri (uriRef);
+		schemaBuilder = SchemaBuilder.create(uri);
+		return true;
+	}
+
+	protected String parseUri(String uriRef) {
+		return StringUtils.strip(uriRef, "< >");
+	}
+
+	public boolean trace(String match) {
+		System.out.format("[sido] %s%n", match);
+		return true;
+	}
+
+	public boolean prefix(String prefix, String uriRef) {
+		schemaBuilder.addPrefix(prefix, parseUri(uriRef));
+		return true;
 	}
 
 }

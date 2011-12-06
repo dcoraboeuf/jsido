@@ -1,26 +1,34 @@
 package net.sf.sido.parser;
 
+import net.sf.sido.parser.actions.SidoParsingAction;
+
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
 
 @BuildParseTree
-public class SidoParser extends BaseParser<Object> {
+public class SidoParser extends BaseParser<String> {
+	
+	final SidoParsingAction action;
+	
+	public SidoParser(SidoParsingAction action) {
+		this.action = action;
+	}
 
 	Rule schema() {
 		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0());
 	}
 
 	Rule schema_decl() {
-		return Sequence("schema", whitespaces(), uid_ref(), whitespaces0(), ".");
+		return Sequence("schema", whitespaces(), uid_ref(), action.schema(match()), whitespaces0(), ".");
 	}
 
 	Rule prefix_list() {
-		return ZeroOrMore(prefix());
+		return ZeroOrMore(prefix(), whitespaces0());
 	}
 
 	Rule prefix() {
-		return Sequence("uses", id(), "for", uid_ref(), ".");
+		return Sequence("uses", whitespaces(), id(), push(match()), whitespaces(), "for", whitespaces(), uid_ref(), action.prefix(pop(), match()), whitespaces0(), ".");
 	}
 
 	Rule uid_ref() {
