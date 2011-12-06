@@ -9,15 +9,31 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
+import net.sf.sido.schema.Sido;
+import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.support.DefaultSidoContext;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 
 public class ParserTest {
+	
+	 private SidoContext context;
+
+	@Before
+	 public void before() {
+		 context = new DefaultSidoContext();
+		 Sido.setContext(context);
+	 }
+
+	// TODO Complex
+	// TODO Already loaded modules
+	// TODO Circularity
 
 	@Test
 	public void name_only() {
@@ -25,6 +41,31 @@ public class ParserTest {
 		assertNotNull("Returned schema is null", schema);
 		assertEquals("sido.test", schema.getUid());
 		assertTrue(schema.getTypes().isEmpty());
+	}
+	
+	@Test
+	public void modules() {
+		Collection<SidoSchema> schemas = parse("module-2", "module-1", "module-0");
+		// Simple check
+		assertNotNull(schemas);
+		assertEquals(3, schemas.size());
+		// Context
+		assertModules();
+	}
+
+	private void assertModules() {
+		// Context
+		Collection<SidoSchema> schemas = context.getSchemas();
+		assertNotNull(schemas);
+		assertEquals(3, schemas.size());
+		// Schema names
+		SidoSchema sMain = context.getSchema("sido.test.main", true);
+		SidoSchema sAddress = context.getSchema("sido.test.address", true);
+		SidoSchema sCompany = context.getSchema("sido.test.company", true);
+		assertNotNull(sMain);
+		assertNotNull(sAddress);
+		assertNotNull(sCompany);
+		// TODO Schema checks
 	}
 
 	private SidoSchema parseOne(String fileName) {

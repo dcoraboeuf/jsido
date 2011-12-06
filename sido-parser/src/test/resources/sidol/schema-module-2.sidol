@@ -1,9 +1,11 @@
 schema <sido.test.company>.
 
 uses main as <sido.test.main>.
+uses address as <sido.test.address>.
 
 a Company
 has
 	a name,
+	an address::Address as address,
 	a collection of main::Person as employees
 	.
