@@ -16,12 +16,7 @@ public class SchemaBuilder {
 		this.context = context;
 	}
 
-	public SchemaBuilder build(XSchema xSchema) {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	public SidoSchema get() {
+	public SidoSchema build(XSchema xSchema) {
 		// TODO Auto-generated method stub
 		return null;
 	}
