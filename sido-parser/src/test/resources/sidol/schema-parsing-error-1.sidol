@@ -1,0 +1,7 @@
+schema <sido.test>.
+
+a Person
+has
+	a name,
+	a nulable integer as age
+	.

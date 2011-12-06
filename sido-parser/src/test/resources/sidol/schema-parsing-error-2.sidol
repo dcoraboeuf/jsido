@@ -1,0 +1,36 @@
+schema <sido.test>.
+
+a Person
+has
+	a name,
+	a nullable integer as age,
+	a nullable collection of string as phones,
+	an Address as mainAddress,
+	a collection of Address as addresses indexed by country
+	.
+
+an Address
+is abstract and
+has
+	a country
+	.
+
+a FreeAddress
+is an Address and
+has
+	a collection of string as lines
+	.
+
+a StructuredAddress
+is an Address and
+has
+	a city,
+	a zipcode,
+	a collection of string as lines
+	.
+
+a Company
+has
+	a name,
+	a collection of Person as employees
+	.
