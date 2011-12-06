@@ -147,5 +147,6 @@
 	<modules>
 		<module>sido-parser</module>
 		<module>sido-schema</module>
+		<module>sido-property</module>
 	</modules>
 </project>
