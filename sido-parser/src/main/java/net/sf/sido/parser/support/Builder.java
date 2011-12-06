@@ -4,15 +4,15 @@ import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 
-public class SchemaBuilder {
+public class Builder {
 
-	public static SchemaBuilder create(SidoContext context) {
-		return new SchemaBuilder(context);
+	public static Builder create(SidoContext context) {
+		return new Builder(context);
 	}
 	
 	private final SidoContext context;
 
-	public SchemaBuilder(SidoContext context) {
+	public Builder(SidoContext context) {
 		this.context = context;
 	}
 

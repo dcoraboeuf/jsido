@@ -78,7 +78,7 @@ public class DefaultSidoParser implements SidoParser {
 	}
 
 	protected SidoSchema buildSchema(XSchema xSchema) {
-		return SchemaBuilder.create(context).build(xSchema);
+		return Builder.create(context).build(xSchema);
 	}
 
 }
