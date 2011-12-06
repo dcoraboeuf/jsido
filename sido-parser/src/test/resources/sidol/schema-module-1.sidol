@@ -1,0 +1,17 @@
+schema <sido.test.address>.
+
+uses main as <sido.test.main>.
+
+a FreeAddress
+is a main::Address and
+has
+	a collection of string as lines
+	.
+
+a StructuredAddress
+is a main::Address and
+has
+	a city,
+	a zipcode,
+	a collection of string as lines
+	.

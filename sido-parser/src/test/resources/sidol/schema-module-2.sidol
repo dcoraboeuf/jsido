@@ -1,0 +1,9 @@
+schema <sido.test.company>.
+
+uses main as <sido.test.main>.
+
+a Company
+has
+	a name,
+	a collection of main::Person as employees
+	.
