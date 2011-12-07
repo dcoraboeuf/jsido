@@ -6,9 +6,9 @@ public class SidoParseExceptionDetail extends SidoException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SidoParseExceptionDetail(int startIndex, int endIndex,
+	public SidoParseExceptionDetail(String match, int startIndex, int endIndex,
 			String errorMessage) {
-		super(startIndex, endIndex, errorMessage);
+		super(match, startIndex, endIndex, errorMessage);
 	}
 
 }

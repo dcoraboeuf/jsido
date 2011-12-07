@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import net.sf.jstring.Localizable;
 import net.sf.jstring.MultiLocalizable;
+import net.sf.jstring.NonLocalizable;
 import net.sf.sido.parser.SidoParser;
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.parboiled.XAction;
@@ -14,9 +15,11 @@ import net.sf.sido.schema.SidoSchema;
 
 import org.parboiled.Parboiled;
 import org.parboiled.buffers.DefaultInputBuffer;
+import org.parboiled.errors.InvalidInputError;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ParseRunner;
 import org.parboiled.parserunners.ReportingParseRunner;
+import org.parboiled.support.MatcherPath;
 import org.parboiled.support.ParsingResult;
 
 import com.google.common.base.Function;
@@ -79,7 +82,29 @@ public class DefaultSidoParser implements SidoParser {
 	}
 	
 	protected Localizable localize(ParseError error) {
-		return new SidoParseExceptionDetail(error.getStartIndex(), error.getEndIndex(), error.getErrorMessage());
+		String match = error.getInputBuffer().extract(error.getStartIndex(), error.getEndIndex());
+		if (error instanceof InvalidInputError) {
+			InvalidInputError inputError = (InvalidInputError) error;
+			MultiLocalizable failedMatchers = new MultiLocalizable(
+					Collections2.transform(
+							inputError.getFailedMatchers(),
+							new Function<MatcherPath, Localizable> () {
+								@Override
+								public Localizable apply(MatcherPath matcherPath) {
+									return localize(matcherPath);
+								}
+							}
+					)
+			);
+			return new SidoParseInvalidInputException(match, error.getStartIndex(), error.getEndIndex(), failedMatchers);
+		} else {
+			return new SidoParseExceptionDetail(match, error.getStartIndex(), error.getEndIndex(), error.getErrorMessage());
+		}
+	}
+
+	protected Localizable localize(MatcherPath matcherPath) {
+		String path = matcherPath.toString();
+		return new NonLocalizable(path);
 	}
 
 	protected Collection<SidoSchema> build(Collection<XSchema> xSchemas) {
