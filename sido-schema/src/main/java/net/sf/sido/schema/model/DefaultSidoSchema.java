@@ -1,17 +1,13 @@
 package net.sf.sido.schema.model;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sf.sido.property.Property;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
 import net.sf.sido.schema.support.SidoTypeNotFoundInSchemaException;
-
-import com.google.common.collect.ImmutableMap;
 
 public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 
@@ -39,18 +35,6 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	@Override
 	public String toString() {
 		return uid;
-	}
-	
-	@Override
-	protected void doLock() {
-		super.doLock();
-		prefixes = ImmutableMap.copyOf(prefixes);
-		types = ImmutableMap.copyOf(types);
-	}
-
-	@Override
-	public Collection<? extends Property<?>> getProperties() {
-		return Collections.emptySet();
 	}
 
 	@Override
