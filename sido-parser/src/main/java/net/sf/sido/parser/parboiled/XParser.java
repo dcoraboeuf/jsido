@@ -36,9 +36,73 @@ public class XParser extends BaseParser<String> {
 	}
 
 	Rule type() {
-		return Sequence (a(), whitespaces(), id(), action.type(match()), TERMINATOR);
+		return Sequence (type_decl(), whitespaces0(), Optional(type_metas()), whitespaces(), "has", type_properties(), TERMINATOR);
 	}
 	
+	Rule type_decl() {
+		return Sequence (a(), whitespaces(), id(), action.type(match()));
+	}
+	
+	Rule type_metas() {
+		return Sequence ("is", whitespaces(), type_meta(), whitespaces0(), ZeroOrMore(",", whitespaces0(), type_meta()), whitespaces(), "and");
+	}
+	
+	Rule type_meta() {
+		return FirstOf("abstract", type_parent());
+	}
+	
+	Rule type_parent() {
+		return Sequence(a(), whitespaces(), type_ref());
+	}
+	
+	Rule type_properties() {
+		return Sequence (type_property(), ZeroOrMore(whitespaces0(), ",", whitespaces0(), type_property()));
+	}
+	
+	Rule type_property() {
+		return Sequence (a(), whitespaces(), property());
+	}
+	
+	Rule property() {
+		return FirstOf(property_array(), property_type(), property_no_type());
+	}
+	
+	Rule property_array() {
+		return Sequence ("array", whitespaces(), "of", whitespaces(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), Optional(Sequence(whitespaces(), property_array_index())));
+	}
+	
+	Rule property_array_index() {
+		return Sequence ("indexed", whitespaces(), "by", whitespaces(), id());
+	}
+	
+	Rule property_type() {
+		return Sequence(property_type_modifiers(), property_type_ref(), whitespaces(), "as", whitespaces(), id());
+	}
+	
+	Rule property_type_modifiers() {
+		return Optional(Sequence (property_type_nullable(), Optional(whitespaces(), property_type_reverse())));
+	}
+	
+	Rule property_type_nullable() {
+		return String("nullable");
+	}
+	
+	Rule property_type_reverse() {
+		return String("reverse");
+	}
+
+	Rule property_no_type() {
+		return id();
+	}
+	
+	Rule property_type_ref() {
+		return FirstOf("anonymous", type_ref());
+	}
+	
+	Rule type_ref() {
+		return Sequence(id(), Optional (Sequence ("::", id())));
+	}
+
 	Rule uid_ref() {
 		return Sequence("<", whitespaces0(), uid(), push(match()), whitespaces0(), ">");
 	}
