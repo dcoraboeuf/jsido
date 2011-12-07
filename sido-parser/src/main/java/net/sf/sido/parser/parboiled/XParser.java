@@ -16,7 +16,7 @@ public class XParser extends BaseParser<String> {
 	}
 
 	public Rule schema() {
-		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0(), type_list());
+		return Sequence(schema_decl(), whitespaces0(), prefix_list(), whitespaces0(), type_list(), EOI);
 	}
 
 	Rule schema_decl() {

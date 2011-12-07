@@ -3,12 +3,16 @@ package net.sf.sido.parser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 
+import net.sf.jstring.Strings;
+import net.sf.sido.parser.support.SidoParseException;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
@@ -16,20 +20,28 @@ import net.sf.sido.schema.support.DefaultSidoContext;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 
 public class ParserTest {
+
+	private static Strings strings;
 	
-	 private SidoContext context;
+	@BeforeClass
+	public static void load() {
+		strings = new Strings("net.sf.sido.parser.Strings");
+	}
+	
+	private SidoContext context;
 
 	@Before
-	 public void before() {
-		 context = new DefaultSidoContext();
-		 Sido.setContext(context);
-	 }
+	public void before() {
+		context = new DefaultSidoContext();
+		Sido.setContext(context);
+	}
 
 	// TODO Complex
 	// TODO Already loaded modules
@@ -42,15 +54,21 @@ public class ParserTest {
 		assertEquals("sido.test", schema.getUid());
 		assertTrue(schema.getTypes().isEmpty());
 	}
-	
+
 	@Test
 	public void parsing_error_0() {
-		parseOne("parsing-error-0");
+		try {
+			parseOne("parsing-error-0");
+			fail("Expected parsing error");
+		} catch (SidoParseException ex) {
+			assertEquals("", ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
 	}
-	
+
 	@Test
 	public void modules() {
-		Collection<SidoSchema> schemas = parse("module-2", "module-1", "module-0");
+		Collection<SidoSchema> schemas = parse("module-2", "module-1",
+				"module-0");
 		// Simple check
 		assertNotNull("Returned schemas are null", schemas);
 		assertEquals(3, schemas.size());
