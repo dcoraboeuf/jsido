@@ -43,7 +43,6 @@ public class ParserTest {
 		Sido.setContext(context);
 	}
 
-	// TODO Complex
 	// TODO Already loaded modules
 	// TODO Circularity
 
@@ -53,6 +52,15 @@ public class ParserTest {
 		assertNotNull("Returned schema is null", schema);
 		assertEquals("sido.test", schema.getUid());
 		assertTrue(schema.getTypes().isEmpty());
+	}
+	
+	@Test
+	public void complex() {
+		SidoSchema schema = parseOne("complex");
+		assertNotNull("Returned schema is null", schema);
+		assertEquals("sido.test", schema.getUid());
+		assertEquals(5, schema.getTypes().size());
+		// TODO Checks the types
 	}
 
 	@Test
