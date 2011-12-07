@@ -1,5 +1,6 @@
 package net.sf.sido.parser.support;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sf.jstring.Localizable;
@@ -37,12 +38,12 @@ public class DefaultSidoParser implements SidoParser {
 	@Override
 	public Collection<SidoSchema> parse(Collection<String> inputs) {
 		// Parses all inputs
-		Collection<XSchema> xSchemas = Collections2.transform(inputs, new Function<String, XSchema>() {
-			@Override
-			public XSchema apply(String input) {
-				return xparse(input);
-			}
-		});
+		Collection<XSchema> xSchemas = new ArrayList<XSchema>();
+		for (String input : inputs) {
+			XSchema xschema = xparse(input);
+			xSchemas.add(xschema);
+			
+		}
 		// Creation of schemas
 		return build (xSchemas);
 	}

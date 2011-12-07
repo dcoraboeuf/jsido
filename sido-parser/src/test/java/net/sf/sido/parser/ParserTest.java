@@ -44,10 +44,15 @@ public class ParserTest {
 	}
 	
 	@Test
+	public void parsing_error_0() {
+		parseOne("parsing-error-0");
+	}
+	
+	@Test
 	public void modules() {
 		Collection<SidoSchema> schemas = parse("module-2", "module-1", "module-0");
 		// Simple check
-		assertNotNull(schemas);
+		assertNotNull("Returned schemas are null", schemas);
 		assertEquals(3, schemas.size());
 		// Context
 		assertModules();
