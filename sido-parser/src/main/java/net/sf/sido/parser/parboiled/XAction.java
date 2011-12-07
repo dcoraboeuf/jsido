@@ -35,4 +35,9 @@ public class XAction implements Action<Object> {
 		return true;
 	}
 
+	boolean trace(String message, String context) {
+		System.out.format("-- %s -- %s --%n", message, context);
+		return true;
+	}
+
 }

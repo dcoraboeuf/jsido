@@ -36,15 +36,23 @@ public class XParser extends BaseParser<String> {
 	}
 
 	Rule type() {
-		return Sequence (type_decl(), whitespaces0(), Optional(type_metas()), whitespaces(), "has", type_properties(), TERMINATOR);
+		return Sequence (type_decl(), whitespaces(), type_header(), whitespaces0(), TERMINATOR);
+	}
+	
+	Rule type_header() {
+		return FirstOf(type_with_meta(), type_no_meta());
+	}
+	
+	Rule type_with_meta() {
+		return Sequence ("is", whitespaces(), type_meta(), whitespaces0(), ZeroOrMore(",", whitespaces0(), type_meta()), whitespaces0(), "and", whitespaces0(), type_no_meta());
+	}
+	
+	Rule type_no_meta() {
+		return Sequence ("has", whitespaces(), type_properties());
 	}
 	
 	Rule type_decl() {
 		return Sequence (a(), whitespaces(), id(), action.type(match()));
-	}
-	
-	Rule type_metas() {
-		return Sequence ("is", whitespaces(), type_meta(), whitespaces0(), ZeroOrMore(",", whitespaces0(), type_meta()), whitespaces(), "and");
 	}
 	
 	Rule type_meta() {
@@ -64,11 +72,11 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule property() {
-		return FirstOf(property_array(), property_type(), property_no_type());
+		return FirstOf(property_collection(), property_type(), property_no_type());
 	}
 	
-	Rule property_array() {
-		return Sequence ("array", whitespaces(), "of", whitespaces(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), Optional(Sequence(whitespaces(), property_array_index())));
+	Rule property_collection() {
+		return Sequence (Optional(property_type_nullable()), whitespaces0(), "collection", whitespaces(), "of", whitespaces(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), Optional(Sequence(whitespaces(), property_array_index())));
 	}
 	
 	Rule property_array_index() {
@@ -76,19 +84,11 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule property_type() {
-		return Sequence(property_type_modifiers(), property_type_ref(), whitespaces(), "as", whitespaces(), id());
-	}
-	
-	Rule property_type_modifiers() {
-		return Optional(Sequence (property_type_nullable(), Optional(whitespaces(), property_type_reverse())));
+		return Sequence(Optional(property_type_nullable()), whitespaces0(), property_type_ref(), whitespaces(), "as", whitespaces(), id());
 	}
 	
 	Rule property_type_nullable() {
 		return String("nullable");
-	}
-	
-	Rule property_type_reverse() {
-		return String("reverse");
 	}
 
 	Rule property_no_type() {
@@ -112,7 +112,7 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule a() {
-		return FirstOf("a", "an");
+		return FirstOf("an", "a");
 	}
 
 	Rule id() {

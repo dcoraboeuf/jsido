@@ -19,6 +19,7 @@ import org.parboiled.errors.InvalidInputError;
 import org.parboiled.errors.ParseError;
 import org.parboiled.parserunners.ParseRunner;
 import org.parboiled.parserunners.ReportingParseRunner;
+import org.parboiled.parserunners.TracingParseRunner;
 import org.parboiled.support.MatcherPath;
 import org.parboiled.support.ParsingResult;
 
@@ -59,7 +60,7 @@ public class DefaultSidoParser implements SidoParser {
 		// Creates the parser
 		XParser parser = Parboiled.createParser(XParser.class, action);
 		// Creates the parser runner
-		ParseRunner<String> runner = new ReportingParseRunner<String>(parser.schema());
+		ParseRunner<String> runner = new TracingParseRunner<String>(parser.schema());
 		// Runs the parser
 		ParsingResult<String> result = runner.run(inputBuffer);
 		// Checks the result
@@ -82,7 +83,7 @@ public class DefaultSidoParser implements SidoParser {
 	}
 	
 	protected Localizable localize(ParseError error) {
-		String match = error.getInputBuffer().extract(error.getStartIndex(), error.getEndIndex());
+		String match = match(error);
 		if (error instanceof InvalidInputError) {
 			InvalidInputError inputError = (InvalidInputError) error;
 			MultiLocalizable failedMatchers = new MultiLocalizable(
@@ -100,6 +101,11 @@ public class DefaultSidoParser implements SidoParser {
 		} else {
 			return new SidoParseExceptionDetail(match, error.getStartIndex(), error.getEndIndex(), error.getErrorMessage());
 		}
+	}
+
+	protected String match(ParseError error) {
+		// TODO Gets more details about the match: context, line number.
+		return error.getInputBuffer().extract(error.getStartIndex(), error.getEndIndex());
 	}
 
 	protected Localizable localize(MatcherPath matcherPath) {
