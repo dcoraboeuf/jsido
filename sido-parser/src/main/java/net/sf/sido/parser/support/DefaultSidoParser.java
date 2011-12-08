@@ -11,6 +11,7 @@ import net.sf.sido.parser.SidoParser;
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.parboiled.XAction;
 import net.sf.sido.parser.parboiled.XParser;
+import net.sf.sido.parser.support.builder.Builder;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 

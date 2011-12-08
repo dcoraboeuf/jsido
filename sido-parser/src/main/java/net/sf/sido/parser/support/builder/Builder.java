@@ -1,4 +1,4 @@
-package net.sf.sido.parser.support;
+package net.sf.sido.parser.support.builder;
 
 import java.util.Collection;
 
