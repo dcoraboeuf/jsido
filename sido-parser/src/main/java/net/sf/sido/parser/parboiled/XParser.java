@@ -100,7 +100,7 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule property_type_ref() {
-		return FirstOf(property_type_anonymous(), type_ref());
+		return FirstOf(property_type_anonymous(), Sequence(type_ref(), action.propertyType(match())));
 	}
 	
 	Rule property_type_anonymous() {
@@ -108,7 +108,7 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule type_ref() {
-		return Sequence(Sequence(id(), Optional (Sequence ("::", id()))), action.propertyType(match()));
+		return Sequence(id(), Optional (Sequence ("::", id())));
 	}
 
 	Rule uid_ref() {
