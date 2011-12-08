@@ -107,6 +107,7 @@ public class ParserTest {
 		assertNotNull(sAddress);
 		assertNotNull(sCompany);
 		// TODO Schema checks
+		fail("Checks the modules");
 	}
 
 	private SidoSchema parseOne(String fileName) {

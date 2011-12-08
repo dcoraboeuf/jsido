@@ -29,4 +29,8 @@ public class XSchema {
 		return type;
 	}
 
+	public List<XType> getTypes() {
+		return types;
+	}
+
 }

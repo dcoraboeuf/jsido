@@ -14,12 +14,19 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	private final SidoContext context;
 	private final String uid;
 	
+	private boolean closed;
+	
 	private Map<String, String> prefixes = new HashMap<String, String>();
 	private Map<String, SidoType> types = new HashMap<String, SidoType>();
 
 	public DefaultSidoSchema(SidoContext context, String uid) {
 		this.context = context;
 		this.uid = uid;
+	}
+	
+	@Override
+	public void close() {
+		closed = true;
 	}
 
 	@Override

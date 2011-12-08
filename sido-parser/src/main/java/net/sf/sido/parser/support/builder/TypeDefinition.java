@@ -1,20 +1,28 @@
 package net.sf.sido.parser.support.builder;
 
 import net.sf.sido.parser.model.XType;
-import net.sf.sido.schema.model.DefaultSidoSchema;
+import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.model.DefaultSidoType;
 
 public class TypeDefinition {
 
-	private final DefaultSidoSchema schema;
-	private final XType sType;
+	private final SidoSchema schema;
+	private final XType xType;
 
 	private ResolutionStatus status;
 	private DefaultSidoType type;
 
-	public TypeDefinition(DefaultSidoSchema schema, XType sType) {
+	public TypeDefinition(SidoSchema schema, XType xType) {
 		this.schema = schema;
-		this.sType = sType;
+		this.xType = xType;
+	}
+	
+	public String getName() {
+		return xType.getName();
+	}
+	
+	public String getQualifiedName() {
+		return String.format("%s::%s", schema.getUid(), getName());
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.model.DefaultSidoSchema;
 
 import org.apache.commons.lang3.Validate;
 
@@ -26,6 +27,13 @@ public class DefaultSidoContext implements SidoContext {
 		} else {
 			return schema;
 		}
+	}
+	
+	@Override
+	public SidoSchema createSchema(String uid) {
+		SidoSchema schema = new DefaultSidoSchema(this, uid);
+		registerSchema(schema);
+		return schema;
 	}
 	
 	@Override

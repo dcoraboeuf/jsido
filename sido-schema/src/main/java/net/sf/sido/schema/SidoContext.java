@@ -10,4 +10,6 @@ public interface SidoContext {
 	
 	void registerSchema (SidoSchema schema);
 
+	SidoSchema createSchema(String uid);
+
 }
