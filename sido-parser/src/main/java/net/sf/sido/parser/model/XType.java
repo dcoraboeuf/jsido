@@ -34,7 +34,13 @@ public class XType {
 	public void setParent(XTypeRef parent) {
 		this.parent = parent;
 	}
-	
-	
+
+	public void addProperty(XProperty property) {
+		properties.add(property);
+	}
+
+	public List<XProperty> getProperties() {
+		return properties;
+	}
 
 }

@@ -1,5 +1,7 @@
 package net.sf.sido.parser.parboiled;
 
+import net.sf.sido.parser.model.XProperty;
+import net.sf.sido.parser.model.XPropertyTypeRef;
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.model.XType;
 import net.sf.sido.parser.model.XTypeRef;
@@ -12,6 +14,7 @@ public class XAction implements Action<Object> {
 
 	private XSchema schema;
 	private XType type;
+	private XProperty property;
 
 	@Override
 	public boolean run(Context<Object> context) {
@@ -58,10 +61,70 @@ public class XAction implements Action<Object> {
 			return true;
 		}
 	}
+	
+	boolean propertyStart() {
+		checkType();
+		property = new XProperty();
+		return true;
+	}
+	
+	boolean propertyArray() {
+		checkProperty();
+		property.setArray(true);
+		return true;
+	}
+	
+	boolean propertyNullable() {
+		checkProperty();
+		property.setNullable(true);
+		return true;
+	}
+	
+	boolean propertyName(String name) {
+		checkProperty();
+		property.setName(name);
+		return true;
+	}
+	
+	boolean propertyIndex(String index) {
+		checkProperty();
+		if (!property.isArray()) {
+			throw new IllegalStateException("Cannot have an index on a non-array property");
+		} else {
+			property.setIndex(index);
+			return true;
+		}
+	}
+	
+	boolean propertyAnonymous() {
+		checkProperty();
+		property.setPropertyTypeRef(new XPropertyTypeRef());
+		return true;
+	}
+	
+	boolean propertyType(String typeRef) {
+		checkProperty();
+		property.setPropertyTypeRef(new XPropertyTypeRef(typeRef));
+		return true;
+	}
+
+	boolean propertyFinish() {
+		checkProperty();
+		type.addProperty(property);
+		property = null;
+		return true;
+	}
 
 	private void checkType() {
 		if (type == null) {
 			throw new IllegalStateException("No type has been defined yet.");
+		}
+	}
+
+	private void checkProperty() {
+		checkType();
+		if (property == null) {
+			throw new IllegalStateException("No property has been defined yet.");
 		}
 	}
 

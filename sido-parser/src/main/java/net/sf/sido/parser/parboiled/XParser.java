@@ -72,7 +72,7 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule type_property() {
-		return Sequence (a(), whitespaces(), property());
+		return Sequence (a(), action.propertyStart(), whitespaces(), property(), action.propertyFinish());
 	}
 	
 	Rule property() {
@@ -80,31 +80,35 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule property_collection() {
-		return Sequence (Optional(property_type_nullable()), whitespaces0(), "collection", whitespaces(), "of", whitespaces(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), Optional(Sequence(whitespaces(), property_array_index())));
+		return Sequence (Optional(property_type_nullable()), whitespaces0(), "collection", whitespaces(), action.propertyArray(), "of", whitespaces(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), action.propertyName(match()), Optional(Sequence(whitespaces(), property_array_index())));
 	}
 	
 	Rule property_array_index() {
-		return Sequence ("indexed", whitespaces(), "by", whitespaces(), id());
+		return Sequence ("indexed", whitespaces(), "by", whitespaces(), id(), action.propertyIndex(match()));
 	}
 	
 	Rule property_type() {
-		return Sequence(Optional(property_type_nullable()), whitespaces0(), property_type_ref(), whitespaces(), "as", whitespaces(), id());
+		return Sequence(Optional(property_type_nullable()), whitespaces0(), property_type_ref(), whitespaces(), "as", whitespaces(), id(), action.propertyName(match()));
 	}
 	
 	Rule property_type_nullable() {
-		return String("nullable");
+		return Sequence("nullable", action.propertyNullable());
 	}
 
 	Rule property_no_type() {
-		return id();
+		return Sequence (id(), action.propertyName(match()));
 	}
 	
 	Rule property_type_ref() {
-		return FirstOf("anonymous", type_ref());
+		return FirstOf(property_type_anonymous(), type_ref());
+	}
+	
+	Rule property_type_anonymous() {
+		return Sequence ("anonymous", action.propertyAnonymous());
 	}
 	
 	Rule type_ref() {
-		return Sequence(id(), Optional (Sequence ("::", id())));
+		return Sequence(Sequence(id(), Optional (Sequence ("::", id()))), action.propertyType(match()));
 	}
 
 	Rule uid_ref() {
