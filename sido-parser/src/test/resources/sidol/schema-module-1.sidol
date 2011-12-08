@@ -1,6 +1,6 @@
 schema <sido.test.address>.
 
-uses main as <sido.test.main>.
+uses main for <sido.test.main>.
 
 a FreeAddress
 is a main::Address and

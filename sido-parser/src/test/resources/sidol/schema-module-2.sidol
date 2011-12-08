@@ -1,7 +1,7 @@
 schema <sido.test.company>.
 
-uses main as <sido.test.main>.
-uses address as <sido.test.address>.
+uses main for <sido.test.main>.
+uses address for <sido.test.address>.
 
 a Company
 has
