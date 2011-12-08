@@ -15,6 +15,7 @@ import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 
 import org.parboiled.Parboiled;
+import org.parboiled.Rule;
 import org.parboiled.buffers.DefaultInputBuffer;
 import org.parboiled.errors.InvalidInputError;
 import org.parboiled.errors.ParseError;
@@ -23,11 +24,15 @@ import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.parserunners.TracingParseRunner;
 import org.parboiled.support.MatcherPath;
 import org.parboiled.support.ParsingResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 
 public class DefaultSidoParser implements SidoParser {
+	
+	private final Logger logger = LoggerFactory.getLogger(SidoParser.class);
 	
 	private final SidoContext context;
 	
@@ -61,7 +66,7 @@ public class DefaultSidoParser implements SidoParser {
 		// Creates the parser
 		XParser parser = Parboiled.createParser(XParser.class, action);
 		// Creates the parser runner
-		ParseRunner<String> runner = new TracingParseRunner<String>(parser.schema());
+		ParseRunner<String> runner = createParserRunner(parser);
 		// Runs the parser
 		ParsingResult<String> result = runner.run(inputBuffer);
 		// Checks the result
@@ -80,6 +85,15 @@ public class DefaultSidoParser implements SidoParser {
 			XSchema xSchema = action.getSchema();
 			// OK
 			return xSchema;
+		}
+	}
+
+	protected ParseRunner<String> createParserRunner(XParser parser) {
+		Rule root = parser.schema();
+		if (logger.isDebugEnabled()) {
+			return new TracingParseRunner<String>(root);
+		} else {
+			return new ReportingParseRunner<String>(root);
 		}
 	}
 	
