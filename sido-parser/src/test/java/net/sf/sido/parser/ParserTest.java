@@ -73,7 +73,7 @@ public class ParserTest {
 			fail("Expected parsing error");
 		} catch (SidoParseException ex) {
 			assertEquals(
-					"Parsing exception:  - Input \"<\" (position 32 to 33) is not valid for:\n"
+					"Error while parsing \"parsing-error-0\":  - Input \"<\" (position 32 to 33) is not valid for:\n"
 							+ " - schema/prefix_list/Sequence/prefix/whitespaces/whitespace\n"
 							+ " - schema/prefix_list/Sequence/prefix/\"for\"/'f'\n" + ".\n",
 						ex.getLocalizedMessage(strings, Locale.ENGLISH));
