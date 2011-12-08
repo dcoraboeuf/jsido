@@ -82,12 +82,16 @@ public class ParserTest {
 
 	@Test
 	public void modules() {
-		Collection<SidoSchema> schemas = parse("module-2", "module-1", "module-0");
-		// Simple check
-		assertNotNull("Returned schemas are null", schemas);
-		assertEquals(3, schemas.size());
-		// Context
-		assertModules();
+		try {
+			Collection<SidoSchema> schemas = parse("module-2", "module-1", "module-0");
+			// Simple check
+			assertNotNull("Returned schemas are null", schemas);
+			assertEquals(3, schemas.size());
+			// Context
+			assertModules();
+		} catch (SidoParseException ex) {
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
 	}
 
 	private void assertModules() {
@@ -123,9 +127,9 @@ public class ParserTest {
 	}
 
 	private Collection<SidoSchema> parse(String... fileNames) {
-		Collection<String> inputs = Collections2.transform(Arrays.asList(fileNames), new Function<String, String>() {
+		Collection<NamedInput> inputs = Collections2.transform(Arrays.asList(fileNames), new Function<String, NamedInput>() {
 			@Override
-			public String apply(String fileName) {
+			public NamedInput apply(String fileName) {
 				String path = String.format("/sidol/schema-%s.sidol", fileName);
 				InputStream in = getClass().getResourceAsStream(path);
 				if (in == null) {
@@ -134,7 +138,7 @@ public class ParserTest {
 					String sidol;
 					try {
 						sidol = IOUtils.toString(in);
-						return sidol;
+						return new NamedInput(fileName, sidol);
 					} catch (IOException e) {
 						throw new IllegalStateException(String.format("Cannot read resource at %s", path), e);
 					}

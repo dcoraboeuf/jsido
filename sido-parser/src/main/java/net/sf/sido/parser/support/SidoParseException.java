@@ -7,8 +7,8 @@ public class SidoParseException extends SidoException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SidoParseException(Localizable error) {
-		super(error);
+	public SidoParseException(String name, Localizable error) {
+		super(name, error);
 	}
 
 }

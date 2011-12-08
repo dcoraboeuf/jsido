@@ -9,6 +9,6 @@ public interface SidoParser {
 	
 	SidoContext getContext();
 	
-	Collection<SidoSchema> parse (Collection<String> inputs);
+	Collection<SidoSchema> parse (Collection<NamedInput> inputs);
 
 }

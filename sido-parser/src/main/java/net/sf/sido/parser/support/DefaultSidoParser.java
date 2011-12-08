@@ -6,6 +6,7 @@ import java.util.Collection;
 import net.sf.jstring.Localizable;
 import net.sf.jstring.MultiLocalizable;
 import net.sf.jstring.NonLocalizable;
+import net.sf.sido.parser.NamedInput;
 import net.sf.sido.parser.SidoParser;
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.parboiled.XAction;
@@ -40,19 +41,19 @@ public class DefaultSidoParser implements SidoParser {
 	}
 	
 	@Override
-	public Collection<SidoSchema> parse(Collection<String> inputs) {
+	public Collection<SidoSchema> parse(Collection<NamedInput> inputs) {
 		// Parses all inputs
 		Collection<XSchema> xSchemas = new ArrayList<XSchema>();
-		for (String input : inputs) {
+		for (NamedInput input : inputs) {
 			XSchema xschema = xparse(input);
 			xSchemas.add(xschema);
-			
 		}
 		// Creation of schemas
 		return build (xSchemas);
 	}
 
-	protected XSchema xparse (String input) {
+	protected XSchema xparse (NamedInput namedInput) {
+		String input = namedInput.getInput();
 		// Input buffer
 		DefaultInputBuffer inputBuffer = new DefaultInputBuffer(input.toCharArray());
 		// Creates the action support
@@ -71,7 +72,7 @@ public class DefaultSidoParser implements SidoParser {
 					return localize (error);
 				}
 			}));
-			throw new SidoParseException(list);
+			throw new SidoParseException(namedInput.getName(), list);
 		}
 		// OK
 		else {
