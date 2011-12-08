@@ -56,11 +56,15 @@ public class XParser extends BaseParser<String> {
 	}
 	
 	Rule type_meta() {
-		return FirstOf("abstract", type_parent());
+		return FirstOf(type_abstract(), type_parent());
+	}
+	
+	Rule type_abstract() {
+		return Sequence("abstract", action.abstractType());
 	}
 	
 	Rule type_parent() {
-		return Sequence(a(), whitespaces(), type_ref());
+		return Sequence(a(), whitespaces(), type_ref(), action.parent(match()));
 	}
 	
 	Rule type_properties() {
