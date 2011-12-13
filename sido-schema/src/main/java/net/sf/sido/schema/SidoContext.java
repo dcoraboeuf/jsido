@@ -14,4 +14,6 @@ public interface SidoContext {
 
 	SidoType getType(String qualifiedName, boolean required);
 
+	SidoType getType(String uri, String name, boolean required);
+
 }

@@ -41,6 +41,16 @@ public class DefaultSidoContext implements SidoContext {
 			schemas.put(uid, schema);
 		}
 	}
+	
+	@Override
+	public SidoType getType(String uri, String name, boolean required) {
+		SidoSchema schema = getSchema(uri, required);
+		if (schema != null) {
+			return schema.getType(name, required);
+		} else {
+			return null;
+		}
+	}
 
 	@Override
 	public SidoType getType(String qualifiedName, boolean required) {
@@ -51,12 +61,7 @@ public class DefaultSidoContext implements SidoContext {
 		}
 		String schemaName = StringUtils.substringBefore(qualifiedName, SCHEMA_SEPARATOR);
 		String typeName = StringUtils.substringAfter(qualifiedName, SCHEMA_SEPARATOR);
-		SidoSchema schema = getSchema(schemaName, required);
-		if (schema != null) {
-			return schema.getType(typeName, required);
-		} else {
-			return null;
-		}
+		return getType (schemaName, typeName, required);
 	}
 
 }
