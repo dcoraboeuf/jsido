@@ -32,6 +32,10 @@ public class TypeDefinition {
         	typeBuilder.setAbstract();
         }
 	}
+	
+	public SidoTypeBuilder getTypeBuilder() {
+		return typeBuilder;
+	}
 
 	public ResolutionStatus getStatus() {
 		return status;

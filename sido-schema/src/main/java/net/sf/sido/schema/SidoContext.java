@@ -16,4 +16,6 @@ public interface SidoContext {
 
 	SidoType getType(String uri, String name, boolean required);
 
+	<T> SidoSimpleType<T> getSimpleType(String name, boolean required);
+
 }

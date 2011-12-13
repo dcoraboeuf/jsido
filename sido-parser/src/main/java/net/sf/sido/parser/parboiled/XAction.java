@@ -70,7 +70,7 @@ public class XAction implements Action<Object> {
 	
 	boolean propertyArray() {
 		checkProperty();
-		property.setArray(true);
+		property.setCollection(true);
 		return true;
 	}
 	
@@ -88,7 +88,7 @@ public class XAction implements Action<Object> {
 	
 	boolean propertyIndex(String index) {
 		checkProperty();
-		if (!property.isArray()) {
+		if (!property.isCollection()) {
 			throw new IllegalStateException("Cannot have an index on a non-array property");
 		} else {
 			property.setIndex(index);

@@ -4,7 +4,7 @@ public class XProperty {
 
 	private String name;
 	private boolean nullable;
-	private boolean array;
+	private boolean collection;
 	private String index;
 	private XPropertyTypeRef propertyTypeRef;
 
@@ -24,12 +24,12 @@ public class XProperty {
 		this.nullable = nullable;
 	}
 
-	public boolean isArray() {
-		return array;
+	public boolean isCollection() {
+		return collection;
 	}
 
-	public void setArray(boolean array) {
-		this.array = array;
+	public void setCollection(boolean collection) {
+		this.collection = collection;
 	}
 
 	public String getIndex() {

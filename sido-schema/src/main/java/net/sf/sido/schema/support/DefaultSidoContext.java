@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.SidoSimpleType;
 import net.sf.sido.schema.SidoType;
 
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +63,12 @@ public class DefaultSidoContext implements SidoContext {
 		String schemaName = StringUtils.substringBefore(qualifiedName, SCHEMA_SEPARATOR);
 		String typeName = StringUtils.substringAfter(qualifiedName, SCHEMA_SEPARATOR);
 		return getType (schemaName, typeName, required);
+	}
+
+	@Override
+	public <T> SidoSimpleType<T> getSimpleType(String name, boolean required) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
