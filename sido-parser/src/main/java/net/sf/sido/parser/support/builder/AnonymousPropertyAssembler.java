@@ -8,7 +8,7 @@ public class AnonymousPropertyAssembler extends AbstractPropertyAssembler {
 	@SuppressWarnings("unchecked")
 	@Override
 	public SidoAnonymousProperty create(TypeDefinition definition, XProperty xProperty) {
-		return definition.getTypeBuilder().addAnonymousProperty(definition.getName(), xProperty.isNullable(), xProperty.isCollection(), xProperty.getIndex());
+		return definition.getTypeBuilder().addAnonymousProperty(definition.getName(), xProperty.isNullable(), xProperty.isCollection());
 	}
 
 }

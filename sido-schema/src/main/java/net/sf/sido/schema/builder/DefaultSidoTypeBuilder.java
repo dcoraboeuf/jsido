@@ -5,6 +5,9 @@ import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoSimpleType;
 import net.sf.sido.schema.SidoType;
+import net.sf.sido.schema.model.DefaultSidoAnonymousProperty;
+import net.sf.sido.schema.model.DefaultSidoRefProperty;
+import net.sf.sido.schema.model.DefaultSidoSimpleProperty;
 import net.sf.sido.schema.model.DefaultSidoType;
 
 public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
@@ -42,24 +45,26 @@ public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
 
 	@Override
 	public SidoAnonymousProperty addAnonymousProperty(String name,
-			boolean nullable, boolean collection, String index) {
-		// TODO Auto-generated method stub
-		return null;
+			boolean nullable, boolean collection) {
+		DefaultSidoAnonymousProperty property = new DefaultSidoAnonymousProperty(name, nullable, collection);
+		this.type.addProperty(property);
+		return property;
 	}
 
 	@Override
 	public <T> SidoSimpleProperty<T> addProperty(String name,
-			SidoSimpleType<T> type, boolean nullable, boolean collection,
-			String index) {
-		// TODO Auto-generated method stub
-		return null;
+			SidoSimpleType<T> type, boolean nullable, boolean collection) {
+		DefaultSidoSimpleProperty<T> property = new DefaultSidoSimpleProperty<T>(name, type, nullable, collection);
+		this.type.addProperty(property);
+		return property;
 	}
 
 	@Override
 	public SidoRefProperty addProperty(String name, SidoType type,
 			boolean nullable, boolean collection, String index) {
-		// TODO Auto-generated method stub
-		return null;
+		DefaultSidoRefProperty property = new DefaultSidoRefProperty(name, type, nullable, collection, index);
+		this.type.addProperty(property);
+		return property;
 	}
 
 }

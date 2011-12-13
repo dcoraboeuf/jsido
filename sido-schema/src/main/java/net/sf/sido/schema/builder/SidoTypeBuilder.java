@@ -16,9 +16,9 @@ public interface SidoTypeBuilder {
 
 	SidoTypeBuilder setAbstract();
 
-	SidoAnonymousProperty addAnonymousProperty(String name, boolean nullable, boolean collection, String index);
+	SidoAnonymousProperty addAnonymousProperty(String name, boolean nullable, boolean collection);
 
-	<T> SidoSimpleProperty<T> addProperty(String name, SidoSimpleType<T> type, boolean nullable, boolean collection, String index);
+	<T> SidoSimpleProperty<T> addProperty(String name, SidoSimpleType<T> type, boolean nullable, boolean collection);
 
 	SidoRefProperty addProperty(String name, SidoType type, boolean nullable, boolean collection, String index);
 

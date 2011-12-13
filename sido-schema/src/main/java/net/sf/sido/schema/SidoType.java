@@ -14,7 +14,7 @@ public interface SidoType {
 
 	boolean isAbstractType();
 	
-	Collection<? extends SidoProperty> getProperties();
+	Collection<? super SidoProperty> getProperties();
 	
 	<P extends SidoProperty> P getProperty (String name, boolean required);
 

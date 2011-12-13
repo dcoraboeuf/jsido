@@ -17,8 +17,7 @@ public class SimplePropertyAssembler<T> extends AbstractPropertyAssembler {
 	public SidoSimpleProperty<T> create(TypeDefinition definition,
 			XProperty xProperty) {
 		return definition.getTypeBuilder().addProperty(definition.getName(),
-				simpleType, xProperty.isNullable(), xProperty.isCollection(),
-				xProperty.getIndex());
+				simpleType, xProperty.isNullable(), xProperty.isCollection());
 	}
 
 }
