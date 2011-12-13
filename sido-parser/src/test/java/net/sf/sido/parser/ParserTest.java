@@ -60,6 +60,23 @@ public class ParserTest {
 	}
 
 	@Test
+	public void simple() {
+		try {
+			SidoSchema schema = parseOne("simple");
+			assertNotNull("Returned schema is null", schema);
+			assertEquals("sido.test", schema.getUid());
+			assertEquals(1, schema.getTypes().size());
+			// Type check
+			SidoType type = assertType("sido.test", "Person", false, null);
+			assertProperty(type, "name", String.class, false, false, null);
+			assertProperty(type, "age", Integer.class, true, false, null);
+		} catch (SidoException ex) {
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+			ex.printStackTrace();
+		}
+	}
+
+	@Test
 	public void complex() {
 		try {
 			SidoSchema schema = parseOne("complex");
