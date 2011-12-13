@@ -13,6 +13,7 @@ import java.util.Locale;
 
 import net.sf.jstring.Strings;
 import net.sf.sido.schema.Sido;
+import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoRefProperty;
@@ -149,10 +150,18 @@ public class ParserTest {
 		// StructuredAddress properties
 		assertProperty(structuredAddressType, "city", String.class, false, false, null);
 		assertProperty(structuredAddressType, "zipcode", String.class, false, false, null);
-		assertProperty(structuredAddressType, "lines", String.class, false, true, null);
+		assertAnonymousProperty(structuredAddressType, "content", false, false, null);
 		// Company properties
 		assertProperty(companyType, "name", String.class, false, false, null);
 		assertProperty(companyType, "employees", personType, false, true, null);
+	}
+
+	private void assertAnonymousProperty(SidoType type, String name,
+			boolean nullable, boolean collection,
+			String collectionIndex) {
+		SidoAnonymousProperty property = assertProperty(type, name, nullable,
+				collection, collectionIndex);
+		assertNotNull(property);
 	}
 
 	private void assertProperty(SidoType type, String name,

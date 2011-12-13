@@ -13,5 +13,5 @@ is a main::Address and
 has
 	a city,
 	a zipcode,
-	a collection of string as lines
+	an anonymous as content
 	.
