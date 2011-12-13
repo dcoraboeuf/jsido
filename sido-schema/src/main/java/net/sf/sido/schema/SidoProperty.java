@@ -1,10 +1,8 @@
 package net.sf.sido.schema;
 
-public interface SidoProperty<P> {
+public interface SidoProperty {
 	
 	String getName();
-	
-	Class<P> getType();
 	
 	boolean isCollection();
 	
