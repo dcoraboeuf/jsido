@@ -123,8 +123,13 @@ public class Builder {
 		// Nature of the type
 		XPropertyTypeRef xPropertyTypeRef = xProperty.getPropertyTypeRef();
 		PropertyAssembler propertyAssembler;
+		// String
+		if (xPropertyTypeRef == null) {
+			SidoSimpleType<String> simpleType = context.getSimpleType("string", false);
+			propertyAssembler = new SimplePropertyAssembler<String>(simpleType);
+		}
 		// Anonymous
-		if (xPropertyTypeRef.isAnonymous()) {
+		else if (xPropertyTypeRef.isAnonymous()) {
 			propertyAssembler = new AnonymousPropertyAssembler();
 		} else {
 			// Gets the reference

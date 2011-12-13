@@ -96,7 +96,7 @@ public class XParser extends BaseParser<String> {
 	}
 
 	Rule property_no_type() {
-		return Sequence (id(), action.propertyName(match()));
+		return Sequence (id(), action.propertyName(match()), action.propertyNoType());
 	}
 	
 	Rule property_type_ref() {

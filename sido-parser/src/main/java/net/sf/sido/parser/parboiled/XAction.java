@@ -101,6 +101,12 @@ public class XAction implements Action<Object> {
 		property.setPropertyTypeRef(new XPropertyTypeRef());
 		return true;
 	}
+
+	public boolean propertyNoType() {
+		checkProperty();
+		property.setPropertyTypeRef(null);
+		return true;
+	}
 	
 	boolean propertyType(String typeRef) {
 		checkProperty();
