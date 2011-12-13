@@ -1,0 +1,13 @@
+schema <sido.test> .
+
+a Node
+	has
+		a name,
+		a collection of Connection as connections
+		.
+
+a Connection
+	has
+		a name,
+		a Node as node
+		.

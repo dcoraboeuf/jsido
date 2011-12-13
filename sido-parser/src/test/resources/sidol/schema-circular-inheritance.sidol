@@ -1,0 +1,7 @@
+schema <sido.test> .
+
+a A is a C and has a name.
+
+a B is an A and has an id.
+
+a C is a B and has a uid.

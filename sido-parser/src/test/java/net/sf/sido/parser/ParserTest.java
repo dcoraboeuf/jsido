@@ -50,7 +50,6 @@ public class ParserTest {
 	}
 
 	// TODO Already loaded modules
-	// TODO Circularity
 
 	@Test
 	public void name_only() {
@@ -87,6 +86,66 @@ public class ParserTest {
 							+ " - schema/prefix_list/Sequence/prefix/\"for\"/'f'\n"
 							+ ".\n",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+
+	@Test
+	public void circular() {
+		try {
+			SidoSchema schema = parseOne("circular");
+			assertNotNull("Returned schema is null", schema);
+			assertEquals("sido.test", schema.getUid());
+			assertEquals(1, schema.getTypes().size());
+			SidoType type = assertType("sido.test", "Node", false, null);
+			assertProperty(type, "name", String.class, false, false, null);
+			assertProperty(type, "parent", type, false, false, null);
+			assertProperty(type, "children", type, false, true, null);
+		} catch (SidoException ex) {
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+			ex.printStackTrace();
+		}
+	}
+
+	@Test
+	public void circular_inheritance() {
+		try {
+			SidoSchema schema = parseOne("circular-inheritance");
+			assertNotNull("Returned schema is null", schema);
+			assertEquals("sido.test", schema.getUid());
+			assertEquals(3, schema.getTypes().size());
+			// Gets the type
+			SidoType a = context.getType("sido.test", "A", true);
+			SidoType b = context.getType("sido.test", "B", true);
+			SidoType c = context.getType("sido.test", "C", true);
+			// Inheritance tests
+			assertTrue (a.getParentType() == c);
+			assertTrue (b.getParentType() == a);
+			assertTrue (c.getParentType() == b);
+		} catch (SidoException ex) {
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+			ex.printStackTrace();
+		}
+	}
+
+	@Test
+	public void circular_double() {
+		try {
+			SidoSchema schema = parseOne("circular-double");
+			assertNotNull("Returned schema is null", schema);
+			assertEquals("sido.test", schema.getUid());
+			assertEquals(2, schema.getTypes().size());
+			// Types
+			SidoType node = assertType("sido.test", "Node", false, null);
+			SidoType connection = assertType("sido.test", "Connection", false, null);
+			// Properties of Node
+			assertProperty(node, "name", String.class, false, false, null);
+			assertProperty(node, "connections", connection, false, true, null);
+			// Properties of Connection
+			assertProperty(connection, "name", String.class, false, false, null);
+			assertProperty(connection, "node", node, false, true, null);
+		} catch (SidoException ex) {
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+			ex.printStackTrace();
 		}
 	}
 

@@ -1,0 +1,8 @@
+schema <sido.test>.
+
+a Node
+	has
+		a name,
+		a Node as parent,
+		a collection of Node as children
+		.
