@@ -33,4 +33,8 @@ public class XSchema {
 		return types;
 	}
 
+	public String resolvePrefix(String prefix) {
+		return prefixes.get(prefix);
+	}
+
 }

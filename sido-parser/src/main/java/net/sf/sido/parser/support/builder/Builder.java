@@ -54,7 +54,7 @@ public class Builder {
 			for (XType xType : xSchema.getTypes()) {
 				// Creates the type definition
 				TypeDefinition definition = new TypeDefinition(schemaBuilder,
-						xType);
+						xSchema, xType);
 				// Indexes the type
 				typeDefinitions.put(definition.getQualifiedName(), definition);
 			}
@@ -115,7 +115,7 @@ public class Builder {
 
 	protected SidoType getDOType(Map<String, SidoSchemaBuilder> schemas,
 			Map<String, TypeDefinition> typeDefinitions, TypeDefinition definition, XTypeRef typeRef) {
-        String qualifiedTypeName = typeRef.getQualifiedName(definition.getSchemaUID());
+        String qualifiedTypeName = definition.resolveQualifiedName(typeRef);
         // This type can be found from the current context, not only in current schemas
 		SidoType type = context.getType(qualifiedTypeName, false);
         if (type != null) {

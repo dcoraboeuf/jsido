@@ -1,6 +1,11 @@
 package net.sf.sido.parser.support.builder;
 
+import org.apache.commons.lang3.StringUtils;
+
+import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.model.XType;
+import net.sf.sido.parser.model.XTypeRef;
+import net.sf.sido.parser.support.SidoSchemaPrefixNotDefinedException;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoType;
 import net.sf.sido.schema.builder.SidoSchemaBuilder;
@@ -9,13 +14,15 @@ import net.sf.sido.schema.builder.SidoTypeBuilder;
 public class TypeDefinition {
 
 	private final SidoSchemaBuilder schemaBuilder;
+	private final XSchema xSchema;
 	private final XType xType;
 	private final SidoTypeBuilder typeBuilder;
 
 	private ResolutionStatus status;
 
-	public TypeDefinition(SidoSchemaBuilder schemaBuilder, XType xType) {
+	public TypeDefinition(SidoSchemaBuilder schemaBuilder, XSchema xSchema, XType xType) {
 		this.schemaBuilder = schemaBuilder;
+		this.xSchema = xSchema;
 		this.xType = xType;
         this.status = ResolutionStatus.PENDING;
         // Type builder
@@ -28,10 +35,6 @@ public class TypeDefinition {
 
 	public String getName() {
 		return xType.getName();
-	}
-	
-	public String getSchemaUID() {
-		return schemaBuilder.getUid();
 	}
 
 	public String getQualifiedName() {
@@ -68,6 +71,25 @@ public class TypeDefinition {
 			typeBuilder.close();
 		} else {
 			throw new IllegalStateException(String.format("Status %s is unknown.", this.status));
+		}
+	}
+
+	public String resolveQualifiedName(XTypeRef typeRef) {
+		String token = typeRef.getToken();
+		if (StringUtils.contains(token, SidoContext.SCHEMA_SEPARATOR)) {
+			// Gets the prefix and the name
+			String prefix = StringUtils.substringBefore(token, SidoContext.SCHEMA_SEPARATOR);
+			String name = StringUtils.substringAfter(token, SidoContext.SCHEMA_SEPARATOR);
+			// Resolves the prefix
+			String uid = xSchema.resolvePrefix(prefix);
+			if (StringUtils.isBlank(uid)) {
+				throw new SidoSchemaPrefixNotDefinedException(prefix, name);
+			}
+			// OK
+			return String.format("%s%s%s", uid, SidoContext.SCHEMA_SEPARATOR, name);
+		} else {
+			// No prefix, uses the same schema
+			return String.format("%s%s%s", schemaBuilder.getUid(), SidoContext.SCHEMA_SEPARATOR, token);
 		}
 	}
 
