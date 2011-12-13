@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.Locale;
 
 import net.sf.jstring.Strings;
-import net.sf.sido.parser.support.SidoParseException;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.support.DefaultSidoContext;
+import net.sf.sido.schema.support.SidoException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class ParserTest {
 
 	@BeforeClass
 	public static void load() {
-		strings = new Strings("net.sf.sido.parser.Strings");
+		strings = new Strings("net.sf.sido.parser.Strings", "net.sf.sido.schema.Strings");
 	}
 
 	private SidoContext context;
@@ -61,8 +61,9 @@ public class ParserTest {
 			assertNotNull("Returned schema is null", schema);
 			assertEquals("sido.test", schema.getUid());
 			assertEquals(5, schema.getTypes().size());
-		} catch (SidoParseException ex) {
+		} catch (SidoException ex) {
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
+			ex.printStackTrace();
 		}
 	}
 
@@ -71,7 +72,7 @@ public class ParserTest {
 		try {
 			parseOne("parsing-error-0");
 			fail("Expected parsing error");
-		} catch (SidoParseException ex) {
+		} catch (SidoException ex) {
 			assertEquals(
 					"Error while parsing \"parsing-error-0\":  - Input \"<\" (position 32 to 33) is not valid for:\n"
 							+ " - schema/prefix_list/Sequence/prefix/whitespaces/whitespace\n"
@@ -89,7 +90,8 @@ public class ParserTest {
 			assertEquals(3, schemas.size());
 			// Context
 			assertModules();
-		} catch (SidoParseException ex) {
+		} catch (SidoException ex) {
+			ex.printStackTrace();
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
