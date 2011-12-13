@@ -27,6 +27,10 @@ public class TypeDefinition {
         this.status = ResolutionStatus.PENDING;
         // Type builder
         typeBuilder = schemaBuilder.newType(xType.getName());
+        // Basic information
+        if (xType.isAbstractType()) {
+        	typeBuilder.setAbstract();
+        }
 	}
 
 	public ResolutionStatus getStatus() {

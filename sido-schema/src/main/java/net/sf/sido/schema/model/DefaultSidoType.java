@@ -9,6 +9,7 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	private final String name;
 	
 	private SidoType parentType;
+	private boolean abstractType;
 
 	public DefaultSidoType(SidoSchema schema, String name) {
 		this.schema = schema;
@@ -31,12 +32,19 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	}
 
 	public void setParentType(SidoType parentType) {
+		checkNotClosed();
 		this.parentType = parentType;
 	}
+	
 
-	public void close() {
-		// TODO Auto-generated method stub
-		
+	@Override
+	public boolean isAbstractType() {
+		return abstractType;
+	}
+
+	public void setAbstractType(boolean abstractType) {
+		checkNotClosed();
+		this.abstractType = abstractType;
 	}
 
 }

@@ -8,4 +8,6 @@ public interface SidoType {
 
 	SidoType getParentType();
 
+	boolean isAbstractType();
+
 }

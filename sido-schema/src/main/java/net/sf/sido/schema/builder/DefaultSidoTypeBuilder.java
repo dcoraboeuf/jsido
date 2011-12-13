@@ -20,6 +20,12 @@ public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
 	}
 	
 	@Override
+	public SidoTypeBuilder setAbstract() {
+		type.setAbstractType(true);
+		return this;
+	}
+	
+	@Override
 	public SidoType getType() {
 		return type;
 	}

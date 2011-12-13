@@ -1,8 +1,10 @@
 package net.sf.sido.parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import net.sf.jstring.Strings;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.SidoType;
 import net.sf.sido.schema.support.DefaultSidoContext;
 import net.sf.sido.schema.support.SidoException;
 
@@ -61,8 +64,8 @@ public class ParserTest {
 			assertNotNull("Returned schema is null", schema);
 			assertEquals("sido.test", schema.getUid());
 			assertEquals(5, schema.getTypes().size());
-			// TODO Types checks
-			fail("Checks the types");
+			// Types checks
+			assertTypes();
 		} catch (SidoException ex) {
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
@@ -112,6 +115,36 @@ public class ParserTest {
 		assertNotNull(sCompany);
 		// TODO Schema checks
 		fail("Checks the modules");
+	}
+	
+	private void assertTypes() {
+		// Person
+		SidoType personType = context.getType("sido.test::Person", true);
+		assertEquals("Person", personType.getName());
+		assertFalse(personType.isAbstractType());
+		assertNull(personType.getParentType());
+		// Address
+		SidoType addressType = context.getType("sido.test::Address", true);
+		assertEquals("Address", addressType.getName());
+		assertTrue(addressType.isAbstractType());
+		assertNull(addressType.getParentType());
+		// FreeAddress
+		SidoType freeAddressType = context.getType("sido.test::FreeAddress", true);
+		assertEquals("FreeAddress", freeAddressType.getName());
+		assertFalse(freeAddressType.isAbstractType());
+		assertTrue(freeAddressType.getParentType() == addressType);
+		// StructuredAddress
+		SidoType structuredAddressType = context.getType("sido.test::StructuredAddress", true);
+		assertEquals("StructuredAddress", structuredAddressType.getName());
+		assertFalse(structuredAddressType.isAbstractType());
+		assertTrue(structuredAddressType.getParentType() == addressType);
+		// Company
+		SidoType companyType = context.getType("sido.test::Company", true);
+		assertEquals("Company", companyType.getName());
+		assertFalse(companyType.isAbstractType());
+		assertNull(companyType.getParentType());
+		// TODO Checks the properties
+		fail("Checks the type properties");
 	}
 
 	private SidoSchema parseOne(String fileName) {
