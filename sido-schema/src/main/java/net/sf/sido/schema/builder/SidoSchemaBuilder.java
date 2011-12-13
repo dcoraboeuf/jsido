@@ -12,4 +12,6 @@ public interface SidoSchemaBuilder {
 
 	SidoTypeBuilder newType(String name);
 
+	void close(SidoTypeBuilder sidoTypeBuilder);
+
 }

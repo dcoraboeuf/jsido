@@ -1,15 +1,16 @@
 package net.sf.sido.schema.builder;
 
 import net.sf.sido.schema.SidoType;
-import net.sf.sido.schema.model.DefaultSidoSchema;
 import net.sf.sido.schema.model.DefaultSidoType;
 
 public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
 
+	private final SidoSchemaBuilder schemaBuilder;
 	private final DefaultSidoType type;
 
-	public DefaultSidoTypeBuilder(DefaultSidoSchema schema, String name) {
-		this.type = new DefaultSidoType(schema, name);
+	public DefaultSidoTypeBuilder(SidoSchemaBuilder schemaBuilder, String name) {
+		this.schemaBuilder = schemaBuilder;
+		this.type = new DefaultSidoType(schemaBuilder.getSchema(), name);
 	}
 
 	@Override
@@ -26,6 +27,7 @@ public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
 	@Override
 	public void close() {
 		type.close();
+		schemaBuilder.close(this);
 	}
 
 }

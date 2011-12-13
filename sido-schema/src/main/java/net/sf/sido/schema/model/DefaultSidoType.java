@@ -10,7 +10,7 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	
 	private SidoType parentType;
 
-	public DefaultSidoType(DefaultSidoSchema schema, String name) {
+	public DefaultSidoType(SidoSchema schema, String name) {
 		this.schema = schema;
 		this.name = name;
 	}

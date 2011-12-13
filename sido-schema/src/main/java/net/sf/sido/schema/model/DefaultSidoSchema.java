@@ -14,10 +14,6 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	private final SidoContext context;
 	private final String uid;
 	
-	@SuppressWarnings("unused")
-	private boolean closed;
-	
-	private Map<String, String> prefixes = new HashMap<String, String>();
 	private Map<String, SidoType> types = new HashMap<String, SidoType>();
 
 	public DefaultSidoSchema(SidoContext context, String uid) {
@@ -41,12 +37,6 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	}
 
 	@Override
-	public SidoSchema getSchemaForPrefix(String prefix) {
-		String ruid = prefixes.get(prefix);
-		return context.getSchema(ruid, true);
-	}
-
-	@Override
 	public Collection<SidoType> getTypes() {
 		return types.values();
 	}
@@ -59,6 +49,10 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 		} else {
 			return type;
 		}
+	}
+
+	public void addType(SidoType type) {
+		types.put(type.getName(), type);
 	}
 
 }

@@ -32,9 +32,13 @@ public class DefaultSidoSchemaBuilder implements SidoSchemaBuilder {
 	
 	@Override
 	public SidoTypeBuilder newType(String name) {
-		DefaultSidoTypeBuilder builder = new DefaultSidoTypeBuilder(schema, name);
-		// TODO The type is not registered in the schema yet
+		DefaultSidoTypeBuilder builder = new DefaultSidoTypeBuilder(this, name);
 		return builder;
+	}
+	
+	@Override
+	public void close(SidoTypeBuilder builder) {
+		schema.addType(builder.getType());
 	}
 
 }

@@ -61,6 +61,8 @@ public class ParserTest {
 			assertNotNull("Returned schema is null", schema);
 			assertEquals("sido.test", schema.getUid());
 			assertEquals(5, schema.getTypes().size());
+			// TODO Types checks
+			fail("Checks the types");
 		} catch (SidoException ex) {
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();

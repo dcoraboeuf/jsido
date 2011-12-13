@@ -8,8 +8,6 @@ public interface SidoSchema {
 
 	String getUid();
 
-	SidoSchema getSchemaForPrefix(String prefix);
-
 	Collection<SidoType> getTypes();
 
 	SidoType getType(String name, boolean required);
