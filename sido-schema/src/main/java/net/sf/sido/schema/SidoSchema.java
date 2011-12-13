@@ -14,6 +14,4 @@ public interface SidoSchema {
 
 	SidoType getType(String name, boolean required);
 
-	void close();
-
 }

@@ -6,4 +6,6 @@ public interface SidoType {
 	
 	String getName();
 
+	SidoType getParentType();
+
 }

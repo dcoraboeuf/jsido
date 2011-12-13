@@ -6,8 +6,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
-import net.sf.sido.schema.model.DefaultSidoSchema;
+import net.sf.sido.schema.SidoType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 public class DefaultSidoContext implements SidoContext {
@@ -30,13 +31,6 @@ public class DefaultSidoContext implements SidoContext {
 	}
 	
 	@Override
-	public SidoSchema createSchema(String uid) {
-		SidoSchema schema = new DefaultSidoSchema(this, uid);
-		registerSchema(schema);
-		return schema;
-	}
-	
-	@Override
 	public synchronized void registerSchema(SidoSchema schema) {
 		Validate.notNull(schema, "The schema is required");
 		String uid = schema.getUid();
@@ -45,6 +39,23 @@ public class DefaultSidoContext implements SidoContext {
 			throw new SidoSchemaUIDDuplicationException(uid);
 		} else {
 			schemas.put(uid, schema);
+		}
+	}
+
+	@Override
+	public SidoType getType(String qualifiedName, boolean required) {
+		// Gets the schema name and the type name
+		int pos = StringUtils.indexOf(qualifiedName, SCHEMA_SEPARATOR);
+		if (pos < 0) {
+			throw new SidoWrongQualifiedNameException(qualifiedName);
+		}
+		String schemaName = StringUtils.substringBefore(qualifiedName, SCHEMA_SEPARATOR);
+		String typeName = StringUtils.substringAfter(qualifiedName, SCHEMA_SEPARATOR);
+		SidoSchema schema = getSchema(schemaName, required);
+		if (schema != null) {
+			return schema.getType(typeName, required);
+		} else {
+			return null;
 		}
 	}
 

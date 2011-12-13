@@ -4,7 +4,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 import net.sf.sido.parser.model.XSchema;
 import net.sf.sido.parser.model.XType;
@@ -12,7 +13,10 @@ import net.sf.sido.parser.model.XTypeRef;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
+import net.sf.sido.schema.builder.SidoSchemaBuilder;
+import net.sf.sido.schema.builder.SidoSchemaBuilderFactory;
 import net.sf.sido.schema.support.SidoSchemaUIDDuplicationException;
+import net.sf.sido.schema.support.SidoTypeNotFoundException;
 
 public class Builder {
 
@@ -30,7 +34,10 @@ public class Builder {
 		// Index of all types
 		Map<String, TypeDefinition> typeDefinitions = new LinkedHashMap<String, TypeDefinition>();
 		// Index of schemas
-		Map<String, SidoSchema> schemas = new LinkedHashMap<String, SidoSchema>();
+		Map<String, SidoSchemaBuilder> schemas = new LinkedHashMap<String, SidoSchemaBuilder>();
+		// Schema factory
+		SidoSchemaBuilderFactory schemaBuilderFactory = SidoSchemaBuilderFactory
+				.newInstance(context);
 		// First pass: indexation of types and schemas
 		for (XSchema xSchema : xSchemas) {
 			String schemaUid = xSchema.getUid();
@@ -39,13 +46,15 @@ public class Builder {
 				throw new SidoSchemaUIDDuplicationException(schemaUid);
 			}
 			// Creates the schema
-			SidoSchema schema = context.createSchema(schemaUid);
+			SidoSchemaBuilder schemaBuilder = schemaBuilderFactory
+					.create(schemaUid);
 			// Indexes the schema
-			schemas.put(schemaUid, schema);
+			schemas.put(schemaUid, schemaBuilder);
 			// All types in this schema
 			for (XType xType : xSchema.getTypes()) {
 				// Creates the type definition
-				TypeDefinition definition = new TypeDefinition(schema, xType);
+				TypeDefinition definition = new TypeDefinition(schemaBuilder,
+						xType);
 				// Indexes the type
 				typeDefinitions.put(definition.getQualifiedName(), definition);
 			}
@@ -53,14 +62,23 @@ public class Builder {
 		// Second pass: resolution of types
 		resolve(schemas, typeDefinitions);
 		// Third pass: closes all schemas
-		for (SidoSchema schema : schemas.values()) {
-			schema.close();
+		for (SidoSchemaBuilder schemaBuilder : schemas.values()) {
+			schemaBuilder.close();
 		}
 		// OK
-		return schemas.values();
+		return Collections2.transform(schemas.values(),
+				new Function<SidoSchemaBuilder, SidoSchema>() {
+
+					@Override
+					public SidoSchema apply(SidoSchemaBuilder o) {
+						return o.getSchema();
+					}
+
+				});
 	}
 
-	protected void resolve(Map<String, SidoSchema> schemas, Map<String, TypeDefinition> typeDefinitions) {
+	protected void resolve(Map<String, SidoSchemaBuilder> schemas,
+			Map<String, TypeDefinition> typeDefinitions) {
 		for (TypeDefinition typeDefinition : typeDefinitions.values()) {
 			ResolutionStatus status = typeDefinition.getStatus();
 			if (status == ResolutionStatus.PENDING) {
@@ -68,32 +86,58 @@ public class Builder {
 			} else if (status != ResolutionStatus.COMPLETE) {
 				throw new IllegalStateException(String.format(
 						"Status %s for definition %s cannot be resolved.",
-							status,
-							typeDefinition.getQualifiedName()));
+						status, typeDefinition.getQualifiedName()));
 			}
 		}
 	}
 
-	protected void readType(Map<String, SidoSchema> schemas, Map<String, TypeDefinition> typeDefinitions,
+	protected void readType(Map<String, SidoSchemaBuilder> schemas,
+			Map<String, TypeDefinition> typeDefinitions,
 			TypeDefinition definition) {
-		// FIXME Resolution of a type
-		// definition.start();
-		// // Super-type
-		// XTypeRef parent = definition.getXType().getParent();
-		// if (parent != null) {
-		// // Gets the parent type reference
-		// SidoType parentType = getDOType(schemas, typeDefinitions, parent);
-		// // Sets as parent
-		// definition.setParentType(parentType);
-		// }
-		// // Gets all properties
+		definition.start();
+		// Super-type
+		XTypeRef parent = definition.getXType().getParent();
+		if (parent != null) {
+			// Gets the parent type reference
+			SidoType parentType = getDOType(schemas, typeDefinitions, definition, parent);
+			// Sets as parent
+			definition.setParentType(parentType);
+		}
+		// FIXME Gets all properties
 		// Array<DataObject> properties = definition.getProperties();
 		// for (DataObject property : properties) {
 		// readProperty(factory, schemas, typeDefinitions, definition,
 		// property);
 		// }
-		// // Completion
-		// definition.complete();
+		// Completion
+		definition.complete();
+	}
+
+	protected SidoType getDOType(Map<String, SidoSchemaBuilder> schemas,
+			Map<String, TypeDefinition> typeDefinitions, TypeDefinition definition, XTypeRef typeRef) {
+        String qualifiedTypeName = typeRef.getQualifiedName(definition.getSchemaUID());
+        // This type can be found from the current context, not only in current schemas
+		SidoType type = context.getType(qualifiedTypeName, false);
+        if (type != null) {
+            return type;
+        }
+        // Gets the definition for this type
+        TypeDefinition tDefinition = typeDefinitions.get(qualifiedTypeName);
+        if (tDefinition == null) {
+            throw new SidoTypeNotFoundException(qualifiedTypeName);
+        }
+        // If not resolved, resolve it
+        ResolutionStatus status = tDefinition.getStatus();
+        if (status == ResolutionStatus.COMPLETE) {
+            return tDefinition.getType();
+        } else if (status == ResolutionStatus.PENDING) {
+            readType(schemas, typeDefinitions, tDefinition);
+            return tDefinition.getType();
+        } else if (status == ResolutionStatus.ONGOING) {
+            return tDefinition.getType();
+        } else {
+            throw new IllegalStateException(String.format("Status %s is unknown.", status));
+        }
 	}
 
 }

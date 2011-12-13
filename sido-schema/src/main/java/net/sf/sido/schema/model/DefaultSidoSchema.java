@@ -14,6 +14,7 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	private final SidoContext context;
 	private final String uid;
 	
+	@SuppressWarnings("unused")
 	private boolean closed;
 	
 	private Map<String, String> prefixes = new HashMap<String, String>();
@@ -22,11 +23,6 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	public DefaultSidoSchema(SidoContext context, String uid) {
 		this.context = context;
 		this.uid = uid;
-	}
-	
-	@Override
-	public void close() {
-		closed = true;
 	}
 
 	@Override
