@@ -253,7 +253,7 @@ public class ParserTest {
 			String collectionIndex) {
 		SidoSimpleProperty<T> property = assertProperty(type, name, nullable,
 				collection, collectionIndex);
-		assertEquals(propertyType, property.getType());
+		assertEquals(propertyType, property.getType().getType());
 	}
 
 	private <P extends SidoProperty> P assertProperty(SidoType type,
