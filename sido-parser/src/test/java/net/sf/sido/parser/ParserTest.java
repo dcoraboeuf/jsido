@@ -160,7 +160,7 @@ public class ParserTest {
 			assertProperty(node, "connections", connection, false, true, null);
 			// Properties of Connection
 			assertProperty(connection, "name", String.class, false, false, null);
-			assertProperty(connection, "node", node, false, true, null);
+			assertProperty(connection, "node", node, false, false, null);
 		} catch (SidoException ex) {
 			ex.printStackTrace();
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
