@@ -85,7 +85,7 @@ public class ParserTest {
 			assertEquals("sido.test", schema.getUid());
 			assertEquals(5, schema.getTypes().size());
 			// Types checks
-			assertTypes();
+			assertTypes("sido.test", "sido.test", "sido.test");
 		} catch (SidoException ex) {
 			ex.printStackTrace();
 			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
@@ -179,23 +179,23 @@ public class ParserTest {
 		assertNotNull(sMain);
 		assertNotNull(sAddress);
 		assertNotNull(sCompany);
-		// TODO Schema checks
-		fail("Checks the modules");
+		// Schema checks
+		assertTypes("sido.test.main", "sido.test.address", "sido.test.company");
 	}
 
-	private void assertTypes() {
+	private void assertTypes(String mainSchema, String addressSchema, String companySchema) {
 		// Person
-		SidoType personType = assertType("sido.test", "Person", false, null);
+		SidoType personType = assertType(mainSchema, "Person", false, null);
 		// Address
-		SidoType addressType = assertType("sido.test", "Address", true, null);
+		SidoType addressType = assertType(mainSchema, "Address", true, null);
 		// FreeAddress
-		SidoType freeAddressType = assertType("sido.test", "FreeAddress",
+		SidoType freeAddressType = assertType(addressSchema, "FreeAddress",
 				false, addressType);
 		// StructuredAddress
-		SidoType structuredAddressType = assertType("sido.test",
+		SidoType structuredAddressType = assertType(addressSchema,
 				"StructuredAddress", false, addressType);
 		// Company
-		SidoType companyType = assertType("sido.test", "Company", false, null);
+		SidoType companyType = assertType(companySchema, "Company", false, null);
 		// Person properties
 		assertProperty(personType, "name", String.class, false, false, null);
 		assertProperty(personType, "age", Integer.class, true, false, null);
