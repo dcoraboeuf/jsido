@@ -21,6 +21,7 @@ import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 import net.sf.sido.schema.support.DefaultSidoContext;
+import net.sf.sido.schema.support.SidoCircularInheritanceException;
 import net.sf.sido.schema.support.SidoException;
 
 import org.apache.commons.io.IOUtils;
@@ -123,26 +124,9 @@ public class ParserTest {
 		}
 	}
 
-	// FIXME Circular inheritance is forbidden
-	@Test
+	@Test(expected = SidoCircularInheritanceException.class)
 	public void circular_inheritance() {
-		try {
-			SidoSchema schema = parseOne("circular-inheritance");
-			assertNotNull("Returned schema is null", schema);
-			assertEquals("sido.test", schema.getUid());
-			assertEquals(3, schema.getTypes().size());
-			// Gets the type
-			SidoType a = context.getType("sido.test", "A", true);
-			SidoType b = context.getType("sido.test", "B", true);
-			SidoType c = context.getType("sido.test", "C", true);
-			// Inheritance tests
-			assertTrue (a.getParentType() == c);
-			assertTrue (b.getParentType() == a);
-			assertTrue (c.getParentType() == b);
-		} catch (SidoException ex) {
-			ex.printStackTrace();
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
-		}
+		parseOne("circular-inheritance");
 	}
 
 	@Test

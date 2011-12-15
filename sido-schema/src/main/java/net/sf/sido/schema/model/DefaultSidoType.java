@@ -8,6 +8,7 @@ import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
+import net.sf.sido.schema.support.SidoCircularInheritanceException;
 import net.sf.sido.schema.support.SidoPropertyNotFoundException;
 
 public class DefaultSidoType extends AbstractSidoItem implements SidoType {
@@ -47,6 +48,22 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 
 	public void setParentType(SidoType parentType) {
 		checkNotClosed();
+		// Checks for double update
+		if (this.parentType != null) {
+			throw new IllegalStateException("Parent type has already been set");
+		}
+		// Checks for circularity
+		if (parentType != null) {
+			SidoType type = parentType;
+			while (type != null) {
+				if (type == this) {
+					throw new SidoCircularInheritanceException(getQualifiedName());
+				} else {
+					type = type.getParentType();
+				}
+			}
+		}
+		// OK
 		this.parentType = parentType;
 	}
 	
