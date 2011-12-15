@@ -1,5 +1,6 @@
 package net.sf.sido.schema.support;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,8 +20,15 @@ public class DefaultSidoContext implements SidoContext {
 	public static Collection<? extends SidoSimpleType<?>> getDefaultSimpleTypes() {
 		List<SidoSimpleType<?>> list = new ArrayList<SidoSimpleType<?>>();
 		list.add(SimpleType.get("string", String.class));
+		list.add(SimpleType.get("boolean", Boolean.class));
+		list.add(SimpleType.get("byte", Byte.class));
+		list.add(SimpleType.get("short", Short.class));
 		list.add(SimpleType.get("integer", Integer.class));
-		// FIXME Adds all default types
+		list.add(SimpleType.get("long", Long.class));
+		list.add(SimpleType.get("float", Float.class));
+		list.add(SimpleType.get("double", Double.class));
+		list.add(SimpleType.get("decimal", BigDecimal.class));
+		// TODO #7 Detection of simple types
 		return list;
 	}
 	
