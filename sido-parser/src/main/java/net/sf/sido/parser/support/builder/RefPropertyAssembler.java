@@ -16,7 +16,7 @@ public class RefPropertyAssembler extends AbstractPropertyAssembler {
 	@Override
 	public SidoRefProperty create(TypeDefinition definition,
 			XProperty xProperty) {
-		return definition.getTypeBuilder().addProperty(definition.getName(),
+		return definition.getTypeBuilder().addProperty(xProperty.getName(),
 				refType, xProperty.isNullable(), xProperty.isCollection(),
 				xProperty.getIndex());
 	}

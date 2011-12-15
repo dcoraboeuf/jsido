@@ -71,8 +71,8 @@ public class ParserTest {
 			assertProperty(type, "name", String.class, false, false, null);
 			assertProperty(type, "age", Integer.class, true, false, null);
 		} catch (SidoException ex) {
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
 
@@ -86,8 +86,8 @@ public class ParserTest {
 			// Types checks
 			assertTypes();
 		} catch (SidoException ex) {
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
 
@@ -118,11 +118,12 @@ public class ParserTest {
 			assertProperty(type, "parent", type, false, false, null);
 			assertProperty(type, "children", type, false, true, null);
 		} catch (SidoException ex) {
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
 
+	// FIXME Circular inheritance is forbidden
 	@Test
 	public void circular_inheritance() {
 		try {
@@ -139,8 +140,8 @@ public class ParserTest {
 			assertTrue (b.getParentType() == a);
 			assertTrue (c.getParentType() == b);
 		} catch (SidoException ex) {
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
 
@@ -161,8 +162,8 @@ public class ParserTest {
 			assertProperty(connection, "name", String.class, false, false, null);
 			assertProperty(connection, "node", node, false, true, null);
 		} catch (SidoException ex) {
-			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 			ex.printStackTrace();
+			fail(ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
 
