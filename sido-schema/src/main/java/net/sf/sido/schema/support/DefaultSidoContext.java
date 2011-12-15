@@ -1,6 +1,8 @@
 package net.sf.sido.schema.support;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +16,33 @@ import org.apache.commons.lang3.Validate;
 
 public class DefaultSidoContext implements SidoContext {
 	
+	public static Collection<? extends SidoSimpleType<?>> getDefaultSimpleTypes() {
+		List<SidoSimpleType<?>> list = new ArrayList<SidoSimpleType<?>>();
+		list.add(SimpleType.get("string", String.class));
+		list.add(SimpleType.get("integer", Integer.class));
+		// FIXME Adds all default types
+		return list;
+	}
+	
 	private final Map<String, SidoSchema> schemas = new ConcurrentHashMap<String, SidoSchema>();
+	
+	private final Map<String, SidoSimpleType<?>> simpleTypes = new ConcurrentHashMap<String, SidoSimpleType<?>>();
+	
+	/**
+	 * Registers the default simple types
+	 */
+	public DefaultSidoContext() {
+		this(getDefaultSimpleTypes());
+	}
+
+	/**
+	 * Registration of simple types
+	 */
+	public DefaultSidoContext (Collection<? extends SidoSimpleType<?>> types) {
+		for (SidoSimpleType<?> type : types) {
+			simpleTypes.put(type.getName(), type);
+		}
+	}
 	
 	@Override
 	public Collection<SidoSchema> getSchemas() {
@@ -67,8 +95,13 @@ public class DefaultSidoContext implements SidoContext {
 
 	@Override
 	public <T> SidoSimpleType<T> getSimpleType(String name, boolean required) {
-		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("unchecked")
+		SidoSimpleType<T> type = (SidoSimpleType<T>) simpleTypes.get(name);
+		if (type == null && required) {
+			throw new SidoSimpleTypeNotFoundException(name);
+		} else {
+			return type;
+		}
 	}
 
 }
