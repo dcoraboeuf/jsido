@@ -1,0 +1,8 @@
+schema <sido.test.extern.client>.
+
+uses api for <sido.test.extern.api>.
+
+a Person
+is an api::Item and
+has a name.
+
