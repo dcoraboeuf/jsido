@@ -90,6 +90,11 @@
 				<artifactId>guava</artifactId>
 				<version>10.0.1</version>
 			</dependency>
+			<dependency>
+				<groupId>net.java.dev.glazedlists</groupId>
+				<artifactId>glazedlists_java15</artifactId>
+				<version>1.8.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -148,5 +153,6 @@
 		<module>sido-parser</module>
 		<module>sido-schema</module>
 		<module>sido-property</module>
+		<module>sido-collections</module>
 	</modules>
 </project>
