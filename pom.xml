@@ -154,5 +154,7 @@
 		<module>sido-schema</module>
 		<module>sido-property</module>
 		<module>sido-collections</module>
+		<module>sido-gen</module>
+		<module>sido-gen-model</module>
 	</modules>
 </project>

@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<artifactId>sido-pom</artifactId>
+		<groupId>net.sf.sido</groupId>
+		<version>1.0.0.A0-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>sido-gen</artifactId>
+	
+	<name>SiDO Generation</name>
+	<description>Basic tooling for generating classes from a SiDO schema</description>
+	
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sido-gen-model</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	
+</project>
