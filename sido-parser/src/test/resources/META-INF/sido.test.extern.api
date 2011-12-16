@@ -1,0 +1,6 @@
+schema <sido.test.extern.api>.
+
+an Item
+is abstract and
+has a long as uid.
+
