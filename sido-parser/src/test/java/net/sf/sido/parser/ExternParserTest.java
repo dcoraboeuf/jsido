@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Locale;
 
+import net.sf.sido.parser.discovery.support.DefaultSidoDiscovery;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
@@ -20,8 +21,12 @@ public class ExternParserTest extends AbstractParserTest {
 
 	@Override
 	protected SidoContext createContext() {
-		// TODO Declares an external-aware context
-		return new DefaultSidoContext();
+		// Context
+		SidoContext context = new DefaultSidoContext();
+		// Discovery
+		new DefaultSidoDiscovery().discover(context);
+		// OK
+		return context;
 	}
 	
 	private static final String API_URI = "sido.test.extern.api";

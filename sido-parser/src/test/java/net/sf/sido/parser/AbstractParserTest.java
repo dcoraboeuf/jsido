@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
+import net.sf.jstring.JStrings;
 import net.sf.jstring.Strings;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoAnonymousProperty;
@@ -34,6 +35,7 @@ public abstract class AbstractParserTest {
 	public static void load() {
 		strings = new Strings("net.sf.sido.parser.Strings",
 				"net.sf.sido.schema.Strings");
+		JStrings.setStaticCollection(strings);
 	}
 
 	protected SidoContext context;
