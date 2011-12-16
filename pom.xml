@@ -156,5 +156,6 @@
 		<module>sido-collections</module>
 		<module>sido-gen</module>
 		<module>sido-gen-model</module>
+		<module>sido-gen-maven</module>
 	</modules>
 </project>

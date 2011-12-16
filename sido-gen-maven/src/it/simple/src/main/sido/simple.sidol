@@ -1,0 +1,3 @@
+schema <sido.maven.it.simple>.
+
+a Person has a name.
