@@ -15,4 +15,11 @@
 	<name>SiDO Generation Model</name>
 	<description>Definition of a generation model</description>
 	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+	</dependencies>
+	
 </project>
