@@ -157,5 +157,6 @@
 		<module>sido-gen</module>
 		<module>sido-gen-model</module>
 		<module>sido-gen-maven</module>
+		<module>sido-gen-model-pojo</module>
 	</modules>
 </project>
