@@ -14,6 +14,11 @@ public class GenerationConfigurationBuilder {
 		this.configuration = new GenerationConfiguration();
 	}
 	
+	public GenerationConfigurationBuilder modelId(String modelId) {
+		configuration.setModelId(modelId);
+		return this;
+	}
+	
 	public GenerationConfiguration build() {
 		return configuration;
 	}
