@@ -52,13 +52,13 @@
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
-        <!-- Concrete generation models used for integration tests -->
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>sido-gen-model-pojo</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- Default implementations -->
+		<dependency>
+		    <groupId>${project.groupId}</groupId>
+		    <artifactId>sido-gen-model-pojo</artifactId>
+		    <version>${project.version}</version>
+		    <scope>runtime</scope>
+		</dependency>
     </dependencies>
 
     <build>

@@ -114,7 +114,7 @@ public class GenerationMojo extends AbstractMojo {
             log("Adding all artifacts to the plug-in class path:");
             for (Artifact artifact : artifacts) {
                 URL artifactURL = artifact.getFile().toURI().toURL();
-                log(" * %s", artifactURL);
+                log(" * %s [%s]", artifactURL, artifact.getScope());
                 urls.add(artifactURL);
             }
         } catch (Exception ex) {
