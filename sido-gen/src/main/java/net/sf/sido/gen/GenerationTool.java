@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+import net.sf.sido.gen.model.GenerationContext;
+import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.GenerationModel;
 import net.sf.sido.gen.model.GenerationResult;
 import net.sf.sido.parser.NamedInput;
@@ -18,6 +20,7 @@ import net.sf.sido.parser.discovery.support.DefaultSidoDiscovery;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
+import net.sf.sido.schema.SidoType;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -66,8 +69,19 @@ public class GenerationTool {
 	protected void generateSchema(GenerationResult result, SidoSchema schema,
 			GenerationModel generationModel,
 			GenerationContext generationContext, GenerationListener listener) {
-		// TODO Auto-generated method stub
-		
+		listener.log("Generating schema %s", schema.getUid());
+		// Generates the types
+		for (SidoType type : schema.getTypes()) {
+			generateType(result, type, generationModel, generationContext, listener);
+		}
+	}
+
+	protected void generateType(GenerationResult result, SidoType type,
+			GenerationModel generationModel,
+			GenerationContext generationContext, GenerationListener listener) {
+		listener.log("Generating type %s", type.getQualifiedName());
+		// Calls the model
+		generationModel.generate(result, type, generationContext, listener);
 	}
 
 	protected Collection<SidoSchema> loadSchemasToGenerate(SidoContext context,

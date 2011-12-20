@@ -1,4 +1,4 @@
-package net.sf.sido.gen;
+package net.sf.sido.gen.model;
 
 public class GenerationContext {
 

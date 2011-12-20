@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.sf.sido.gen.GenerationConfiguration;
-import net.sf.sido.gen.GenerationListener;
 import net.sf.sido.gen.GenerationTool;
+import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 
 import org.apache.maven.artifact.Artifact;
