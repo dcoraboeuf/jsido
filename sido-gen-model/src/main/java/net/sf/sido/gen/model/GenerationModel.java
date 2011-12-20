@@ -2,13 +2,13 @@ package net.sf.sido.gen.model;
 
 import net.sf.sido.schema.SidoType;
 
-public interface GenerationModel {
+public interface GenerationModel<R extends GenerationResult> {
 	
 	String getId();
 
-	GenerationResult createResultInstance();
+	R createResultInstance();
 
-	void generate(GenerationResult result, SidoType type,
+	void generate(R result, SidoType type,
 			GenerationContext generationContext, GenerationListener listener);
 
 }

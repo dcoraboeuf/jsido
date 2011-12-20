@@ -34,8 +34,14 @@ public class GenerationTool {
 		// Validation
 		configuration.validate();
 		// Searches for the generation model
-		GenerationModel generationModel = lookupGenerationModel(configuration, listener);
+		GenerationModel<? extends GenerationResult> generationModel = lookupGenerationModel(configuration, listener);
 		listener.log("Using generator: %s --> %s", configuration.getModelId(), generationModel);
+		generate(configuration, listener, generationModel);
+	}
+
+	protected <R extends GenerationResult> void generate(GenerationConfiguration configuration,
+			GenerationListener listener,
+			GenerationModel<R> generationModel) {
 		// Gets the context
 		SidoContext context = Sido.getContext();
 		// Discovers all other schemas
@@ -47,15 +53,15 @@ public class GenerationTool {
 		// TODO Context schemas (for packaging lookup)
 		// Generation
 		@SuppressWarnings("unused")
-		GenerationResult result = generateAll (schemas, generationModel, generationContext, listener);
+		R result = generateAll (schemas, generationModel, generationContext, listener);
 		// TODO Writes the result down
 	}
 
-	protected GenerationResult generateAll(Collection<SidoSchema> schemas,
-			GenerationModel generationModel,
+	protected <R extends GenerationResult> R generateAll(Collection<SidoSchema> schemas,
+			GenerationModel<R> generationModel,
 			GenerationContext generationContext, GenerationListener listener) {
 		// Creates the result
-		GenerationResult result = generationModel.createResultInstance();
+		R result = generationModel.createResultInstance();
 		listener.log("Result instance is %s", result);
 		// Full generation
 		listener.log("Generating all schemas and types");
@@ -66,8 +72,8 @@ public class GenerationTool {
 		return result;
 	}
 
-	protected void generateSchema(GenerationResult result, SidoSchema schema,
-			GenerationModel generationModel,
+	protected <R extends GenerationResult> void generateSchema(R result, SidoSchema schema,
+			GenerationModel<R> generationModel,
 			GenerationContext generationContext, GenerationListener listener) {
 		listener.log("Generating schema %s", schema.getUid());
 		// Generates the types
@@ -76,8 +82,8 @@ public class GenerationTool {
 		}
 	}
 
-	protected void generateType(GenerationResult result, SidoType type,
-			GenerationModel generationModel,
+	protected <R extends GenerationResult> void generateType(R result, SidoType type,
+			GenerationModel<R> generationModel,
 			GenerationContext generationContext, GenerationListener listener) {
 		listener.log("Generating type %s", type.getQualifiedName());
 		// Calls the model
@@ -124,15 +130,18 @@ public class GenerationTool {
 		});
 	}
 
-	protected GenerationModel lookupGenerationModel(
+	protected <R extends GenerationResult> GenerationModel<R> lookupGenerationModel(
 			GenerationConfiguration configuration, GenerationListener listener) {
 		String modelId = configuration.getModelId();
 		listener.log("Looking for model generator [%s]", modelId);
+		@SuppressWarnings("rawtypes")
 		ServiceLoader<GenerationModel> loader = ServiceLoader.load(GenerationModel.class, Thread.currentThread().getContextClassLoader());
+		@SuppressWarnings("rawtypes")
 		Iterator<GenerationModel> i = loader.iterator();
-		GenerationModel modelGenerator = null;
+		GenerationModel<? extends GenerationResult> modelGenerator = null;
 		while (i.hasNext()) {
-			GenerationModel generator = i.next();
+			@SuppressWarnings("unchecked")
+			GenerationModel<? extends GenerationResult> generator = i.next();
 			listener.log("Found generator: %s --> %s", generator.getId(), generator);
 			if (StringUtils.equals(modelId, generator.getId())) {
 				modelGenerator = generator;
@@ -141,7 +150,9 @@ public class GenerationTool {
 		if (modelGenerator == null) {
 			throw new RuntimeException("Cannot find any generator for model " + modelId);
 		} else {
-			return modelGenerator;
+			@SuppressWarnings("unchecked")
+			GenerationModel<R> generator = (GenerationModel<R>) modelGenerator;
+			return generator;
 		}
 	}
 
