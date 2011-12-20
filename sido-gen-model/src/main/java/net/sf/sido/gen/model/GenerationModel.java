@@ -4,4 +4,6 @@ public interface GenerationModel {
 	
 	String getId();
 
+	GenerationResult createResultInstance();
+
 }

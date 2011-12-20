@@ -51,8 +51,23 @@ public class GenerationTool {
 	protected GenerationResult generateAll(Collection<SidoSchema> schemas,
 			GenerationModel generationModel,
 			GenerationContext generationContext, GenerationListener listener) {
+		// Creates the result
+		GenerationResult result = generationModel.createResultInstance();
+		listener.log("Result instance is %s", result);
+		// Full generation
+		listener.log("Generating all schemas and types");
+		for (SidoSchema schema : schemas) {
+			generateSchema(result, schema, generationModel, generationContext, listener);
+		}
+		// OK
+		return result;
+	}
+
+	protected void generateSchema(GenerationResult result, SidoSchema schema,
+			GenerationModel generationModel,
+			GenerationContext generationContext, GenerationListener listener) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	protected Collection<SidoSchema> loadSchemasToGenerate(SidoContext context,
