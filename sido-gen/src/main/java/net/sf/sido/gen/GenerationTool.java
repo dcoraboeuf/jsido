@@ -30,7 +30,7 @@ import com.google.common.collect.Collections2;
 
 public class GenerationTool {
 	
-	public void generate (GenerationConfiguration configuration, GenerationListener listener) {
+	public void generate (GenerationConfiguration configuration, GenerationListener listener) throws IOException {
 		// Validation
 		configuration.validate();
 		// Searches for the generation model
@@ -41,7 +41,7 @@ public class GenerationTool {
 
 	protected <R extends GenerationResult> void generate(GenerationConfiguration configuration,
 			GenerationListener listener,
-			GenerationModel<R> generationModel) {
+			GenerationModel<R> generationModel) throws IOException {
 		// Gets the context
 		SidoContext context = Sido.getContext();
 		// Discovers all other schemas
@@ -52,9 +52,9 @@ public class GenerationTool {
 		GenerationContext generationContext = new GenerationContext();
 		// TODO Context schemas (for packaging lookup)
 		// Generation
-		@SuppressWarnings("unused")
 		R result = generateAll (schemas, generationModel, generationContext, listener);
-		// TODO Writes the result down
+		// Writes the result down
+		result.write(configuration.getOutput(), listener);
 	}
 
 	protected <R extends GenerationResult> R generateAll(Collection<SidoSchema> schemas,

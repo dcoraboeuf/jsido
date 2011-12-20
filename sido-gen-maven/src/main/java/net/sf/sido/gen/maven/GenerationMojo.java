@@ -1,6 +1,7 @@
 package net.sf.sido.gen.maven;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -150,6 +151,7 @@ public class GenerationMojo extends AbstractMojo {
             		GenerationConfigurationBuilder.create()
             			.modelId(model)
             			.sources(sidolFiles)
+            			.output(outputDirectory)
             			.build();
 
             // Listener
@@ -162,7 +164,11 @@ public class GenerationMojo extends AbstractMojo {
 			};
 
             // Generation
-            tool.generate(configuration, toolListener);
+            try {
+				tool.generate(configuration, toolListener);
+			} catch (IOException e) {
+				throw new MojoExecutionException("Cannot proceed with generation", e);
+			}
 
             // Adds the output directory as sources
             if (test) {

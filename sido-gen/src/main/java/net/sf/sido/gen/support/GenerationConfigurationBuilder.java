@@ -27,6 +27,11 @@ public class GenerationConfigurationBuilder {
 		return this;
 	}
 	
+	public GenerationConfigurationBuilder output (File output) {
+		configuration.setOutput(output);
+		return this;
+	}
+	
 	public GenerationConfiguration build() {
 		return configuration;
 	}

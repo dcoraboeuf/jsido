@@ -9,6 +9,7 @@ public class GenerationConfiguration {
 
 	private String modelId;
 	private Collection<File> files;
+	private File output;
 
 	public String getModelId() {
 		return modelId;
@@ -25,10 +26,19 @@ public class GenerationConfiguration {
 	public void setFiles(Collection<File> files) {
 		this.files = files;
 	}
-	
+
+	public File getOutput() {
+		return output;
+	}
+
+	public void setOutput(File output) {
+		this.output = output;
+	}
+
 	public void validate() {
 		Validate.notBlank(modelId, "The model ID is required");
 		Validate.notEmpty(files, "The list of files is required");
+		Validate.notNull(output, "The output directory is required");
 	}
 
 }
