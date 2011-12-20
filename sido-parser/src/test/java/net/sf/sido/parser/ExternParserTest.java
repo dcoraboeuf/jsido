@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Locale;
 
+import net.sf.sido.parser.discovery.SidoDiscoveryLogger;
 import net.sf.sido.parser.discovery.support.DefaultSidoDiscovery;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
@@ -24,7 +25,13 @@ public class ExternParserTest extends AbstractParserTest {
 		// Context
 		SidoContext context = new DefaultSidoContext();
 		// Discovery
-		new DefaultSidoDiscovery().discover(context);
+		new DefaultSidoDiscovery().discover(context, new SidoDiscoveryLogger() {
+			
+			@Override
+			public void log(String format, Object... parameters) {
+				System.out.format(format + "%n", parameters);
+			}
+		});
 		// OK
 		return context;
 	}

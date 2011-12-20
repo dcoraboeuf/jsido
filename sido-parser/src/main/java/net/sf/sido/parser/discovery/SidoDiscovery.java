@@ -6,6 +6,6 @@ import net.sf.sido.schema.SidoContext;
 
 public interface SidoDiscovery {
 	
-	Collection<SidoSchemaDiscovery> discover(SidoContext context);
+	Collection<SidoSchemaDiscovery> discover(SidoContext context, SidoDiscoveryLogger logger);
 
 }

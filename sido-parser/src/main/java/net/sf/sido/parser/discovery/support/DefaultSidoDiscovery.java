@@ -9,20 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-
 import net.sf.sido.parser.NamedInput;
 import net.sf.sido.parser.SidoParser;
 import net.sf.sido.parser.SidoParserFactory;
 import net.sf.sido.parser.discovery.SidoDiscovery;
+import net.sf.sido.parser.discovery.SidoDiscoveryLogger;
 import net.sf.sido.parser.discovery.SidoSchemaDiscovery;
 import net.sf.sido.schema.SidoContext;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public class DefaultSidoDiscovery implements SidoDiscovery {
 
@@ -34,10 +33,8 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 
 	private static final String SIDO_SCHEMA_PATH = "META-INF/sido/%s";
 
-	private final Logger logger = LoggerFactory.getLogger(SidoDiscovery.class);
-
 	@Override
-	public Collection<SidoSchemaDiscovery> discover(SidoContext context) {
+	public Collection<SidoSchemaDiscovery> discover(SidoContext context, final SidoDiscoveryLogger logger) {
 		// Creates a parser
 		SidoParser parser = SidoParserFactory.createParser(context);
 		// All results
@@ -48,7 +45,7 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 					SIDO_SCHEMAS);
 			while (sidoPojoURLs.hasMoreElements()) {
 				URL sidoPojoURL = sidoPojoURLs.nextElement();
-				logger.debug("Loading POJO schema definitions from {}",
+				logger.log("Loading POJO schema definitions from %s",
 						sidoPojoURL);
 				InputStream sidoSchemas = sidoPojoURL.openStream();
 				try {
@@ -60,12 +57,12 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 						if (StringUtils.isNotBlank(line)) {
 							line = StringUtils.trim(line);
 							if (!StringUtils.startsWith(line, COMMENT_PREFIX)) {
-								logger.debug(
+								logger.log(
 										"Parsing schema discovery definition from {}",
 										line);
 								SidoSchemaDiscovery discovery = parseDiscovery(line);
 								discoveries.put(discovery.getUid(), discovery);
-								logger.debug(
+								logger.log(
 										"Parsed schema discovery definition is {}",
 										discovery);
 							}
@@ -83,7 +80,7 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 
 			@Override
 			public NamedInput apply(SidoSchemaDiscovery discovery) {
-				return loadSchemaContent(discovery);
+				return loadSchemaContent(discovery, logger);
 			}
 		});
 		// Parsing
@@ -92,13 +89,13 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 		return discoveries.values();
 	}
 
-	protected NamedInput loadSchemaContent(SidoSchemaDiscovery discovery) {
+	protected NamedInput loadSchemaContent(SidoSchemaDiscovery discovery, SidoDiscoveryLogger logger) {
 		// UID
 		String uid = discovery.getUid();
-		logger.debug("Loading schema content for {}", uid);
+		logger.log("Loading schema content for {}", uid);
 		// Resource path
 		String schemaPath = String.format(SIDO_SCHEMA_PATH, uid);
-		logger.debug("Loading schema content from {}", schemaPath);
+		logger.log("Loading schema content from {}", schemaPath);
 		// Gets the resource
 		InputStream in = getClassLoader().getResourceAsStream(schemaPath);
 		if (in == null) {
