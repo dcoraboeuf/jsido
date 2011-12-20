@@ -70,12 +70,14 @@ public class ParserTest extends AbstractParserTest {
 			parseOne("parsing-error-0");
 			fail("Expected parsing error");
 		} catch (SidoException ex) {
+			String message = ex.getLocalizedMessage(strings, Locale.ENGLISH);
+			System.out.format("Parsing error is:%n%s%n", message);
 			assertEquals(
 					"Error while parsing \"parsing-error-0\":  - Input \"<\" (position 32 to 33) is not valid for:\n"
 							+ " - schema/prefix_list/Sequence/prefix/whitespaces/whitespace\n"
 							+ " - schema/prefix_list/Sequence/prefix/\"for\"/'f'\n"
 							+ ".\n",
-					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+					message);
 		}
 	}
 
