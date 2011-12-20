@@ -149,6 +149,7 @@ public class GenerationMojo extends AbstractMojo {
             GenerationConfiguration configuration = 
             		GenerationConfigurationBuilder.create()
             			.modelId(model)
+            			.sources(sidolFiles)
             			.build();
 
             // Listener

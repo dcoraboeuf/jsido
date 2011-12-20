@@ -27,8 +27,6 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 
 	private static final String COMMENT_PREFIX = "#";
 
-	private static final String SIDO_ENCODING = "UTF-8";
-
 	private static final String SIDO_SCHEMAS = "META-INF/sido/sido.schemas";
 
 	private static final String SIDO_SCHEMA_PATH = "META-INF/sido/%s";

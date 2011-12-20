@@ -1,22 +1,35 @@
 package net.sf.sido.gen;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.sf.sido.gen.model.GenerationModel;
+import net.sf.sido.gen.model.GenerationResult;
+import net.sf.sido.parser.NamedInput;
+import net.sf.sido.parser.SidoParser;
+import net.sf.sido.parser.SidoParserFactory;
 import net.sf.sido.parser.discovery.SidoDiscovery;
 import net.sf.sido.parser.discovery.SidoDiscoveryLogger;
 import net.sf.sido.parser.discovery.SidoSchemaDiscovery;
 import net.sf.sido.parser.discovery.support.DefaultSidoDiscovery;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
+import net.sf.sido.schema.SidoSchema;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 public class GenerationTool {
 	
 	public void generate (GenerationConfiguration configuration, GenerationListener listener) {
+		// Validation
+		configuration.validate();
 		// Searches for the generation model
 		GenerationModel generationModel = lookupGenerationModel(configuration, listener);
 		listener.log("Using generator: %s --> %s", configuration.getModelId(), generationModel);
@@ -24,7 +37,47 @@ public class GenerationTool {
 		SidoContext context = Sido.getContext();
 		// Discovers all other schemas
 		loadExistingSchemas(context, configuration, listener);
-		// FIXME Generation
+		// Loads all schemas to generate
+		Collection<SidoSchema> schemas = loadSchemasToGenerate(context, configuration, listener);
+		// Generation context
+		GenerationContext generationContext = new GenerationContext();
+		// TODO Context schemas (for packaging lookup)
+		// Generation
+		@SuppressWarnings("unused")
+		GenerationResult result = generateAll (schemas, generationModel, generationContext, listener);
+		// TODO Writes the result down
+	}
+
+	protected GenerationResult generateAll(Collection<SidoSchema> schemas,
+			GenerationModel generationModel,
+			GenerationContext generationContext, GenerationListener listener) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	protected Collection<SidoSchema> loadSchemasToGenerate(SidoContext context,
+			GenerationConfiguration configuration, GenerationListener listener) {
+		// List of files
+		Collection<File> files = configuration.getFiles();
+		// Loads the files
+		Collection<NamedInput> inputs = Collections2.transform(files, new Function<File, NamedInput>() {
+
+			@Override
+			public NamedInput apply(File file) {
+				try {
+					String content = FileUtils.readFileToString(file, SidoDiscovery.SIDO_ENCODING);
+					return new NamedInput(file.getPath(), content);
+				} catch (IOException ex) {
+					throw new RuntimeException("Cannot read file at " + file, ex);
+				}
+			}
+		});
+		// Creates a parser
+		SidoParser parser = SidoParserFactory.createParser(context);
+		// Parsing
+		Collection<SidoSchema> schemas = parser.parse(inputs);
+		// OK
+		return schemas;
 	}
 
 	protected void loadExistingSchemas(SidoContext context,
