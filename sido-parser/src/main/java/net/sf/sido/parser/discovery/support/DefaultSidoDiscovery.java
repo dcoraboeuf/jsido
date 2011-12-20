@@ -39,6 +39,8 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 		Map<String, SidoSchemaDiscovery> discoveries = new HashMap<String, SidoSchemaDiscovery>();
 		// Gets all sido.schemas definitions
 		try {
+			logger.log("Discovering all schemas on the classpath...");
+			int count = 0;
 			Enumeration<URL> sidoPojoURLs = getClassLoader().getResources(
 					SIDO_SCHEMAS);
 			while (sidoPojoURLs.hasMoreElements()) {
@@ -63,6 +65,7 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 								logger.log(
 										"Parsed schema discovery definition is {}",
 										discovery);
+								count++;
 							}
 						}
 					}
@@ -70,6 +73,7 @@ public class DefaultSidoDiscovery implements SidoDiscovery {
 					sidoSchemas.close();
 				}
 			}
+			logger.log("Number of discovered schemas: %d", count);
 		} catch (IOException ex) {
 			throw new SidoDiscoveryException(ex);
 		}
