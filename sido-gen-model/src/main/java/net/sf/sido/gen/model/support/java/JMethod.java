@@ -1,4 +1,4 @@
-package net.sf.sido.gen.java;
+package net.sf.sido.gen.model.support.java;
 
 import java.io.IOException;
 import java.io.PrintWriter;

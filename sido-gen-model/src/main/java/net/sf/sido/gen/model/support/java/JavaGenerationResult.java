@@ -1,4 +1,4 @@
-package net.sf.sido.gen.model.support;
+package net.sf.sido.gen.model.support.java;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.sf.sido.gen.java.JClass;
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.model.support.AbstractGenerationResult;
 
 import org.apache.commons.lang3.StringUtils;
 

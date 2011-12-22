@@ -1,18 +1,17 @@
-package net.sf.sido.gen.model.support;
+package net.sf.sido.gen.model.support.java;
 
 import java.util.Collection;
 
-import org.apache.commons.lang3.StringUtils;
-
-import net.sf.sido.gen.java.JClass;
-import net.sf.sido.gen.java.JField;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.model.support.AbstractGenerationModel;
 import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
+
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractJavaGenerationModel extends AbstractGenerationModel<JavaGenerationResult> {
 

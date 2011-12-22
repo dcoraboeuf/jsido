@@ -1,4 +1,4 @@
-package net.sf.sido.gen.java;
+package net.sf.sido.gen.model.support.java;
 
 import org.apache.commons.lang3.StringUtils;
 
