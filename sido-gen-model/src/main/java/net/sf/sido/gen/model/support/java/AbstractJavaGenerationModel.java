@@ -96,23 +96,36 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		JClass fieldClass = getFieldSingleClass(generationContext, property);
 		// Field declaration
 		JField field = c.addField(fieldClass, fieldName);
-		// TODO If not nullable, initializes it
-		// if (!property.isNullable()) {
-		// field.setInitialisation(getFieldSingleDefault(generationContext,
-		// property));
-		// }
+		// If not nullable, initializes it
+		if (!property.isNullable()) {
+			String initialization = getFieldSingleDefault(generationContext, property, fieldClass);
+			if (StringUtils.isNotBlank(initialization)) {
+				field.setInitialisation(initialization);
+			}
+		}
 		// Getter
 		c.addMethod(getGetMethodName(property), fieldClass).addContent("return %s;", fieldName);
 		// Setter
 		c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
 	}
 
+	protected <T extends SidoProperty> String getFieldSingleDefault(GenerationContext generationContext, T property, JClass propertyClass) {
+		PropertyBinder<T> binder = loadPropertyBinder(property);
+		return binder.getFieldSingleDefault(generationContext, property, propertyClass); 
+	}
+
 	protected <T extends SidoProperty> JClass getFieldSingleClass(GenerationContext generationContext, T property) {
+		PropertyBinder<T> binder = loadPropertyBinder(property);
+		return binder.getFieldSingleClass(generationContext, property);
+	}
+
+	protected <T extends SidoProperty> PropertyBinder<T> loadPropertyBinder(T property) {
 		PropertyBinder<T> binder = getPropertyBinder(property);
 		if (binder == null) {
 			throw new IllegalStateException(String.format("Cannot find any property binder for %s", property));
+		} else {
+			return binder;
 		}
-		return binder.getFieldSingleClass(generationContext, property);
 	}
 
 	protected abstract <T extends SidoProperty> PropertyBinder<T> getPropertyBinder(T property);

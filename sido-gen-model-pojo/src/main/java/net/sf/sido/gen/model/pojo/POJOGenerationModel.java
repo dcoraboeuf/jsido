@@ -16,6 +16,13 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		public JClass getFieldSingleClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
 			return new JClass(property.getType().getType());
 		}
+
+		@Override
+		public String getFieldSingleDefault(GenerationContext generationContext, SidoSimpleProperty<?> property,
+				JClass propertyClass) {
+			Object value = property.getType().getDefaultValue();
+			return valueToString(value);
+		}
 		
 	}
 	

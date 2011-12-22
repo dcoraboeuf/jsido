@@ -6,4 +6,6 @@ public interface SidoSimpleType<T> {
 
 	Class<T> getType();
 
+	T getDefaultValue();
+
 }

@@ -7,4 +7,6 @@ public interface PropertyBinder<T extends SidoProperty> {
 
 	JClass getFieldSingleClass(GenerationContext generationContext, T property);
 
+	String getFieldSingleDefault(GenerationContext generationContext, T property, JClass propertyClass);
+
 }
