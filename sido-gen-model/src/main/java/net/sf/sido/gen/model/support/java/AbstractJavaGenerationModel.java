@@ -5,10 +5,7 @@ import java.util.Collection;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.support.AbstractGenerationModel;
-import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoProperty;
-import net.sf.sido.schema.SidoRefProperty;
-import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,21 +15,21 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	public AbstractJavaGenerationModel(String id) {
 		super(id);
 	}
-	
+
 	@Override
 	public JavaGenerationResult createResultInstance() {
 		return new JavaGenerationResult();
 	}
-	
+
 	@Override
-	public void generate(JavaGenerationResult result, SidoType type,
-			GenerationContext generationContext, GenerationListener listener) {
-		JClass j = generateClass (result, type, generationContext, listener);
+	public void generate(JavaGenerationResult result, SidoType type, GenerationContext generationContext,
+			GenerationListener listener) {
+		JClass j = generateClass(result, type, generationContext, listener);
 		result.addClass(j);
 	}
 
-	protected JClass generateClass(JavaGenerationResult result, SidoType type,
-			GenerationContext generationContext, GenerationListener listener) {
+	protected JClass generateClass(JavaGenerationResult result, SidoType type, GenerationContext generationContext,
+			GenerationListener listener) {
 		// Class
 		JClass c = createClass(generationContext, type);
 		// Properties
@@ -41,8 +38,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		return c;
 	}
 
-	protected JClass createClass(GenerationContext generationContext,
-			SidoType type) {
+	protected JClass createClass(GenerationContext generationContext, SidoType type) {
 		JClass c = createClassRef(generationContext, type);
 		// Abstraction?
 		if (type.isAbstractType()) {
@@ -64,37 +60,27 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	protected JClass createClassRef(GenerationContext generationContext, SidoType type) {
 		return new JClass(getPackage(generationContext, type), getSimpleClassName(generationContext, type));
 	}
-	
+
 	/**
 	 * Does not generate any constructor by default
 	 */
-	protected void generateConstructors(
-			JClass c,
-			GenerationContext generationContext,
-			SidoType type) {
+	protected void generateConstructors(JClass c, GenerationContext generationContext, SidoType type) {
 	}
-	
+
 	/**
 	 * Generation of members for all properties
 	 */
-	protected void generateProperties(
-			JClass c,
-			GenerationContext generationContext,
-			SidoType type) {
+	protected void generateProperties(JClass c, GenerationContext generationContext, SidoType type) {
 		Collection<SidoProperty> properties = type.getProperties();
 		for (SidoProperty property : properties) {
-			generateProperty (property, c, generationContext, type);
+			generateProperty(property, c, generationContext, type);
 		}
 	}
 
 	/**
 	 * Generation of a property
 	 */
-	protected void generateProperty(
-			SidoProperty property,
-			JClass c,
-			GenerationContext generationContext,
-			SidoType type) {
+	protected void generateProperty(SidoProperty property, JClass c, GenerationContext generationContext, SidoType type) {
 		if (property.isCollection()) {
 			// FIXME Collection property
 		} else {
@@ -102,10 +88,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		}
 	}
 
-	protected void generateSingleProperty(
-			SidoProperty property,
-			JClass c,
-			GenerationContext generationContext,
+	protected void generateSingleProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type) {
 		// Field name
 		String fieldName = getFieldName(property);
@@ -115,38 +98,24 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		JField field = c.addField(fieldClass, fieldName);
 		// TODO If not nullable, initializes it
 		// if (!property.isNullable()) {
-		// field.setInitialisation(getFieldSingleDefault(generationContext, property));
+		// field.setInitialisation(getFieldSingleDefault(generationContext,
+		// property));
 		// }
 		// Getter
-		c.addMethod(getGetMethodName(property), fieldClass)
-			.addContent("return %s;", fieldName);
+		c.addMethod(getGetMethodName(property), fieldClass).addContent("return %s;", fieldName);
 		// Setter
-		c.addMethod(getSetMethodName(property))
-			.addParam(fieldClass, "pValue")
-			.addContent("%s = pValue;", fieldName);
+		c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
 	}
 
-	protected JClass getFieldSingleClass(GenerationContext generationContext, SidoProperty property) {
-		if (property instanceof SidoSimpleProperty) {
-			return getFieldSingleSimpleClass(generationContext, (SidoSimpleProperty<?>) property);
-		} else if (property instanceof SidoRefProperty) {
-			return getFieldSingleRefClass(generationContext, (SidoRefProperty) property);
-		} else if (property instanceof SidoAnonymousProperty) {
-			return getFieldSingleAnonymousClass(generationContext, (SidoAnonymousProperty) property);
-		} else {
-			throw new IllegalStateException("Unknown property class: " + property.getClass());
+	protected <T extends SidoProperty> JClass getFieldSingleClass(GenerationContext generationContext, T property) {
+		PropertyBinder<T> binder = getPropertyBinder(property);
+		if (binder == null) {
+			throw new IllegalStateException(String.format("Cannot find any property binder for %s", property));
 		}
+		return binder.getFieldSingleClass(generationContext, property);
 	}
 
-	protected abstract JClass getFieldSingleAnonymousClass(GenerationContext generationContext, SidoAnonymousProperty property);
-
-	protected JClass getFieldSingleRefClass(GenerationContext generationContext, SidoRefProperty property) {
-		return createClassRef(generationContext, property.getType());
-	}
-
-	protected JClass getFieldSingleSimpleClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
-		return new JClass(property.getType().getType());
-	}
+	protected abstract <T extends SidoProperty> PropertyBinder<T> getPropertyBinder(T property);
 
 	protected String getFieldName(SidoProperty property) {
 		return property.getName();
