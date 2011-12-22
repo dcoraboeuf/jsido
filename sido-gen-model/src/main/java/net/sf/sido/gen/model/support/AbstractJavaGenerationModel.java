@@ -30,7 +30,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		// Class
 		JClass c = createClass(generationContext, type);
 		// Properties
-		// FIXME generateProperties(generationContext, c, type);
+		generateProperties(c, generationContext, type);
 		// OK
 		return c;
 	}
@@ -50,9 +50,27 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 			c.addImport(getPackage(generationContext, parentType));
 		}
 		// Constructors
-		// FIXME generateConstructors(c, type);
+		generateConstructors(c, generationContext, type);
 		// OK
 		return c;
+	}
+	
+	/**
+	 * Does not generate any constructor by default
+	 */
+	protected void generateConstructors(
+			JClass c,
+			GenerationContext generationContext,
+			SidoType type) {
+	}
+	
+	/**
+	 * FIXME Generation of members for all properties
+	 */
+	protected void generateProperties(
+			JClass c,
+			GenerationContext generationContext,
+			SidoType type) {
 	}
 
 	protected String getSimpleClassName(GenerationContext generationContext, SidoType type) {
