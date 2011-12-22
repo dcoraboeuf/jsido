@@ -16,7 +16,7 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	private final SidoSchema schema;
 	private final String name;
 	
-	private final Map<String, ? super SidoProperty> properties = new HashMap<String, SidoProperty>();
+	private final Map<String, SidoProperty> properties = new HashMap<String, SidoProperty>();
 	
 	private SidoType parentType;
 	private boolean abstractType;
@@ -79,7 +79,7 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	}
 	
 	@Override
-	public Collection<? super SidoProperty> getProperties() {
+	public Collection<SidoProperty> getProperties() {
 		return properties.values();
 	}
 	

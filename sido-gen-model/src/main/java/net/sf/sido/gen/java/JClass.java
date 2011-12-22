@@ -22,6 +22,10 @@ public class JClass extends JItem<JClass> {
     private final List<JField> fields = new ArrayList<JField>();
     private final List<JConstructor> constructors = new ArrayList<JConstructor>();
     private final List<JMethod> methods = new ArrayList<JMethod>();
+    
+    public JClass (Class<?> type) {
+    	this (type.getPackage().getName(), type.getSimpleName());
+    }
 
     public JClass(String packageName, String name) {
         this.packageName = packageName;
@@ -137,14 +141,14 @@ public class JClass extends JItem<JClass> {
 
     public void addImport(JClass cls) {
         String otherPackageName = cls.getPackageName();
-        if (!packageName.equals(otherPackageName)) {
+        if (!packageName.equals(otherPackageName) && !"java.lang".equals(otherPackageName)) {
         	addImport(otherPackageName + "." + cls.getName());
         }
     }
 
     public void addImport(Class<?> cls) {
-        String packageName = cls.getPackage().getName();
-        if (!packageName.equals("java.lang")) {
+        String otherPackageName = cls.getPackage().getName();
+        if (!packageName.equals(otherPackageName) && !"java.lang".equals(otherPackageName)) {
             addImport(cls.getName());
         }
     }
