@@ -115,8 +115,16 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		// Field declaration
 		JField field = c.addField(fieldClass, fieldName);
 		// TODO If not nullable, initializes it
-		// TODO Getter
-		// TODO Setter
+		// if (!property.isNullable()) {
+		// field.setInitialisation(getFieldSingleDefault(generationContext, property));
+		// }
+		// Getter
+		c.addMethod(getGetMethodName(property), fieldClass)
+			.addContent("return %s;", fieldName);
+		// Setter
+		c.addMethod(getSetMethodName(property))
+			.addParam(fieldClass, "pValue")
+			.addContent("%s = pValue;", fieldName);
 	}
 
 	protected JClass getFieldSingleClass(GenerationContext generationContext, SidoProperty property) {
