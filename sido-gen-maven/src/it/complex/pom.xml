@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.sf.sido</groupId>
+        <artifactId>sido-gen-maven-it-pom</artifactId>
+        <version>@pom.version@</version>
+        <relativePath>..</relativePath>
+    </parent>
+
+    <groupId>net.sf.sido</groupId>
+    <artifactId>sido-gen-maven-it-complex</artifactId>
+    <version>@pom.version@</version>
+
+    <packaging>jar</packaging>
+
+    <name>Complex POM</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.sf.sido</groupId>
+                <artifactId>sido-gen-maven</artifactId>
+                <version>@pom.version@</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                        	<model>pojo</model>
+                            <outputPackage>net.sf.sido.it.complex</outputPackage>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+</project>
