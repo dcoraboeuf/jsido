@@ -49,7 +49,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		if (parentType != null) {
 			String parentTypeName = getSimpleClassName(generationContext, parentType);
 			c.setParent(parentTypeName);
-			c.addImport(getPackage(generationContext, parentType));
+			c.addImport(createClassRef(generationContext, parentType));
 		}
 		// Constructors
 		generateConstructors(c, generationContext, type);

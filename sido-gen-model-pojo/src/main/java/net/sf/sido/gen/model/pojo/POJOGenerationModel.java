@@ -7,7 +7,9 @@ import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
 import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoProperty;
+import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
+import net.sf.sido.schema.SidoType;
 
 public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	
@@ -43,9 +45,34 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		}
 		
 	}
+	
+	protected class RefPropertyBinder extends AbstractPropertyBinder<SidoRefProperty> {
+
+		@Override
+		public JClass getFieldSingleClass(GenerationContext generationContext,
+				SidoRefProperty property) {
+			return createClassRef(generationContext, property.getType());
+		}
+
+		@Override
+		public String getFieldSingleDefault(
+				GenerationContext generationContext, SidoRefProperty property,
+				JClass propertyClass) {
+			SidoType type = property.getType();
+			if (type.isAbstractType()) {
+				// Cannot initialise an abstract type
+				return null;
+			} else {
+				JClass typeClass = createClassRef(generationContext, type);
+				return String.format ("new %s()", typeClass.getName());
+			}
+		}
+		
+	}
 
 	private final SimplePropertyBinder simplePropertyBinder = new SimplePropertyBinder();
 	private final AnonymousPropertyBinder anonymousPropertyBinder = new AnonymousPropertyBinder();
+	private final RefPropertyBinder refPropertyBinder = new RefPropertyBinder();
 	
 	public POJOGenerationModel() {
 		super("pojo");
@@ -58,6 +85,8 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 			return simplePropertyBinder;
 		} else if (property instanceof SidoAnonymousProperty) {
 			return anonymousPropertyBinder;
+		} else if (property instanceof SidoRefProperty) {
+			return refPropertyBinder;
 		} else {
 			return null;
 		}
