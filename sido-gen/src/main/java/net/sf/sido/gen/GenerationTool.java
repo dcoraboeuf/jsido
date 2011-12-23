@@ -1,6 +1,5 @@
 package net.sf.sido.gen;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -22,7 +21,6 @@ import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Function;
@@ -93,17 +91,16 @@ public class GenerationTool {
 	protected Collection<SidoSchema> loadSchemasToGenerate(SidoContext context,
 			GenerationConfiguration configuration, GenerationListener listener) {
 		// List of files
-		Collection<File> files = configuration.getFiles();
+		Collection<GenerationInput> files = configuration.getInputs();
 		// Loads the files
-		Collection<NamedInput> inputs = Collections2.transform(files, new Function<File, NamedInput>() {
+		Collection<NamedInput> inputs = Collections2.transform(files, new Function<GenerationInput, NamedInput>() {
 
 			@Override
-			public NamedInput apply(File file) {
+			public NamedInput apply(GenerationInput file) {
 				try {
-					String content = FileUtils.readFileToString(file, SidoDiscovery.SIDO_ENCODING);
-					return new NamedInput(file.getPath(), content);
-				} catch (IOException ex) {
-					throw new RuntimeException("Cannot read file at " + file, ex);
+					return file.getNamedInput();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
 		});

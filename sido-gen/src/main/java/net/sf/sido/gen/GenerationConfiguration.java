@@ -8,7 +8,7 @@ import org.apache.commons.lang3.Validate;
 public class GenerationConfiguration {
 
 	private String modelId;
-	private Collection<File> files;
+	private Collection<GenerationInput> inputs;
 	private File output;
 
 	public String getModelId() {
@@ -19,12 +19,12 @@ public class GenerationConfiguration {
 		this.modelId = modelId;
 	}
 
-	public Collection<File> getFiles() {
-		return files;
+	public Collection<GenerationInput> getInputs() {
+		return inputs;
 	}
 
-	public void setFiles(Collection<File> files) {
-		this.files = files;
+	public void setInputs(Collection<GenerationInput> inputs) {
+		this.inputs = inputs;
 	}
 
 	public File getOutput() {
@@ -37,7 +37,7 @@ public class GenerationConfiguration {
 
 	public void validate() {
 		Validate.notBlank(modelId, "The model ID is required");
-		Validate.notEmpty(files, "The list of files is required");
+		Validate.notEmpty(inputs, "The list of inputs is required");
 		Validate.notNull(output, "The output directory is required");
 	}
 

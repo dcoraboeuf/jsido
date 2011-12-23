@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 
 import net.sf.sido.gen.GenerationConfiguration;
+import net.sf.sido.gen.GenerationInput;
 
 public class GenerationConfigurationBuilder {
 	
@@ -22,8 +23,8 @@ public class GenerationConfigurationBuilder {
 		return this;
 	}
 	
-	public GenerationConfigurationBuilder sources (Collection<File> sources) {
-		configuration.setFiles(sources);
+	public GenerationConfigurationBuilder sources (Collection<GenerationInput> sources) {
+		configuration.setInputs(sources);
 		return this;
 	}
 	

@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import net.sf.sido.gen.GenerationConfiguration;
+import net.sf.sido.gen.GenerationInput;
 import net.sf.sido.gen.GenerationTool;
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.support.FileGenerationInput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 
 import org.apache.maven.artifact.Artifact;
@@ -23,6 +26,9 @@ import org.codehaus.plexus.compiler.util.scan.InclusionScanException;
 import org.codehaus.plexus.compiler.util.scan.SimpleSourceInclusionScanner;
 import org.codehaus.plexus.compiler.util.scan.SourceInclusionScanner;
 import org.codehaus.plexus.compiler.util.scan.mapping.SuffixMapping;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 
 /**
  * Generation of code from a SiDO schema.
@@ -134,6 +140,14 @@ public class GenerationMojo extends AbstractMojo {
                 return super.findResource(name);
             }
         };
+        
+        // Inputs
+        Collection<GenerationInput> sidolInputs = Collections2.transform(sidolFiles, new Function<File, GenerationInput>() {
+        	@Override
+        	public GenerationInput apply(File file) {
+        		return new FileGenerationInput(file);
+        	}
+		});
 
         // Starting the generation in a specific classloader
         log("Former class loader is: %s", formerClassLoader);
@@ -150,7 +164,7 @@ public class GenerationMojo extends AbstractMojo {
             GenerationConfiguration configuration = 
             		GenerationConfigurationBuilder.create()
             			.modelId(model)
-            			.sources(sidolFiles)
+            			.sources(sidolInputs)
             			.output(outputDirectory)
             			.build();
 
