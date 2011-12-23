@@ -14,6 +14,8 @@ import net.sf.sido.gen.GenerationConfiguration;
 import net.sf.sido.gen.GenerationInput;
 import net.sf.sido.gen.GenerationTool;
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.model.GenerationOutput;
+import net.sf.sido.gen.model.support.DirectoryGenerationOutput;
 import net.sf.sido.gen.support.FileGenerationInput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 
@@ -148,6 +150,9 @@ public class GenerationMojo extends AbstractMojo {
         		return new FileGenerationInput(file);
         	}
 		});
+        
+        // Output
+        GenerationOutput output = new DirectoryGenerationOutput(outputDirectory);
 
         // Starting the generation in a specific classloader
         log("Former class loader is: %s", formerClassLoader);
@@ -165,7 +170,7 @@ public class GenerationMojo extends AbstractMojo {
             		GenerationConfigurationBuilder.create()
             			.modelId(model)
             			.sources(sidolInputs)
-            			.output(outputDirectory)
+            			.output(output)
             			.build();
 
             // Listener

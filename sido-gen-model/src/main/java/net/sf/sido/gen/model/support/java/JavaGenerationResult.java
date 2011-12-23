@@ -1,17 +1,13 @@
 package net.sf.sido.gen.model.support.java;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.model.GenerationOutput;
 import net.sf.sido.gen.model.support.AbstractGenerationResult;
-
-import org.apache.commons.lang3.StringUtils;
 
 public class JavaGenerationResult extends AbstractGenerationResult {
 
@@ -22,26 +18,17 @@ public class JavaGenerationResult extends AbstractGenerationResult {
 	}
 
 	@Override
-	public void write(File output, GenerationListener listener)
+	public void write(GenerationOutput output, GenerationListener listener)
 			throws IOException {
 		for (JClass jClass : classes) {
 			writeClass(jClass, output, listener);
 		}
 	}
 
-	protected void writeClass(JClass jClass, File output,
+	protected void writeClass(JClass jClass, GenerationOutput output,
 			GenerationListener listener) throws IOException {
-		String className = jClass.getName();
-		String fileName = className + ".java";
-		String packagePath = StringUtils.replace(jClass.getPackageName(), ".",
-				"/");
-		File packageFile = new File(output, packagePath);
-		if (!packageFile.exists()) {
-			packageFile.mkdirs();
-		}
-		File file = new File(packageFile, fileName);
-		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
-				new FileOutputStream(file), "UTF-8"));
+		PrintWriter writer = output.createInPackage(jClass.getPackageName(),
+				jClass.getName() + ".java");
 		try {
 			jClass.write(writer);
 		} finally {

@@ -1,10 +1,10 @@
 package net.sf.sido.gen.support;
 
-import java.io.File;
 import java.util.Collection;
 
 import net.sf.sido.gen.GenerationConfiguration;
 import net.sf.sido.gen.GenerationInput;
+import net.sf.sido.gen.model.GenerationOutput;
 
 public class GenerationConfigurationBuilder {
 	
@@ -28,7 +28,7 @@ public class GenerationConfigurationBuilder {
 		return this;
 	}
 	
-	public GenerationConfigurationBuilder output (File output) {
+	public GenerationConfigurationBuilder output (GenerationOutput output) {
 		configuration.setOutput(output);
 		return this;
 	}
