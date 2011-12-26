@@ -97,8 +97,11 @@ public class JClass extends JItem<JClass> {
         // Package
         writer.format("package %s;%n%n", packageName);
         // Imports
-        for (String importName : importNames) {
-            writer.format("import %s;%n", importName);
+        if (!importNames.isEmpty()) {
+	        for (String importName : importNames) {
+	            writer.format("import %s;%n", importName);
+	        }
+	        writer.println();
         }
         // Class doc
         writeDoc(writer, 0);

@@ -64,10 +64,6 @@ public abstract class JMember<T extends JMember<T>> extends JItem<T> {
         writer.format("\t%s ", scope);
         // Pre-defined modifiers
         writeModifiers(writer);
-        // Modifiers
-        if (!modifiers.isEmpty()) {
-            writer.print(StringUtils.join(modifiers, " "));
-        }
         // Declaration
         writeDecl(writer);
         // Content
@@ -75,6 +71,10 @@ public abstract class JMember<T extends JMember<T>> extends JItem<T> {
     }
 
     protected void writeModifiers(PrintWriter writer) throws IOException {
+        if (!modifiers.isEmpty()) {
+            writer.print(StringUtils.join(modifiers, " "));
+            writer.print(" ");
+        }
     }
 
     protected abstract void writeDecl(PrintWriter writer) throws IOException;

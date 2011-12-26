@@ -2,9 +2,12 @@ package sido.maven.it.complex;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -54,7 +57,18 @@ public class ComplexTest {
 		assertTrue(address == p.getMainAddress());
 	}
 
-	// FIXME person.phones
+	@Test
+	public void person_phones() {
+		Person p = new Person();
+		assertNull(p.getPhones());
+		p.addPhones("111", "222");
+		List<String> phones = p.getPhones();
+		assertNotNull(phones);
+		assertEquals(Arrays.asList("111", "222"), phones);
+		phones.remove(0);
+		assertEquals(Arrays.asList("222"), p.getPhones());
+	}
+	
 	// FIXME person.addresses
 	// FIXME freeAddress.country
 	// FIXME freeAddress.lines

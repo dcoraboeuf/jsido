@@ -26,6 +26,10 @@ public abstract class AbstractGenerationModel<R extends GenerationResult> implem
 	protected String getSetMethodName(SidoProperty property) {
 		return getPrefixedMethodName("set", property);
 	}
+	
+	protected String getAddMethodName(SidoProperty property) {
+		return getPrefixedMethodName("add", property);
+	}
 
 	protected String getPrefixedMethodName(String prefix, SidoProperty property) {
 		String name = StringUtils.capitalize(property.getName());
