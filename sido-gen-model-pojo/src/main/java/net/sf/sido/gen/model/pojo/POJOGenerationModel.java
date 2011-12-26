@@ -6,7 +6,6 @@ import net.sf.sido.gen.model.support.java.AbstractPropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
 import net.sf.sido.schema.SidoAnonymousProperty;
-import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
@@ -77,19 +76,22 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public POJOGenerationModel() {
 		super("pojo");
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	protected PropertyBinder<? extends SidoProperty> getPropertyBinder(SidoProperty property) {
-		if (property instanceof SidoSimpleProperty) {
-			return simplePropertyBinder;
-		} else if (property instanceof SidoAnonymousProperty) {
-			return anonymousPropertyBinder;
-		} else if (property instanceof SidoRefProperty) {
-			return refPropertyBinder;
-		} else {
-			return null;
-		}
+	protected PropertyBinder<? extends SidoSimpleProperty<?>> getSimplePropertyBinder(SidoSimpleProperty<?> property) {
+		return simplePropertyBinder;
 	}
+
+	@Override
+	protected PropertyBinder<? extends SidoAnonymousProperty> getAnonymousPropertyBinder(SidoAnonymousProperty property) {
+		return anonymousPropertyBinder;
+	}
+
+	@Override
+	protected PropertyBinder<? extends SidoRefProperty> getRefPropertyBinder(SidoRefProperty property) {
+		return refPropertyBinder;
+	}
+	
+	
 
 }

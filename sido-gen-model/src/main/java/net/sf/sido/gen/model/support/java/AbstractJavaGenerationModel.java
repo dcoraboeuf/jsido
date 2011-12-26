@@ -5,7 +5,10 @@ import java.util.Collection;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.support.AbstractGenerationModel;
+import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoProperty;
+import net.sf.sido.schema.SidoRefProperty;
+import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 
 import org.apache.commons.lang3.StringUtils;
@@ -127,8 +130,23 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 			return binder;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends SidoProperty> PropertyBinder<T> getPropertyBinder(T property) {
+		if (property instanceof SidoSimpleProperty) {
+			return (PropertyBinder<T>) getSimplePropertyBinder((SidoSimpleProperty<?>) property);
+		} else if (property instanceof SidoAnonymousProperty) {
+			return (PropertyBinder<T>) getAnonymousPropertyBinder((SidoAnonymousProperty) property);
+		} else if (property instanceof SidoRefProperty) {
+			return (PropertyBinder<T>) getRefPropertyBinder((SidoRefProperty) property);
+		} else {
+			return null;
+		}
+	}
 
-	protected abstract <T extends SidoProperty> PropertyBinder<T> getPropertyBinder(T property);
+	protected abstract PropertyBinder<? extends SidoSimpleProperty<?>> getSimplePropertyBinder(SidoSimpleProperty<?> property);
+	protected abstract PropertyBinder<? extends SidoAnonymousProperty> getAnonymousPropertyBinder(SidoAnonymousProperty property);
+	protected abstract PropertyBinder<? extends SidoRefProperty> getRefPropertyBinder(SidoRefProperty property);
 
 	protected String getFieldName(SidoProperty property) {
 		return property.getName();
