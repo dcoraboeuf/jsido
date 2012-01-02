@@ -57,7 +57,7 @@ public abstract class JAbstractMethod<T extends JAbstractMethod<T>> extends JMem
     @Override
     protected void writeContent(PrintWriter writer) throws IOException {
         // TODO Abstract method
-        writer.format("{%n");
+        writer.format(" {%n");
         for (String line : content) {
             writer.format("\t\t%s%n", line);
         }
