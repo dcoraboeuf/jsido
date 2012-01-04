@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.sf.sido.gen.GenerationConfiguration;
 import net.sf.sido.gen.GenerationInput;
 import net.sf.sido.gen.model.GenerationOutput;
+import net.sf.sido.gen.model.Options;
 
 public class GenerationConfigurationBuilder {
 	
@@ -30,6 +31,11 @@ public class GenerationConfigurationBuilder {
 	
 	public GenerationConfigurationBuilder output (GenerationOutput output) {
 		configuration.setOutput(output);
+		return this;
+	}
+	
+	public GenerationConfigurationBuilder options (Options options) {
+		configuration.setOptions(options);
 		return this;
 	}
 	

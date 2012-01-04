@@ -47,7 +47,7 @@ public class GenerationTool {
 		// Loads all schemas to generate
 		Collection<SidoSchema> schemas = loadSchemasToGenerate(context, configuration, listener);
 		// Generation context
-		GenerationContext generationContext = new GenerationContext();
+		GenerationContext generationContext = new GenerationContext(configuration.getOptions());
 		// TODO Context schemas (for packaging lookup)
 		// Generation
 		R result = generateAll (schemas, generationModel, generationContext, listener);
