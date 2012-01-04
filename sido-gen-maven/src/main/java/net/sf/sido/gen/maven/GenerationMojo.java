@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.sido.gen.GenerationConfiguration;
@@ -16,6 +17,7 @@ import net.sf.sido.gen.GenerationTool;
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.GenerationOutput;
 import net.sf.sido.gen.model.support.DirectoryGenerationOutput;
+import net.sf.sido.gen.model.support.MapOptions;
 import net.sf.sido.gen.support.FileGenerationInput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 
@@ -82,6 +84,13 @@ public class GenerationMojo extends AbstractMojo {
      * @parameter expression="${sido.test}" default-value="false"
      */
     private boolean test = false;
+    
+    /**
+     * Options for the generation model.
+     * 
+     * @parameter
+     */
+    private Map<String, String> options = Collections.emptyMap();
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -171,6 +180,7 @@ public class GenerationMojo extends AbstractMojo {
             			.modelId(model)
             			.sources(sidolInputs)
             			.output(output)
+            			.options(new MapOptions(options))
             			.build();
 
             // Listener
