@@ -9,10 +9,13 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.sf.sido.gen.model.GenerationListener;
+import net.sf.sido.gen.model.Options;
+import net.sf.sido.gen.model.support.MapOptions;
 import net.sf.sido.gen.model.support.RecordingGenerationOutput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 import net.sf.sido.gen.support.ResourceGenerationInput;
@@ -41,10 +44,15 @@ public class GenerationToolTest {
 
 		// Output
 		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		Options options = new MapOptions(map);
 
 		// Configuration
 		GenerationConfiguration configuration = GenerationConfigurationBuilder
 				.create().modelId("pojo").sources(sources).output(output)
+				.options(options)
 				.build();
 
 		// Call
