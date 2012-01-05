@@ -13,9 +13,9 @@
 	<description>Parent POM used by all SiDO projects</description>
 
 	<scm>
-		<connection>scm:git:git@github.com:dcoraboe/jsido.git</connection>
-		<url>scm:git:git@github.com:dcoraboe/jsido.git</url>
-		<developerConnection>scm:git:git@github.com:dcoraboe/jsido.git</developerConnection>
+		<connection>scm:git:git@github.com:dcoraboeuf/jsido.git</connection>
+		<url>scm:git:git@github.com:dcoraboeuf/jsido.git</url>
+		<developerConnection>scm:git:git@github.com:dcoraboeuf/jsido.git</developerConnection>
 	</scm>
 
 	<distributionManagement>
