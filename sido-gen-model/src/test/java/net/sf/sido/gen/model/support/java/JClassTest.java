@@ -79,7 +79,7 @@ public class JClassTest {
 	}
 
 	private List<String> readLines(String content) {
-		String[] lines = StringUtils.split(content, "\n\r");
+		String[] lines = StringUtils.splitPreserveAllTokens(content, "\n");
 		return Arrays.asList(lines);
 	}
 

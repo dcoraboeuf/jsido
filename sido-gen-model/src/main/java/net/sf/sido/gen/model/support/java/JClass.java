@@ -120,12 +120,18 @@ public class JClass extends JItem<JClass> {
         // Start of class
         writer.format("{%n");
         // Fields
-        for (JField field : fields) {
-            field.write(writer);
+        if (!fields.isEmpty()) {
+            writer.format("%n");
+	        for (JField field : fields) {
+	            field.write(writer);
+	        }
         }
         // Constructors
-        for (JConstructor constructor : constructors) {
-            constructor.write(writer);
+        if (!constructors.isEmpty()) {
+            writer.format("%n");
+	        for (JConstructor constructor : constructors) {
+	            constructor.write(writer);
+	        }
         }
         // Methods
         for (JMethod method : methods) {
