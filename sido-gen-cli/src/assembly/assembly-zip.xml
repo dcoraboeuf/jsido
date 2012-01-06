@@ -1,0 +1,23 @@
+<assembly>
+	<id>zip</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target</directory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency</directory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<outputDirectory>/dependency</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
