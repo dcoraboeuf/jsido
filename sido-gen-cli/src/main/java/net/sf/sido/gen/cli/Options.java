@@ -7,6 +7,9 @@ import java.util.Map;
 import org.kohsuke.args4j.Option;
 
 public class Options {
+	
+	@Option(name = "--verbose", aliases = "-v", usage = "Verbosity of the output")
+	public boolean verbose;
 
 	@Option(name = "--model", aliases = "-m", usage = "ID of the generation model", metaVar = "ID")
 	public String model = "pojo";
