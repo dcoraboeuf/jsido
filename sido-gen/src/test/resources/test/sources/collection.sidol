@@ -1,0 +1,11 @@
+schema <sido.test>.
+
+a Library
+has
+	a collection of Book as books
+	.
+
+a Book
+has
+	a title
+	.

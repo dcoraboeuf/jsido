@@ -15,13 +15,17 @@ import java.util.Map;
 
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.Options;
+import net.sf.sido.gen.model.pojo.POJOGenerationModel;
 import net.sf.sido.gen.model.support.MapOptions;
 import net.sf.sido.gen.model.support.RecordingGenerationOutput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 import net.sf.sido.gen.support.ResourceGenerationInput;
+import net.sf.sido.schema.Sido;
+import net.sf.sido.schema.support.DefaultSidoContext;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import difflib.Delta;
@@ -29,6 +33,14 @@ import difflib.DiffUtils;
 import difflib.Patch;
 
 public class GenerationToolTest {
+	
+	// TODO Uses a template for tests
+	
+	@Before
+	public void init() {
+		// Uses a specific context for each test
+		Sido.setDefault(new DefaultSidoContext());
+	}
 
 	@Test
 	public void pojo_simple() throws IOException {
@@ -62,6 +74,75 @@ public class GenerationToolTest {
 		Map<String, String> files = output.getFiles();
 		checkOutput(files, "sido.test.Person.java",
 				"/test/output/pojo/simple/Person.java");
+	}
+
+	@Test
+	public void pojo_collection_non_final() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/collection.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("pojo").sources(sources).output(output)
+				.options(options)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Library.java",
+				"/test/output/pojo/collection_non_final/Library.java");
+	}
+
+	@Test
+	public void pojo_collection_final() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/collection.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(POJOGenerationModel.NON_NULLABLE_COLLECTION_FINAL, "true");
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("pojo").sources(sources).output(output)
+				.options(options)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Person.java",
+				"/test/output/pojo/collection_final/Person.java");
 	}
 
 	private void checkOutput(Map<String, String> files, String filePath,

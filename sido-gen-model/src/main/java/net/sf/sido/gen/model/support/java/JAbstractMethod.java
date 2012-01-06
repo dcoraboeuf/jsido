@@ -51,7 +51,7 @@ public abstract class JAbstractMethod<T extends JAbstractMethod<T>> extends JMem
             String type = param.getValue();
             list.add(String.format("%s %s", type, name));
         }
-        writer.format("(%s)", StringUtils.join(list, ", "));
+        writer.format(" (%s)", StringUtils.join(list, ", "));
     }
 
     @Override

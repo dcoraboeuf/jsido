@@ -17,6 +17,8 @@ import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 
 public class POJOGenerationModel extends AbstractJavaGenerationModel {
+	
+	public static final String NON_NULLABLE_COLLECTION_FINAL = "nonNullableCollectionFinal";
 
 	protected class SimplePropertyBinder extends AbstractPropertyBinder<SidoSimpleProperty<?>> {
 
@@ -102,6 +104,8 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	@Override
 	protected void generateCollectionProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type) {
+		// Options
+		boolean optionNonNullableCollectionFinal = generationContext.getOptions().getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
 		// Field name
 		String fieldName = getFieldName(property);
 		// Field class
@@ -133,16 +137,17 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 					.addContent("}");
 		// If not nullable, initializes it
 		if (!property.isNullable()) {
-			// Final field
-			// TODO Optional
-			field.addModifier("final");
+			// Final field (optional)
+			if (optionNonNullableCollectionFinal) {
+				field.addModifier("final");
+			}
 			// Initialization
 			// TODO Configurable implementation
 			c.addImport(ArrayList.class);
 			field.setInitialisation("new ArrayList<%s>()", fieldClassName);
-		} else {
-			// Setter
-			// TODO Only for nullable collection - configurable
+		}
+		// Setter (only for nullable collection - configurable)
+		if (property.isNullable() || !optionNonNullableCollectionFinal) {
 			c
 					.addMethod(getSetMethodName(property))
 						.addParam(collectionTypeName, "pValues")
