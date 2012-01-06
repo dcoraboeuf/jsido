@@ -15,8 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractJavaGenerationModel extends AbstractGenerationModel<JavaGenerationResult> {
 
-	public static final String NOT_NULLABLE_IS_FINAL = "notNullableIsFinal";
-
 	public AbstractJavaGenerationModel(String id) {
 		super(id);
 	}
@@ -102,8 +100,6 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 
 	protected void generateSingleProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type) {
-		// Configuration
-		boolean notNullableIsFinal = generationContext.getOptions().getBoolean(NOT_NULLABLE_IS_FINAL, false);
 		// Field name
 		String fieldName = getFieldName(property);
 		// Field class
@@ -112,10 +108,6 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		JField field = c.addField(fieldClass, fieldName);
 		// If not nullable, initializes it
 		if (!property.isNullable()) {
-			// Final?
-			if (notNullableIsFinal) {
-				field.addModifier("final");
-			}
 			// Initialization
 			String initialization = getFieldSingleDefault(generationContext, property, fieldClass);
 			if (StringUtils.isNotBlank(initialization)) {
@@ -125,9 +117,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		// Getter
 		c.addMethod(getGetMethodName(property), fieldClass).addContent("return %s;", fieldName);
 		// Setter
-		if (property.isNullable() || !notNullableIsFinal) {
-			c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
-		}
+		c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
 	}
 
 	protected <T extends SidoProperty> String getFieldSingleDefault(GenerationContext generationContext, T property, JClass propertyClass) {
