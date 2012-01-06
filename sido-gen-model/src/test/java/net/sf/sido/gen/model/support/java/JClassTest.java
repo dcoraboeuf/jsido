@@ -62,6 +62,44 @@ public class JClassTest {
 			fail("spacing");
 		}
 	}
+	
+	/**
+	 * Tests that spacing is correct.
+	 * @throws IOException 
+	 */
+	@Test
+	public void spacing_no_constructor() throws IOException {
+		// Class structure
+		JClass c = new JClass("sido.test", "Test");
+		c.addImport(List.class);
+		c.addImport(ArrayList.class);
+		c.addField("String", "name");
+		c.addField("List<String>", "otherNames").setInitialisation("new ArrayList<String>()");
+		c.addMethod("getName", "String").addContent("return name;");
+		c.addMethod("setName").addParam("String", "value").addContent("this.name = value;");
+		// Output
+		StringWriter s = new StringWriter();
+		PrintWriter writer = new PrintWriter(s);
+		// Generation
+		c.write(writer);
+		// Output
+		List<String> actual = readLines(s.toString());
+		// Gets the expected content
+		List<String> expected = readReference("/jclass/SpacingNoConstructor.java");
+		// Difference between the two sets
+		Patch diff = DiffUtils.diff(expected, actual);
+		List<Delta> deltas = diff.getDeltas();
+		if (!deltas.isEmpty()) {
+			// Creates the diff
+			String original = StringUtils.join(expected, "\n");
+			String revised = StringUtils.join(actual, "\n");
+			List<String> unifiedDiff = DiffUtils.generateUnifiedDiff(original,
+					revised, expected, diff, 3);
+			String diffDisplay = StringUtils.join(unifiedDiff, "\n");
+			System.err.println(diffDisplay);
+			fail("spacing-no-constructor");
+		}
+	}
 
 	private List<String> readReference(String referenceResourcePath)
 			throws IOException {

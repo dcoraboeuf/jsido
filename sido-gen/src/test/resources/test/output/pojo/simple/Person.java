@@ -1,22 +1,23 @@
 package sido.test;
 
 public class Person {
+
 	private Integer age;
 	private String name = "";
 
-	public Integer getAge() {
+	public Integer getAge () {
 		return age;
 	}
 
-	public void setAge(Integer pValue) {
+	public void setAge (Integer pValue) {
 		age = pValue;
 	}
 
-	public String getName() {
+	public String getName () {
 		return name;
 	}
 
-	public void setName(String pValue) {
+	public void setName (String pValue) {
 		name = pValue;
 	}
 
