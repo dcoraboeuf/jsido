@@ -141,8 +141,8 @@ public class GenerationToolTest {
 
 		// Checks the output
 		Map<String, String> files = output.getFiles();
-		checkOutput(files, "sido.test.Person.java",
-				"/test/output/pojo/collection_final/Person.java");
+		checkOutput(files, "sido.test.Library.java",
+				"/test/output/pojo/collection_final/Library.java");
 	}
 
 	private void checkOutput(Map<String, String> files, String filePath,
