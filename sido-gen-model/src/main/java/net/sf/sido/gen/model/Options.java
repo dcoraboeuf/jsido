@@ -9,5 +9,7 @@ public interface Options {
 	long getLong (String name, long defaultValue);
 	
 	String getString (String name, String defaultValue);
+	
+	Class<?> getClass (String name, Class<?> defaultValue);
 
 }

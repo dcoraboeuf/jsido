@@ -33,5 +33,20 @@ public abstract class AbstractOptions implements Options {
 			return Long.parseLong(value);
 		}
 	}
+	
+	@Override
+	public Class<?> getClass(String name, Class<?> defaultValue) {
+		String value = getString(name, null);
+		if (value == null) {
+			return defaultValue;
+		} else {
+			try {
+				Class<?> t = Class.forName(value);
+				return t;
+			} catch (ClassNotFoundException ex) {
+				throw new RuntimeException("Cannot find class " + value, ex);
+			}
+		}
+	}
 
 }

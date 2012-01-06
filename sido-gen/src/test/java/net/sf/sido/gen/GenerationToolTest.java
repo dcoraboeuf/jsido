@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.Options;
@@ -33,8 +35,6 @@ import difflib.DiffUtils;
 import difflib.Patch;
 
 public class GenerationToolTest {
-	
-	// TODO Uses a template for tests
 	
 	@Before
 	public void init() {
@@ -108,6 +108,42 @@ public class GenerationToolTest {
 		Map<String, String> files = output.getFiles();
 		checkOutput(files, "sido.test.Library.java",
 				"/test/output/pojo/collection_non_final/Library.java");
+	}
+
+	@Test
+	public void pojo_collection_other_implementation() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/collection.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(POJOGenerationModel.COLLECTION_INTERFACE, Set.class.getName());
+		map.put(POJOGenerationModel.COLLECTION_IMPLEMENTATION, HashSet.class.getName());
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("pojo").sources(sources).output(output)
+				.options(options)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Library.java",
+				"/test/output/pojo/collection_other_implementation/Library.java");
 	}
 
 	@Test

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.sido.gen.model.GenerationContext;
+import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.AbstractPropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
@@ -17,8 +18,10 @@ import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 
 public class POJOGenerationModel extends AbstractJavaGenerationModel {
-	
+
 	public static final String NON_NULLABLE_COLLECTION_FINAL = "nonNullableCollectionFinal";
+	public static final String COLLECTION_INTERFACE = "collectionInterface";
+	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
 
 	protected class SimplePropertyBinder extends AbstractPropertyBinder<SidoSimpleProperty<?>> {
 
@@ -98,37 +101,35 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 
 	/**
 	 * Generates a {@link List} field.
-	 * 
-	 * TODO Configuration of the collection type
 	 */
 	@Override
 	protected void generateCollectionProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type) {
 		// Options
-		boolean optionNonNullableCollectionFinal = generationContext.getOptions().getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
+		Options options = generationContext.getOptions();
+		boolean optionNonNullableCollectionFinal = options.getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
+		Class<?> optionCollectionInterface = options.getClass(COLLECTION_INTERFACE, List.class);
+		Class<?> optionCollectionImplementation = options.getClass(COLLECTION_IMPLEMENTATION, ArrayList.class);
 		// Field name
 		String fieldName = getFieldName(property);
 		// Field class
 		JClass fieldClass = getFieldSingleClass(generationContext, property);
 		c.addImport(fieldClass);
 		// Collection type
-		// TODO Configurable collection type
-		Class<?> collectionType = List.class;
-		c.addImport(collectionType);
+		c.addImport(optionCollectionInterface);
 		// Field declaration
 		String fieldClassName = fieldClass.getName();
-		String collectionTypeName = String.format("%s<%s>", collectionType.getSimpleName(), fieldClassName);
+		String collectionTypeName = String.format("%s<%s>", optionCollectionInterface.getSimpleName(), fieldClassName);
 		JField field = c.addField(collectionTypeName, fieldName);
 		// Getter
 		c.addMethod(getGetMethodName(property), collectionTypeName).addContent("return %s;", fieldName);
 		// Adding a collection of elements
 		JMethod m = c.addMethod(getAddMethodName(property)).addParam(String.format("%s...", fieldClassName), "pValues");
 		if (property.isNullable()) {
-			// TODO Configurable implementation
-			c.addImport(ArrayList.class);
+			c.addImport(optionCollectionImplementation);
 			m
 					.addContent("if (%s == null) {", fieldName)
-						.addContent("\t%s = new ArrayList<%s>();", fieldName, fieldClassName)
+						.addContent("\t%s = new %s<%s>();", fieldName, optionCollectionImplementation.getSimpleName(), fieldClassName)
 						.addContent("}");
 		}
 		m
@@ -142,9 +143,8 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 				field.addModifier("final");
 			}
 			// Initialization
-			// TODO Configurable implementation
-			c.addImport(ArrayList.class);
-			field.setInitialisation("new ArrayList<%s>()", fieldClassName);
+			c.addImport(optionCollectionImplementation);
+			field.setInitialisation("new %s<%s>()", optionCollectionImplementation.getSimpleName(), fieldClassName);
 		}
 		// Setter (only for nullable collection - configurable)
 		if (property.isNullable() || !optionNonNullableCollectionFinal) {

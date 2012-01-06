@@ -63,5 +63,17 @@ public class MapOptionsTest {
 		MapOptions options = new MapOptions(Collections.singletonMap("test", "A"));
 		assertEquals("A", options.getString("test", "B"));
 	}
+	
+	@Test
+	public void class_null () {
+		MapOptions options = new MapOptions(Collections.singletonMap("test", "java.lang.String"));
+		assertEquals(Long.class, options.getClass("ttt", Long.class));
+	}
+	
+	@Test
+	public void class_value () {
+		MapOptions options = new MapOptions(Collections.singletonMap("test", "java.lang.String"));
+		assertEquals(String.class, options.getClass("test", Long.class));
+	}
 
 }
