@@ -57,6 +57,9 @@ public class GenerationToolTest {
 		// Output
 		RecordingGenerationOutput output = new RecordingGenerationOutput();
 		
+		// Registration
+		RecordingGenerationOutput registration = new RecordingGenerationOutput();
+		
 		// Options
 		Map<String, String> map = new HashMap<String, String>();
 		Options options = new MapOptions(map);
@@ -65,6 +68,7 @@ public class GenerationToolTest {
 		GenerationConfiguration configuration = GenerationConfigurationBuilder
 				.create().modelId("pojo").sources(sources).output(output)
 				.options(options)
+				.registrationOutput(registration)
 				.build();
 
 		// Call
@@ -74,6 +78,10 @@ public class GenerationToolTest {
 		Map<String, String> files = output.getFiles();
 		checkOutput(files, "sido.test.Person.java",
 				"/test/output/pojo/simple/Person.java");
+		
+		// Checks the registration
+		checkOutput(registration.getFiles(), "META-INF/sido/sido.schemas", "/test/output/pojo/simple/sido.schemas");
+		// FIXME checkOutput(registration.getFiles(), "META-INF/sido/sido.test", "/test/sources/simple.sidol");
 	}
 
 	@Test

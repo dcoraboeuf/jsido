@@ -39,6 +39,11 @@ public class GenerationConfigurationBuilder {
 		return this;
 	}
 	
+	public GenerationConfigurationBuilder registrationOutput (GenerationOutput output) {
+		configuration.setRegistrationOutput(output);
+		return this;
+	}
+	
 	public GenerationConfiguration build() {
 		return configuration;
 	}

@@ -22,6 +22,7 @@ import net.sf.sido.gen.support.FileGenerationInput;
 import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -76,6 +77,13 @@ public class GenerationMojo extends AbstractMojo {
      * @required
      */
     private File outputDirectory;
+
+    /**
+     * Location for generated registration files.
+     *
+     * @parameter expression="${sido.registration.dir}" default-value="${project.build.directory}/generated-sources/sido-resources"
+     */
+    private File registrationDirectory;
     
     /**
      * Flag used to indicate to generate the sources and resources in the test scope, instead
@@ -175,12 +183,16 @@ public class GenerationMojo extends AbstractMojo {
             GenerationTool tool = new GenerationTool();
 
             // Configuration
-            GenerationConfiguration configuration = 
+            GenerationConfigurationBuilder configurationBuilder = 
             		GenerationConfigurationBuilder.create()
             			.modelId(model)
             			.sources(sidolInputs)
             			.output(output)
-            			.options(new MapOptions(options))
+            			.options(new MapOptions(options));
+            if (registrationDirectory != null) {
+            	configurationBuilder.registrationOutput(new DirectoryGenerationOutput(registrationDirectory));
+            }
+            GenerationConfiguration configuration = configurationBuilder            
             			.build();
 
             // Listener
@@ -206,15 +218,15 @@ public class GenerationMojo extends AbstractMojo {
             	project.addCompileSourceRoot(outputDirectory.getPath());
             }
 
-            // FIXME Services directory as resources
-			// Resource resource = new Resource();
-			// resource.setDirectory(servicesDirectory.getPath());
-			// resource.setFiltering(false);
-			// if (test) {
-			// project.addTestResource(resource);
-			// } else {
-			// project.addResource(resource);
-			// }
+            // Services directory as resources
+			Resource resource = new Resource();
+			resource.setDirectory(registrationDirectory.getPath());
+			resource.setFiltering(false);
+			if (test) {
+				project.addTestResource(resource);
+			} else {
+				project.addResource(resource);
+			}
 
         } finally {
             // Restores the class path

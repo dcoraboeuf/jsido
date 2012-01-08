@@ -19,6 +19,9 @@ public class Options {
 
 	@Option(name = "--output", aliases = "-o", usage = "Location for generated Java files", metaVar = "DIR")
 	public File outputDirectory = new File(".");
+
+	@Option(name = "--registration", aliases = "-r", usage = "Location for generated resource files", metaVar = "DIR")
+	public File registrationDirectory;
 	
 	@Option(name = "--option", aliases = "-i", usage = "Options for the generation model", metaVar = "OPTION")
 	public Map<String, String> options = new HashMap<String, String>();

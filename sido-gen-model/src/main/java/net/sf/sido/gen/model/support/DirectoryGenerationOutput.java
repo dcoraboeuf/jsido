@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 
 import net.sf.sido.gen.model.GenerationOutput;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class DirectoryGenerationOutput implements GenerationOutput {
@@ -26,6 +27,7 @@ public class DirectoryGenerationOutput implements GenerationOutput {
 			packageFile.mkdirs();
 		}
 		File file = new File(packageFile, fileName);
+		FileUtils.forceMkdir(file.getParentFile());
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(
 				new FileOutputStream(file), "UTF-8"));
 		return writer;

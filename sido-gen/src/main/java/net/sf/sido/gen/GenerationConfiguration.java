@@ -12,6 +12,7 @@ public class GenerationConfiguration {
 	private String modelId;
 	private Collection<GenerationInput> inputs;
 	private GenerationOutput output;
+	private GenerationOutput registrationOutput;
 	private Options options;
 
 	public String getModelId() {
@@ -46,11 +47,23 @@ public class GenerationConfiguration {
 		this.options = options;
 	}
 
+	public GenerationOutput getRegistrationOutput() {
+		return registrationOutput;
+	}
+
+	public void setRegistrationOutput(GenerationOutput registrationOutput) {
+		this.registrationOutput = registrationOutput;
+	}
+
 	public void validate() {
 		Validate.notBlank(modelId, "The model ID is required");
 		Validate.notEmpty(inputs, "The list of inputs is required");
 		Validate.notNull(output, "The output directory is required");
 		Validate.notNull(options, "The options are required");
+	}
+
+	public boolean mustWriteRegistration() {
+		return registrationOutput != null;
 	}
 
 }

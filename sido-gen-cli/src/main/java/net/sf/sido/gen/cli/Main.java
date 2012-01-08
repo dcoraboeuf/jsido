@@ -85,9 +85,13 @@ public class Main {
 		GenerationTool tool = new GenerationTool();
 
 		// Configuration
-		GenerationConfiguration configuration = GenerationConfigurationBuilder
+		GenerationConfigurationBuilder generationBuilder = GenerationConfigurationBuilder
 				.create().modelId(options.model).sources(sidolInputs).output(output)
-				.options(new MapOptions(options.options)).build();
+				.options(new MapOptions(options.options));
+		if (options.registrationDirectory != null) {
+			generationBuilder.registrationOutput(new DirectoryGenerationOutput(options.registrationDirectory));
+		}
+		GenerationConfiguration configuration = generationBuilder.build();
 
 		// Listener
 		GenerationListener toolListener = new GenerationListener() {

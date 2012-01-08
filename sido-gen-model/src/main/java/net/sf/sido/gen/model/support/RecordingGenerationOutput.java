@@ -6,6 +6,8 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.sf.sido.gen.model.GenerationOutput;
 
 import com.google.common.base.Functions;
@@ -20,6 +22,7 @@ public class RecordingGenerationOutput implements GenerationOutput {
 			throws IOException {
 		StringWriter writer = new StringWriter();
 		String key = packageName + "." + fileName;
+		key = StringUtils.strip(key, ".");
 		writers.put(key, writer);
 		return new PrintWriter(writer);
 	}

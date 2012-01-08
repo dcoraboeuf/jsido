@@ -1,6 +1,7 @@
 package net.sf.sido.gen;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -8,6 +9,7 @@ import java.util.ServiceLoader;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.GenerationListener;
 import net.sf.sido.gen.model.GenerationModel;
+import net.sf.sido.gen.model.GenerationOutput;
 import net.sf.sido.gen.model.GenerationResult;
 import net.sf.sido.parser.NamedInput;
 import net.sf.sido.parser.SidoParser;
@@ -52,6 +54,35 @@ public class GenerationTool {
 		R result = generateAll (schemas, generationModel, generationContext, listener);
 		// Writes the result down
 		result.write(configuration.getOutput(), listener);
+		// Writes the registration down
+		if (configuration.mustWriteRegistration()) {
+			writeRegistration(schemas, generationModel, configuration, listener);
+		}
+	}
+
+	protected void writeRegistration(Collection<SidoSchema> schemas,
+			GenerationModel<?> generationModel,
+			GenerationConfiguration configuration, GenerationListener listener) throws IOException {
+		GenerationOutput registrationOutput = configuration.getRegistrationOutput();
+		// Index
+		PrintWriter index = registrationOutput.createInPackage("", SidoDiscovery.SIDO_SCHEMAS);
+		try {
+			// For all schemas
+			for (SidoSchema schema : schemas) {
+				index.format("%s\tmodel=%s%n", schema.getUid(), generationModel.getId());
+			}
+		} finally {
+			index.close();
+		}
+		// For all schemas
+		for (SidoSchema schema : schemas) {
+			PrintWriter writer = registrationOutput.createInPackage("", String.format(SidoDiscovery.SIDO_SCHEMA_PATH, schema.getUid()));
+			try {
+				// FIXME Writes the schema down
+			} finally {
+				writer.close();
+			}
+		}
 	}
 
 	protected <R extends GenerationResult> R generateAll(Collection<SidoSchema> schemas,
