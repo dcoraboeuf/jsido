@@ -81,7 +81,7 @@ public class GenerationToolTest {
 		
 		// Checks the registration
 		checkOutput(registration.getFiles(), "META-INF/sido/sido.schemas", "/test/output/pojo/simple/sido.schemas");
-		// FIXME checkOutput(registration.getFiles(), "META-INF/sido/sido.test", "/test/sources/simple.sidol");
+		checkOutput(registration.getFiles(), "META-INF/sido/sido.test", "/test/sources/simple.sidol");
 	}
 
 	@Test

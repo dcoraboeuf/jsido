@@ -2,6 +2,7 @@ package net.sf.sido.gen;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -29,8 +30,36 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 
 public class GenerationTool {
-	
-	public void generate (GenerationConfiguration configuration, GenerationListener listener) throws IOException {
+
+	protected static class InputSchema {
+
+		public static final Function<InputSchema, SidoSchema> getSchemaFn = new Function<InputSchema, SidoSchema>() {
+			
+			public SidoSchema apply(InputSchema o) {
+				return o.getSchema();
+			}
+			
+		};
+		
+		private final NamedInput input;
+		private final SidoSchema schema;
+
+		public InputSchema(NamedInput input, SidoSchema schema) {
+			this.input = input;
+			this.schema = schema;
+		}
+
+		public NamedInput getInput() {
+			return input;
+		}
+
+		public SidoSchema getSchema() {
+			return schema;
+		}
+
+	}
+
+	public void generate(GenerationConfiguration configuration, GenerationListener listener) throws IOException {
 		// Validation
 		configuration.validate();
 		// Searches for the generation model
@@ -40,45 +69,47 @@ public class GenerationTool {
 	}
 
 	protected <R extends GenerationResult> void generate(GenerationConfiguration configuration,
-			GenerationListener listener,
-			GenerationModel<R> generationModel) throws IOException {
+			GenerationListener listener, GenerationModel<R> generationModel) throws IOException {
 		// Gets the context
 		SidoContext context = Sido.getContext();
 		// Discovers all other schemas
 		loadExistingSchemas(context, configuration, listener);
 		// Loads all schemas to generate
-		Collection<SidoSchema> schemas = loadSchemasToGenerate(context, configuration, listener);
+		Collection<InputSchema> inputSchemas = loadSchemasToGenerate(context, configuration, listener);
 		// Generation context
 		GenerationContext generationContext = new GenerationContext(configuration.getOptions());
 		// Generation
-		R result = generateAll (schemas, generationModel, generationContext, listener);
+		Collection<SidoSchema> schemas = Collections2.transform(inputSchemas, InputSchema.getSchemaFn);
+		R result = generateAll(schemas, generationModel, generationContext, listener);
 		// Writes the result down
 		result.write(configuration.getOutput(), listener);
 		// Writes the registration down
 		if (configuration.mustWriteRegistration()) {
-			writeRegistration(schemas, generationModel, configuration, listener);
+			writeRegistration(inputSchemas, generationModel, configuration, listener);
 		}
 	}
 
-	protected void writeRegistration(Collection<SidoSchema> schemas,
-			GenerationModel<?> generationModel,
+	protected void writeRegistration(Collection<InputSchema> inputSchemas, GenerationModel<?> generationModel,
 			GenerationConfiguration configuration, GenerationListener listener) throws IOException {
 		GenerationOutput registrationOutput = configuration.getRegistrationOutput();
 		// Index
 		PrintWriter index = registrationOutput.createInPackage("", SidoDiscovery.SIDO_SCHEMAS);
 		try {
 			// For all schemas
-			for (SidoSchema schema : schemas) {
-				index.format("%s\tmodel=%s%n", schema.getUid(), generationModel.getId());
+			for (InputSchema schema : inputSchemas) {
+				index.format("%s\tmodel=%s%n", schema.getSchema().getUid(), generationModel.getId());
 			}
 		} finally {
 			index.close();
 		}
 		// For all schemas
-		for (SidoSchema schema : schemas) {
-			PrintWriter writer = registrationOutput.createInPackage("", String.format(SidoDiscovery.SIDO_SCHEMA_PATH, schema.getUid()));
+		for (InputSchema schema : inputSchemas) {
+			PrintWriter writer = registrationOutput.createInPackage(
+					"",
+						String.format(SidoDiscovery.SIDO_SCHEMA_PATH, schema.getSchema().getUid()));
 			try {
-				// FIXME Writes the schema down
+				// Writes the schema down
+				writer.print(schema.getInput().getInput());
 			} finally {
 				writer.close();
 			}
@@ -86,8 +117,7 @@ public class GenerationTool {
 	}
 
 	protected <R extends GenerationResult> R generateAll(Collection<SidoSchema> schemas,
-			GenerationModel<R> generationModel,
-			GenerationContext generationContext, GenerationListener listener) {
+			GenerationModel<R> generationModel, GenerationContext generationContext, GenerationListener listener) {
 		// Creates the result
 		R result = generationModel.createResultInstance();
 		listener.log("Result instance is %s", result);
@@ -101,8 +131,7 @@ public class GenerationTool {
 	}
 
 	protected <R extends GenerationResult> void generateSchema(R result, SidoSchema schema,
-			GenerationModel<R> generationModel,
-			GenerationContext generationContext, GenerationListener listener) {
+			GenerationModel<R> generationModel, GenerationContext generationContext, GenerationListener listener) {
 		listener.log("Generating schema %s", schema.getUid());
 		// Generates the types
 		for (SidoType type : schema.getTypes()) {
@@ -111,15 +140,14 @@ public class GenerationTool {
 	}
 
 	protected <R extends GenerationResult> void generateType(R result, SidoType type,
-			GenerationModel<R> generationModel,
-			GenerationContext generationContext, GenerationListener listener) {
+			GenerationModel<R> generationModel, GenerationContext generationContext, GenerationListener listener) {
 		listener.log("Generating type %s", type.getQualifiedName());
 		// Calls the model
 		generationModel.generate(result, type, generationContext, listener);
 	}
 
-	protected Collection<SidoSchema> loadSchemasToGenerate(SidoContext context,
-			GenerationConfiguration configuration, GenerationListener listener) {
+	protected Collection<InputSchema> loadSchemasToGenerate(SidoContext context, GenerationConfiguration configuration,
+			GenerationListener listener) {
 		// List of files
 		Collection<GenerationInput> files = configuration.getInputs();
 		// Loads the files
@@ -138,18 +166,24 @@ public class GenerationTool {
 		SidoParser parser = SidoParserFactory.createParser(context);
 		// Parsing
 		Collection<SidoSchema> schemas = parser.parse(inputs);
-		// OK
-		return schemas;
+		// Combines inputs and schemas
+		Collection<InputSchema> inputSchemas = new ArrayList<InputSchema>();
+		Iterator<NamedInput> i1 = inputs.iterator();
+		Iterator<SidoSchema> i2 = schemas.iterator();
+		while (i1.hasNext()) {
+			inputSchemas.add(new InputSchema(i1.next(), i2.next()));
+		}
+		return inputSchemas;
 	}
 
-	protected void loadExistingSchemas(SidoContext context,
-			GenerationConfiguration configuration, final GenerationListener listener) {
+	protected void loadExistingSchemas(SidoContext context, GenerationConfiguration configuration,
+			final GenerationListener listener) {
 		// Discovery engine
 		SidoDiscovery discovery = new DefaultSidoDiscovery();
 		// Call
 		@SuppressWarnings("unused")
 		Collection<SidoSchemaDiscovery> discoveryResults = discovery.discover(context, new SidoDiscoveryLogger() {
-			
+
 			@Override
 			public void log(String format, Object... parameters) {
 				listener.log(format, parameters);
@@ -162,7 +196,9 @@ public class GenerationTool {
 		String modelId = configuration.getModelId();
 		listener.log("Looking for model generator [%s]", modelId);
 		@SuppressWarnings("rawtypes")
-		ServiceLoader<GenerationModel> loader = ServiceLoader.load(GenerationModel.class, Thread.currentThread().getContextClassLoader());
+		ServiceLoader<GenerationModel> loader = ServiceLoader.load(GenerationModel.class, Thread
+				.currentThread()
+					.getContextClassLoader());
 		@SuppressWarnings("rawtypes")
 		Iterator<GenerationModel> i = loader.iterator();
 		GenerationModel<? extends GenerationResult> modelGenerator = null;
