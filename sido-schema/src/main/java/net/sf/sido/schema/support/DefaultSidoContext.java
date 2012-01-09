@@ -3,8 +3,10 @@ package net.sf.sido.schema.support;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.sf.sido.schema.SidoContext;
@@ -14,8 +16,12 @@ import net.sf.sido.schema.SidoType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultSidoContext implements SidoContext {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SidoContext.class);
 	
 	public static Collection<? extends SidoSimpleType<?>> getDefaultSimpleTypes() {
 		List<SidoSimpleType<?>> list = new ArrayList<SidoSimpleType<?>>();
@@ -28,7 +34,16 @@ public class DefaultSidoContext implements SidoContext {
 		list.add(SimpleType.get("float", Float.class));
 		list.add(SimpleType.get("double", Double.class));
 		list.add(SimpleType.get("decimal", BigDecimal.class));
-		// TODO #7 Detection of simple types
+		// Detection of simple types
+		@SuppressWarnings("rawtypes")
+		Iterator<SidoSimpleType> extensions = ServiceLoader.load(SidoSimpleType.class).iterator();
+		while (extensions.hasNext()) {
+			@SuppressWarnings("rawtypes")
+			SidoSimpleType type = (SidoSimpleType) extensions.next();
+			list.add(type);
+			logger.debug("[context] Loading simple type for {}", type.getName());
+		}
+		// OK
 		return list;
 	}
 	
