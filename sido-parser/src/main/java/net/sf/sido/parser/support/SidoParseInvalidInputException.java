@@ -7,8 +7,8 @@ public class SidoParseInvalidInputException extends SidoException {
 
 	private static final long serialVersionUID = 1L;
 
-	public SidoParseInvalidInputException(String match, int startIndex, int endIndex, Localizable failedMatchers) {
-		super(match, startIndex, endIndex, failedMatchers);
+	public SidoParseInvalidInputException(String match, int line, int startIndex, int endIndex, Localizable failedMatchers) {
+		super(match, line, startIndex, endIndex, failedMatchers);
 	}
 
 

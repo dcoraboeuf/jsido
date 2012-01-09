@@ -25,6 +25,7 @@ import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.parserunners.TracingParseRunner;
 import org.parboiled.support.MatcherPath;
 import org.parboiled.support.ParsingResult;
+import org.parboiled.support.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,6 +101,10 @@ public class DefaultSidoParser implements SidoParser {
 	
 	protected Localizable localize(ParseError error) {
 		String match = match(error);
+		Position position = getPosition(error);
+		int line = position.line;
+		int start = position.column;
+		int end = start + error.getEndIndex() - error.getStartIndex();
 		if (error instanceof InvalidInputError) {
 			InvalidInputError inputError = (InvalidInputError) error;
 			MultiLocalizable failedMatchers = new MultiLocalizable(
@@ -113,15 +118,18 @@ public class DefaultSidoParser implements SidoParser {
 							}
 					)
 			);
-			return new SidoParseInvalidInputException(match, error.getStartIndex(), error.getEndIndex(), failedMatchers);
+			return new SidoParseInvalidInputException(match, line, start, end, failedMatchers);
 		} else {
-			return new SidoParseExceptionDetail(match, error.getStartIndex(), error.getEndIndex(), error.getErrorMessage());
+			return new SidoParseExceptionDetail(match, line, start, end, error.getErrorMessage());
 		}
 	}
 
 	protected String match(ParseError error) {
-		// TODO Gets more details about the match: context, line number.
 		return error.getInputBuffer().extract(error.getStartIndex(), error.getEndIndex());
+	}
+
+	protected Position getPosition(ParseError error) {
+		return error.getInputBuffer().getPosition(error.getStartIndex());
 	}
 
 	protected Localizable localize(MatcherPath matcherPath) {
