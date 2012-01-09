@@ -3,8 +3,11 @@ package net.sf.sido.gen.cli;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
+import net.sf.jstring.LocalizableException;
+import net.sf.jstring.Strings;
 import net.sf.sido.gen.GenerationConfiguration;
 import net.sf.sido.gen.GenerationInput;
 import net.sf.sido.gen.GenerationTool;
@@ -34,6 +37,8 @@ public class Main {
 	 *            CLI arguments
 	 */
 	public static void main(String[] args) {
+		// Strings
+		Strings strings = new Strings(true, "net.sf.sido.parser.Strings", "net.sf.sido.schema.Strings");
 		// Options
 		Options options = readOptions(args);
 		// Summary
@@ -41,6 +46,8 @@ public class Main {
 		// Generation
 		try {
 			generate(options);
+		} catch (LocalizableException e) {
+			System.err.format("Problem with the generation:%n%s%n", e.getLocalizedMessage(strings, Locale.getDefault()));
 		} catch (Exception e) {
 			System.err.println("Problem with the generation");
 			e.printStackTrace(System.err);
