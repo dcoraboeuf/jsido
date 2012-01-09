@@ -234,6 +234,11 @@ public class GenerationToolTest {
 
 	private List<String> readLines(String content) {
 		String[] lines = StringUtils.splitPreserveAllTokens(content, "\n");
+		// Trim all lines
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = StringUtils.trim(lines[i]);
+		}
+		// OK
 		return Arrays.asList(lines);
 	}
 
