@@ -25,15 +25,15 @@ public class DefaultSidoContext implements SidoContext {
 	
 	public static Collection<? extends SidoSimpleType<?>> getDefaultSimpleTypes() {
 		List<SidoSimpleType<?>> list = new ArrayList<SidoSimpleType<?>>();
-		list.add(SimpleType.get("string", String.class));
-		list.add(SimpleType.get("boolean", Boolean.class));
-		list.add(SimpleType.get("byte", Byte.class));
-		list.add(SimpleType.get("short", Short.class));
-		list.add(SimpleType.get("integer", Integer.class));
-		list.add(SimpleType.get("long", Long.class));
-		list.add(SimpleType.get("float", Float.class));
-		list.add(SimpleType.get("double", Double.class));
-		list.add(SimpleType.get("decimal", BigDecimal.class));
+		list.add(SimpleType.get("string", String.class, "\"\""));
+		list.add(SimpleType.get("boolean", Boolean.class, "false"));
+		list.add(SimpleType.get("byte", Byte.class, "0"));
+		list.add(SimpleType.get("short", Short.class, "0"));
+		list.add(SimpleType.get("integer", Integer.class, "0"));
+		list.add(SimpleType.get("long", Long.class, "0L"));
+		list.add(SimpleType.get("float", Float.class, "0f"));
+		list.add(SimpleType.get("double", Double.class, "0d"));
+		list.add(SimpleType.get("decimal", BigDecimal.class, "BigDecimal.ZERO"));
 		// Detection of simple types
 		@SuppressWarnings("rawtypes")
 		Iterator<SidoSimpleType> extensions = ServiceLoader.load(SidoSimpleType.class).iterator();

@@ -29,15 +29,17 @@ public class SimpleType<T> extends AbstractSidoSimpleType<T> {
 		}
 	}
 
-	public static <T> SimpleType<T> get(String name, Class<T> type) {
-		return new SimpleType<T>(name, type);
+	public static <T> SimpleType<T> get(String name, Class<T> type, String defaultJavaInitialization) {
+		return new SimpleType<T>(name, type, defaultJavaInitialization);
 	}
 
 	private final Class<T> type;
+	private final String defaultJavaInitialization;
 
-	public SimpleType(String name, Class<T> type) {
+	public SimpleType(String name, Class<T> type, String defaultJavaInitialization) {
 		super(name);
 		this.type = type;
+		this.defaultJavaInitialization = defaultJavaInitialization;
 	}
 
 	@Override
@@ -48,6 +50,11 @@ public class SimpleType<T> extends AbstractSidoSimpleType<T> {
 	@Override
 	public T getDefaultValue() {
 		return getDefaultValue(type);
+	}
+	
+	@Override
+	public String getDefaultJavaInitialization() {
+		return defaultJavaInitialization;
 	}
 
 }

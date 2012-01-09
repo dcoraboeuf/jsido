@@ -33,8 +33,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		@Override
 		public String getFieldSingleDefault(GenerationContext generationContext, SidoSimpleProperty<?> property,
 				JClass propertyClass) {
-			Object value = property.getType().getDefaultValue();
-			return valueToString(value);
+			return property.getType().getDefaultJavaInitialization();
 		}
 
 	}

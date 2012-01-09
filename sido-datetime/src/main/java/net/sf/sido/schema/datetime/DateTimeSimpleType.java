@@ -19,5 +19,10 @@ public class DateTimeSimpleType extends AbstractSidoSimpleType<DateTime> {
 	public DateTime getDefaultValue() {
 		return new DateTime();
 	}
+	
+	@Override
+	public String getDefaultJavaInitialization() {
+		return "new DateTime()";
+	}
 
 }
