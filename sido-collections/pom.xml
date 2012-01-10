@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>sido-pom</artifactId>
 		<groupId>net.sf.sido</groupId>
-		<version>1.0.0.A0</version>
+		<version>1.0.0.A1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
