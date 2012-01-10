@@ -24,7 +24,7 @@ public class JClass extends JItem<JClass> {
     private final List<JMethod> methods = new ArrayList<JMethod>();
     
     public JClass (Class<?> type) {
-    	this (type.getPackage().getName(), type.getSimpleName());
+    	this (type.isPrimitive() ? null : type.getPackage().getName(), type.getSimpleName());
     }
 
     public JClass(String packageName, String name) {
@@ -93,6 +93,10 @@ public class JClass extends JItem<JClass> {
     }
 
     public void write(PrintWriter writer) throws IOException {
+    	// Checks
+    	if (StringUtils.isBlank(packageName)) {
+    		throw new IllegalStateException("Cannot write a class with no package");
+    	}
         // TODO Header
         // Package
         writer.format("package %s;%n%n", packageName);
@@ -147,7 +151,7 @@ public class JClass extends JItem<JClass> {
 
     public void addImport(JClass cls) {
         String otherPackageName = cls.getPackageName();
-        if (!packageName.equals(otherPackageName) && !"java.lang".equals(otherPackageName)) {
+        if (StringUtils.isNotBlank(otherPackageName) && !packageName.equals(otherPackageName) && !"java.lang".equals(otherPackageName)) {
         	addImport(otherPackageName + "." + cls.getName());
         }
     }

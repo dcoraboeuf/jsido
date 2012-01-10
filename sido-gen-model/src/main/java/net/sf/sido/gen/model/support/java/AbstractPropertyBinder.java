@@ -1,5 +1,6 @@
 package net.sf.sido.gen.model.support.java;
 
+import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.schema.SidoProperty;
 
 public abstract class AbstractPropertyBinder<T extends SidoProperty> implements PropertyBinder<T> {
@@ -13,4 +14,9 @@ public abstract class AbstractPropertyBinder<T extends SidoProperty> implements 
 			return "null";
 		}
 	}
+	
+	public JClass getFieldCollectionClass(GenerationContext generationContext, T property) {
+		return getFieldSingleClass(generationContext, property);
+	}
+	
 }

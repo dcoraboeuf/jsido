@@ -1,5 +1,9 @@
 package net.sf.sido.gen.model.support.java;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
@@ -9,6 +13,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,10 +27,45 @@ import difflib.Patch;
  * Unit test for {@link JClass}.
  */
 public class JClassTest {
-	
+
+	/**
+	 * Primitive type
+	 */
+	@Test
+	public void primitive() {
+		JClass c = new JClass(Integer.TYPE);
+		assertNull(c.getPackageName());
+		assertEquals("int", c.getName());
+	}
+
+	/**
+	 * Primitive type cannot be written
+	 * 
+	 * @throws IOException
+	 */
+	@Test(expected = IllegalStateException.class)
+	public void primitive_cannot_be_written() throws IOException {
+		JClass c = new JClass(Integer.TYPE);
+		c.write(new PrintWriter(new StringWriter()));
+	}
+
+	/**
+	 * Primitive type as an import
+	 */
+	@Test
+	public void primitive_as_import() throws IOException {
+		JClass intClass = new JClass(Integer.TYPE);
+		JClass hostClass = new JClass("test", "Test");
+		hostClass.addImport(intClass);
+		Set<String> imports = hostClass.getImportNames();
+		assertNotNull(imports);
+		assertTrue(imports.isEmpty());
+	}
+
 	/**
 	 * Tests that spacing is correct.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void spacing() throws IOException {
@@ -34,11 +74,14 @@ public class JClassTest {
 		c.addImport(List.class);
 		c.addImport(ArrayList.class);
 		c.addField("String", "name");
-		c.addField("List<String>", "otherNames").setInitialisation("new ArrayList<String>()");
+		c.addField("List<String>", "otherNames").setInitialisation(
+				"new ArrayList<String>()");
 		c.addConstructor();
-		c.addConstructor().addParam("String", "value").addContent("this.name = value;");
+		c.addConstructor().addParam("String", "value")
+				.addContent("this.name = value;");
 		c.addMethod("getName", "String").addContent("return name;");
-		c.addMethod("setName").addParam("String", "value").addContent("this.name = value;");
+		c.addMethod("setName").addParam("String", "value")
+				.addContent("this.name = value;");
 		// Output
 		StringWriter s = new StringWriter();
 		PrintWriter writer = new PrintWriter(s);
@@ -62,10 +105,11 @@ public class JClassTest {
 			fail("spacing");
 		}
 	}
-	
+
 	/**
 	 * Tests that spacing is correct.
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void spacing_no_constructor() throws IOException {
@@ -74,9 +118,11 @@ public class JClassTest {
 		c.addImport(List.class);
 		c.addImport(ArrayList.class);
 		c.addField("String", "name");
-		c.addField("List<String>", "otherNames").setInitialisation("new ArrayList<String>()");
+		c.addField("List<String>", "otherNames").setInitialisation(
+				"new ArrayList<String>()");
 		c.addMethod("getName", "String").addContent("return name;");
-		c.addMethod("setName").addParam("String", "value").addContent("this.name = value;");
+		c.addMethod("setName").addParam("String", "value")
+				.addContent("this.name = value;");
 		// Output
 		StringWriter s = new StringWriter();
 		PrintWriter writer = new PrintWriter(s);
@@ -105,7 +151,8 @@ public class JClassTest {
 			throws IOException {
 		InputStream in = getClass().getResourceAsStream(referenceResourcePath);
 		if (in == null) {
-			throw new IOException("Cannot find resource at " + referenceResourcePath);
+			throw new IOException("Cannot find resource at "
+					+ referenceResourcePath);
 		} else {
 			try {
 				String content = IOUtils.toString(in, "UTF-8");

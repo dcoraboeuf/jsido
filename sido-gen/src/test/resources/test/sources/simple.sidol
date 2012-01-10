@@ -3,5 +3,6 @@ schema <sido.test>.
 a Person
 has
 	a name,
-	a nullable integer as age
+	a nullable integer as age,
+	a long as id
 	.

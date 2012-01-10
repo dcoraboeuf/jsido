@@ -3,6 +3,8 @@ package net.sf.sido.gen.model.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ClassUtils;
+
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
@@ -27,6 +29,22 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 
 		@Override
 		public JClass getFieldSingleClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
+			Class<?> type = property.getType().getType();
+			if (property.isNullable()) {
+				return new JClass(type);
+			} else {
+				// Gets the associated primitive type, if any
+				Class<?> primitiveType = ClassUtils.wrapperToPrimitive(type);
+				if (primitiveType != null) {
+					return new JClass(primitiveType);
+				} else {
+					return new JClass(type);
+				}
+			}
+		}
+		
+		@Override
+		public JClass getFieldCollectionClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
 			return new JClass(property.getType().getType());
 		}
 
@@ -124,7 +142,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		// Field name
 		String fieldName = getFieldName(property);
 		// Field class
-		JClass fieldClass = getFieldSingleClass(generationContext, property);
+		JClass fieldClass = getFieldCollectionClass(generationContext, property);
 		c.addImport(fieldClass);
 		// Collection type
 		c.addImport(optionCollectionInterface);

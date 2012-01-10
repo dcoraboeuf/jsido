@@ -130,6 +130,11 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		return binder.getFieldSingleClass(generationContext, property);
 	}
 
+	protected <T extends SidoProperty> JClass getFieldCollectionClass(GenerationContext generationContext, T property) {
+		PropertyBinder<T> binder = loadPropertyBinder(property);
+		return binder.getFieldCollectionClass(generationContext, property);
+	}
+
 	protected <T extends SidoProperty> PropertyBinder<T> loadPropertyBinder(T property) {
 		PropertyBinder<T> binder = getPropertyBinder(property);
 		if (binder == null) {

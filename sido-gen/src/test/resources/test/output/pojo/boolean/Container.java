@@ -6,7 +6,7 @@ import java.util.List;
 public class Container {
 
 	private Boolean optionalFlag;
-	private Boolean flag = false;
+	private boolean flag = false;
 	private List<Boolean> flags = new ArrayList<Boolean>();
 
 	public Boolean getOptionalFlag () {
@@ -17,11 +17,11 @@ public class Container {
 		optionalFlag = pValue;
 	}
 
-	public Boolean isFlag () {
+	public boolean isFlag () {
 		return flag;
 	}
 
-	public void setFlag (Boolean pValue) {
+	public void setFlag (boolean pValue) {
 		flag = pValue;
 	}
 
