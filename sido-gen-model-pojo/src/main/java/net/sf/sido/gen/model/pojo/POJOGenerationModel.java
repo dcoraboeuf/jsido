@@ -82,6 +82,18 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public POJOGenerationModel() {
 		super("pojo");
 	}
+	
+	@Override
+	protected String getGetMethodName(SidoProperty property) {
+		if (property instanceof SidoSimpleProperty) {
+			SidoSimpleProperty<?> simpleProperty = (SidoSimpleProperty<?>) property;
+			if (Boolean.class.equals(simpleProperty.getType().getType()) && !simpleProperty.isNullable() && !simpleProperty.isCollection()) {
+				return getPrefixedMethodName("is", property);
+			}
+		}
+		// Default
+		return super.getGetMethodName(property);
+	}
 
 	@Override
 	protected PropertyBinder<? extends SidoSimpleProperty<?>> getSimplePropertyBinder(SidoSimpleProperty<?> property) {

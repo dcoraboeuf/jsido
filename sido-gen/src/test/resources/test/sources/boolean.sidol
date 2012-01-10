@@ -1,0 +1,8 @@
+schema <sido.test>.
+
+a Container
+has
+	a collection of boolean as flags,
+	a boolean as flag,
+	a nullable boolean as optionalFlag
+	.
