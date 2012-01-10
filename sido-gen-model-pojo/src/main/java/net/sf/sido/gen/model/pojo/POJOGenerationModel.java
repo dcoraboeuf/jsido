@@ -24,13 +24,14 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public static final String NON_NULLABLE_COLLECTION_FINAL = "nonNullableCollectionFinal";
 	public static final String COLLECTION_INTERFACE = "collectionInterface";
 	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
+	public static final String NO_PRIMITIVE_TYPE = "noPrimitiveType";
 
 	protected class SimplePropertyBinder extends AbstractPropertyBinder<SidoSimpleProperty<?>> {
 
 		@Override
 		public JClass getFieldSingleClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
 			Class<?> type = property.getType().getType();
-			if (property.isNullable()) {
+			if (property.isNullable() || generationContext.getOptions().getBoolean(NO_PRIMITIVE_TYPE, false)) {
 				return new JClass(type);
 			} else {
 				// Gets the associated primitive type, if any
