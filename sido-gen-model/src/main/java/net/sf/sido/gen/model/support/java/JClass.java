@@ -201,4 +201,13 @@ public class JClass extends JItem<JClass> {
     public String toString() {
     	return name;
     }
+
+	public String getReferenceName() {
+		if (parameters.isEmpty()) {
+			return getName();
+		} else {
+			return String.format("%s<%s>", getName(), parameters);
+		}
+	}
+	
 }

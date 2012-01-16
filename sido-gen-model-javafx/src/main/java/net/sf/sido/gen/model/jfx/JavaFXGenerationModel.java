@@ -1,8 +1,11 @@
 package net.sf.sido.gen.model.jfx;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.JClass;
+import net.sf.sido.gen.model.support.java.JField;
 import net.sf.sido.gen.model.support.java.JMethod;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
 import net.sf.sido.schema.SidoAnonymousProperty;
@@ -34,29 +37,32 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 		// Field class
 		JClass fieldClass = getFieldSingleClass(generationContext, property);
 		// Property type
-		JClass propertyClass = getFieldPropertyClass(generationContext, property);
-		// TODO Field declaration using the property type
-		// JField field = c.addField(fieldClass, fieldName);
-		// TODO If not nullable, provides a default value
-		// TODO Property field initialisation
-		// if (!property.isNullable()) {
-		// // Initialization
-		// String initialization = getFieldSingleDefault(generationContext,
-		// property, fieldClass);
-		// if (StringUtils.isNotBlank(initialization)) {
-		// field.setInitialisation(initialization);
-		// }
-		// }
-		//
+		JClass propertyClass = getFieldPropertyClass(generationContext,
+				property);
+		// Field declaration using the property type
+		JField field = c.addField(propertyClass, fieldName).addModifier("final");
+		// If not nullable, provides a default value
+		// Property field initialisation
+		if (!property.isNullable()) {
+			// Initialization
+			String initialization = getFieldSingleDefault(generationContext,
+					property, fieldClass);
+			if (StringUtils.isNotBlank(initialization)) {
+				field.setInitialisation(String.format("new %s(this, \"%s\", %s)", propertyClass.getReferenceName(), fieldName, initialization));
+			}
+		} else {
+			field.setInitialisation(String.format("new %s(this, \"%s\")", propertyClass.getReferenceName(), fieldName));
+		}
+
 		// Property getter
-		// TODO Returns the property type
-		c.addMethod(String.format("%sProperty", fieldName));
+		c.addMethod(String.format("%sProperty", fieldName), propertyClass)
+				.addModifier("final").addContent("return %s;", fieldName);
 		// Getter
 		c.addMethod(getGetMethodName(property), fieldClass)
 				.addModifier("final").addContent("return %s.get();", fieldName);
 		// Setter
 		JMethod setMethod = c.addMethod(getSetMethodName(property))
-				.addParam(fieldClass, "pValue")
+				.addModifier("final").addParam(fieldClass, "pValue")
 				.addContent("%s.set(pValue);", fieldName);
 		if (generationContext.getOptions().getBoolean(CHAINED_SETTER, false)) {
 			setMethod.setReturnType(c.getName());
@@ -64,8 +70,8 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 		}
 	}
 
-	protected <T extends SidoProperty> JClass getFieldPropertyClass(GenerationContext generationContext,
-			T property) {
+	protected <T extends SidoProperty> JClass getFieldPropertyClass(
+			GenerationContext generationContext, T property) {
 		JavaFXPropertyBinder<T> binder = getPropertyBinder(property);
 		return binder.getFieldJavaFXProperty(generationContext, property);
 	}

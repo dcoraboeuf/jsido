@@ -1,33 +1,49 @@
 package sido.test;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 public class Person {
 
-	private long id = 0L;
-	private Integer age;
-	private String name = "";
+	private final SimpleLongProperty id = new SimpleLongProperty(this, "id", 0L);
+	private final SimpleIntegerProperty age = new SimpleIntegerProperty(this, "age");
+	private final SimpleStringProperty name = new SimpleStringProperty(this, "name", "");
 
-	public long getId () {
+	public final SimpleLongProperty idProperty () {
 		return id;
 	}
 
-	public void setId (long pValue) {
-		id = pValue;
+	public final long getId () {
+		return id.get();
 	}
 
-	public Integer getAge () {
+	public final void setId (long pValue) {
+		id.set(pValue);
+	}
+
+	public final SimpleIntegerProperty ageProperty () {
 		return age;
 	}
 
-	public void setAge (Integer pValue) {
-		age = pValue;
+	public final Integer getAge () {
+		return age.get();
 	}
 
-	public String getName () {
+	public final void setAge (Integer pValue) {
+		age.set(pValue);
+	}
+
+	public final SimpleStringProperty nameProperty () {
 		return name;
 	}
 
-	public void setName (String pValue) {
-		name = pValue;
+	public final String getName () {
+		return name.get();
+	}
+
+	public final void setName (String pValue) {
+		name.set(pValue);
 	}
 
 }

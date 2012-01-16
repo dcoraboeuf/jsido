@@ -16,7 +16,7 @@ public class JavaFXSimplePropertyBinder extends BasicSimplePropertyBinder implem
 			SidoSimpleProperty<?> property) {
 		Class<?> type = property.getType().getType();
 		if (ClassUtils.isPrimitiveWrapper(type)) {
-			return new JClass(JAVAFX_PROPERTY_PACKAGE, String.format(".%sProperty", type.getSimpleName()));
+			return new JClass(JAVAFX_PROPERTY_PACKAGE, String.format("Simple%sProperty", type.getSimpleName()));
 		} else if (String.class.isAssignableFrom(type)) {
 			return new JClass(JAVAFX_PROPERTY_PACKAGE, "SimpleStringProperty");
 		} else {
