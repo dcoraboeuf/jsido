@@ -85,6 +85,45 @@ public class GenerationToolTest {
 	}
 
 	@Test
+	public void pojo_simple_chained_setter() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/simple.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Registration
+		RecordingGenerationOutput registration = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(POJOGenerationModel.CHAINED_SETTER, "true");
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("pojo").sources(sources).output(output)
+				.options(options)
+				.registrationOutput(registration)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Person.java",
+				"/test/output/pojo/simple_chained_setter/Person.java");
+	}
+
+	@Test
 	public void pojo_simple_no_primitive_type() throws IOException {
 		GenerationTool tool = new GenerationTool();
 

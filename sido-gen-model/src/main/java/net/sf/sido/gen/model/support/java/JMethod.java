@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 public class JMethod extends JAbstractMethod<JMethod> {
 
-    private final String returnType;
+    private String returnType;
     private final String name;
     private boolean staticMethod;
 
@@ -18,6 +18,11 @@ public class JMethod extends JAbstractMethod<JMethod> {
         this.name = name;
         this.returnType = returnType;
     }
+    
+    public JMethod setReturnType(String returnType) {
+		this.returnType = returnType;
+		return this;
+	}
 
     @Override
     protected void writeDecl(PrintWriter writer) throws IOException {

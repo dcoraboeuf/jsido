@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
@@ -25,6 +26,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public static final String COLLECTION_INTERFACE = "collectionInterface";
 	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
 	public static final String NO_PRIMITIVE_TYPE = "noPrimitiveType";
+	public static final String CHAINED_SETTER = "chainedSetter";
 
 	protected class SimplePropertyBinder extends AbstractPropertyBinder<SidoSimpleProperty<?>> {
 
@@ -127,6 +129,32 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	@Override
 	protected PropertyBinder<? extends SidoRefProperty> getRefPropertyBinder(SidoRefProperty property) {
 		return refPropertyBinder;
+	}
+
+	protected void generateSingleProperty(SidoProperty property, JClass c, GenerationContext generationContext,
+			SidoType type) {
+		// Field name
+		String fieldName = getFieldName(property);
+		// Field class
+		JClass fieldClass = getFieldSingleClass(generationContext, property);
+		// Field declaration
+		JField field = c.addField(fieldClass, fieldName);
+		// If not nullable, initializes it
+		if (!property.isNullable()) {
+			// Initialization
+			String initialization = getFieldSingleDefault(generationContext, property, fieldClass);
+			if (StringUtils.isNotBlank(initialization)) {
+				field.setInitialisation(initialization);
+			}
+		}
+		// Getter
+		c.addMethod(getGetMethodName(property), fieldClass).addContent("return %s;", fieldName);
+		// Setter
+		JMethod setMethod = c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
+		if (generationContext.getOptions().getBoolean(CHAINED_SETTER, false)) {
+			setMethod.setReturnType(c.getName());
+			setMethod.addContent("return this;");
+		}
 	}
 
 	/**

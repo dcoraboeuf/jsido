@@ -98,27 +98,8 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	protected abstract void generateCollectionProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type);
 
-	protected void generateSingleProperty(SidoProperty property, JClass c, GenerationContext generationContext,
-			SidoType type) {
-		// Field name
-		String fieldName = getFieldName(property);
-		// Field class
-		JClass fieldClass = getFieldSingleClass(generationContext, property);
-		// Field declaration
-		JField field = c.addField(fieldClass, fieldName);
-		// If not nullable, initializes it
-		if (!property.isNullable()) {
-			// Initialization
-			String initialization = getFieldSingleDefault(generationContext, property, fieldClass);
-			if (StringUtils.isNotBlank(initialization)) {
-				field.setInitialisation(initialization);
-			}
-		}
-		// Getter
-		c.addMethod(getGetMethodName(property), fieldClass).addContent("return %s;", fieldName);
-		// Setter
-		c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
-	}
+	protected abstract void generateSingleProperty(SidoProperty property, JClass c, GenerationContext generationContext,
+			SidoType type);
 
 	protected <T extends SidoProperty> String getFieldSingleDefault(GenerationContext generationContext, T property, JClass propertyClass) {
 		PropertyBinder<T> binder = loadPropertyBinder(property);
