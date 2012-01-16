@@ -2,7 +2,6 @@ package net.sf.sido.gen.model.jfx;
 
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
-import net.sf.sido.gen.model.support.java.BasicSimplePropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.JMethod;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
@@ -14,7 +13,7 @@ import net.sf.sido.schema.SidoType;
 
 public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 
-	private final BasicSimplePropertyBinder simplePropertyBinder = new BasicSimplePropertyBinder();
+	private final JavaFXSimplePropertyBinder simplePropertyBinder = new JavaFXSimplePropertyBinder();
 
 	public JavaFXGenerationModel() {
 		super("javafx");
@@ -34,7 +33,8 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 		String fieldName = getFieldName(property);
 		// Field class
 		JClass fieldClass = getFieldSingleClass(generationContext, property);
-		// TODO Property type
+		// Property type
+		JClass propertyClass = getFieldPropertyClass(generationContext, property);
 		// TODO Field declaration using the property type
 		// JField field = c.addField(fieldClass, fieldName);
 		// TODO If not nullable, provides a default value
@@ -62,6 +62,12 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 			setMethod.setReturnType(c.getName());
 			setMethod.addContent("return this;");
 		}
+	}
+
+	protected <T extends SidoProperty> JClass getFieldPropertyClass(GenerationContext generationContext,
+			T property) {
+		JavaFXPropertyBinder<T> binder = getPropertyBinder(property);
+		return binder.getFieldJavaFXProperty(generationContext, property);
 	}
 
 	@Override

@@ -18,6 +18,8 @@ public class JClass extends JItem<JClass> {
 
     private String parent;
     private boolean abstractClass;
+    
+    private final List<String> parameters = new ArrayList<String>();
 
     private final List<JField> fields = new ArrayList<JField>();
     private final List<JConstructor> constructors = new ArrayList<JConstructor>();
@@ -64,8 +66,22 @@ public class JClass extends JItem<JClass> {
         // FIXME Checks for imported current package
         importNames.add(s);
     }
+    
+    public JClass addParameter (Class<?> type) {
+    	return addParameter(new JClass(type));
+    }
 
-    public JField addField(String type, String name) {
+    protected JClass addParameter(JClass type) {
+    	addImport(type);
+    	return addParameter(type.getName());
+	}
+
+    protected JClass addParameter(String expression) {
+    	parameters.add(expression);
+    	return this;
+	}
+
+	public JField addField(String type, String name) {
         JField field = new JField(this, type, name);
         fields.add(field);
         return field;
@@ -116,7 +132,13 @@ public class JClass extends JItem<JClass> {
             writer.print(" abstract");
         }
         // Class name
-        writer.format(" class %s ", name);
+        writer.format(" class %s", name);
+        // Parameters
+        if (!parameters.isEmpty()) {
+        	writer.format("<%s>", parameters);
+        }
+        // Separator
+        writer.format(" ");
         // Parent
         if (StringUtils.isNotBlank(parent)) {
             writer.format("extends %s ", parent);

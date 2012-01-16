@@ -129,13 +129,13 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected <T extends SidoProperty> PropertyBinder<T> getPropertyBinder(T property) {
+	protected <P extends PropertyBinder<T>, T extends SidoProperty> P getPropertyBinder(T property) {
 		if (property instanceof SidoSimpleProperty) {
-			return (PropertyBinder<T>) getSimplePropertyBinder((SidoSimpleProperty<?>) property);
+			return (P) getSimplePropertyBinder((SidoSimpleProperty<?>) property);
 		} else if (property instanceof SidoAnonymousProperty) {
-			return (PropertyBinder<T>) getAnonymousPropertyBinder((SidoAnonymousProperty) property);
+			return (P) getAnonymousPropertyBinder((SidoAnonymousProperty) property);
 		} else if (property instanceof SidoRefProperty) {
-			return (PropertyBinder<T>) getRefPropertyBinder((SidoRefProperty) property);
+			return (P) getRefPropertyBinder((SidoRefProperty) property);
 		} else {
 			return null;
 		}
