@@ -269,5 +269,6 @@
 		<module>sido-gen-model-pojo</module>
 		<module>sido-gen-cli</module>
 		<module>sido-datetime</module>
+		<module>sido-gen-model-javafx</module>
 	</modules>
 </project>
