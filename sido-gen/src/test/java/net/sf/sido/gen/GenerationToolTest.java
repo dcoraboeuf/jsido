@@ -351,6 +351,40 @@ public class GenerationToolTest {
 				"/test/output/pojo/collection_final/Library.java");
 	}
 
+	@Test
+	public void javafx_collection () throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/collection.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("javafx").sources(sources).output(output)
+				.options(options)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Library.java",
+				"/test/output/javafx/collection/Library.java");
+	}
+
 	private void checkOutput(Map<String, String> files, String filePath,
 			String referenceResourcePath) throws IOException {
 		// Reads the content
