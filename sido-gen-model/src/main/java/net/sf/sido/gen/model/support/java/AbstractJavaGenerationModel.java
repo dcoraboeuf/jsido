@@ -15,6 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractJavaGenerationModel extends AbstractGenerationModel<JavaGenerationResult> {
 
+	public static final String CHAINED_SETTER = "chainedSetter";
+	public static final String NO_PRIMITIVE_TYPE = "noPrimitiveType";
+
 	public AbstractJavaGenerationModel(String id) {
 		super(id);
 	}

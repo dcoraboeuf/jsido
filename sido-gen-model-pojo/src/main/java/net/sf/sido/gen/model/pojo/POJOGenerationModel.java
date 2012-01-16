@@ -3,13 +3,13 @@ package net.sf.sido.gen.model.pojo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.AbstractPropertyBinder;
+import net.sf.sido.gen.model.support.java.BasicSimplePropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.JField;
 import net.sf.sido.gen.model.support.java.JMethod;
@@ -25,39 +25,6 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public static final String NON_NULLABLE_COLLECTION_FINAL = "nonNullableCollectionFinal";
 	public static final String COLLECTION_INTERFACE = "collectionInterface";
 	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
-	public static final String NO_PRIMITIVE_TYPE = "noPrimitiveType";
-	public static final String CHAINED_SETTER = "chainedSetter";
-
-	protected class SimplePropertyBinder extends AbstractPropertyBinder<SidoSimpleProperty<?>> {
-
-		@Override
-		public JClass getFieldSingleClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
-			Class<?> type = property.getType().getType();
-			if (property.isNullable() || generationContext.getOptions().getBoolean(NO_PRIMITIVE_TYPE, false)) {
-				return new JClass(type);
-			} else {
-				// Gets the associated primitive type, if any
-				Class<?> primitiveType = ClassUtils.wrapperToPrimitive(type);
-				if (primitiveType != null) {
-					return new JClass(primitiveType);
-				} else {
-					return new JClass(type);
-				}
-			}
-		}
-		
-		@Override
-		public JClass getFieldCollectionClass(GenerationContext generationContext, SidoSimpleProperty<?> property) {
-			return new JClass(property.getType().getType());
-		}
-
-		@Override
-		public String getFieldSingleDefault(GenerationContext generationContext, SidoSimpleProperty<?> property,
-				JClass propertyClass) {
-			return property.getType().getDefaultJavaInitialization();
-		}
-
-	}
 
 	protected class AnonymousPropertyBinder extends AbstractPropertyBinder<SidoAnonymousProperty> {
 
@@ -96,7 +63,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 
 	}
 
-	private final SimplePropertyBinder simplePropertyBinder = new SimplePropertyBinder();
+	private final BasicSimplePropertyBinder simplePropertyBinder = new BasicSimplePropertyBinder();
 	private final AnonymousPropertyBinder anonymousPropertyBinder = new AnonymousPropertyBinder();
 	private final RefPropertyBinder refPropertyBinder = new RefPropertyBinder();
 
