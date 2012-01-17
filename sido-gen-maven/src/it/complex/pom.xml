@@ -31,7 +31,6 @@
                         </goals>
                         <configuration>
                         	<model>pojo</model>
-                            <outputPackage>net.sf.sido.it.complex</outputPackage>
                         </configuration>
                     </execution>
                 </executions>
