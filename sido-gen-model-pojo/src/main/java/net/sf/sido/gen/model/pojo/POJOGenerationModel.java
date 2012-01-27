@@ -9,6 +9,7 @@ import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.AbstractPropertyBinder;
+import net.sf.sido.gen.model.support.java.BasicAnonymousPropertyBinder;
 import net.sf.sido.gen.model.support.java.BasicSimplePropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.JField;
@@ -25,21 +26,6 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public static final String NON_NULLABLE_COLLECTION_FINAL = "nonNullableCollectionFinal";
 	public static final String COLLECTION_INTERFACE = "collectionInterface";
 	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
-
-	protected class AnonymousPropertyBinder extends AbstractPropertyBinder<SidoAnonymousProperty> {
-
-		@Override
-		public JClass getFieldSingleClass(GenerationContext generationContext, SidoAnonymousProperty property) {
-			return new JClass(Object.class);
-		}
-
-		@Override
-		public String getFieldSingleDefault(GenerationContext generationContext, SidoAnonymousProperty property,
-				JClass propertyClass) {
-			return null;
-		}
-
-	}
 
 	protected class RefPropertyBinder extends AbstractPropertyBinder<SidoRefProperty> {
 
@@ -64,7 +50,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	}
 
 	private final BasicSimplePropertyBinder simplePropertyBinder = new BasicSimplePropertyBinder();
-	private final AnonymousPropertyBinder anonymousPropertyBinder = new AnonymousPropertyBinder();
+	private final BasicAnonymousPropertyBinder anonymousPropertyBinder = new BasicAnonymousPropertyBinder();
 	private final RefPropertyBinder refPropertyBinder = new RefPropertyBinder();
 
 	public POJOGenerationModel() {

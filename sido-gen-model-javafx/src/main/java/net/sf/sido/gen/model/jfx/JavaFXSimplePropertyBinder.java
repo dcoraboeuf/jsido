@@ -8,8 +8,6 @@ import net.sf.sido.schema.SidoSimpleProperty;
 import org.apache.commons.lang3.ClassUtils;
 
 public class JavaFXSimplePropertyBinder extends BasicSimplePropertyBinder implements JavaFXPropertyBinder<SidoSimpleProperty<?>> {
-	
-	private static final String JAVAFX_PROPERTY_PACKAGE = "javafx.beans.property";
 
 	@Override
 	public JClass getFieldJavaFXProperty(GenerationContext generationContext,

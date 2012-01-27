@@ -7,6 +7,8 @@ import net.sf.sido.schema.SidoProperty;
 
 public interface JavaFXPropertyBinder<T extends SidoProperty> extends PropertyBinder<T> {
 	
+	String JAVAFX_PROPERTY_PACKAGE = "javafx.beans.property";
+	
 	JClass getFieldJavaFXProperty(GenerationContext generationContext, T property);
 
 }

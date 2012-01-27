@@ -1,7 +1,5 @@
 package net.sf.sido.gen.model.jfx;
 
-import org.apache.commons.lang3.StringUtils;
-
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.JClass;
@@ -14,9 +12,12 @@ import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 
 	private final JavaFXSimplePropertyBinder simplePropertyBinder = new JavaFXSimplePropertyBinder();
+	private final JavaFXAnonymousPropertyBinder anonymousPropertyBinder = new JavaFXAnonymousPropertyBinder();
 
 	public JavaFXGenerationModel() {
 		super("javafx");
@@ -85,8 +86,7 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 	@Override
 	protected PropertyBinder<? extends SidoAnonymousProperty> getAnonymousPropertyBinder(
 			SidoAnonymousProperty property) {
-		// TODO Auto-generated method stub
-		return null;
+		return anonymousPropertyBinder;
 	}
 
 	@Override
