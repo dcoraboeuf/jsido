@@ -128,7 +128,6 @@ public class GenerationToolTest {
 	}
 
 	@Test
-	@Ignore
 	public void javafx_composite() throws IOException {
 		GenerationTool tool = new GenerationTool();
 
