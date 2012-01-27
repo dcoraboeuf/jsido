@@ -67,7 +67,7 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 				.addModifier("final").addParam(fieldClass, "pValue")
 				.addContent("%s.set(pValue);", fieldName);
 		if (generationContext.getOptions().getBoolean(CHAINED_SETTER, false)) {
-			setMethod.setReturnType(c.getName());
+			setMethod.setReturnType(c);
 			setMethod.addContent("return this;");
 		}
 	}

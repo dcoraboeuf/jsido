@@ -1,0 +1,7 @@
+schema <sido.test>.
+
+a Document
+has
+	a long as id,
+	an anonymous as content
+	.

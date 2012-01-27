@@ -103,6 +103,11 @@ public class JClass extends JItem<JClass> {
     }
 
     public JMethod addMethod(String name, String returnType) {
+    	return addMethod(name, new JClass("", returnType));
+    }
+
+    public JMethod addMethod(String name, JClass returnType) {
+        addImport(returnType);
         JMethod method = new JMethod(this, name, returnType);
         methods.add(method);
         return method;
@@ -167,13 +172,6 @@ public class JClass extends JItem<JClass> {
 	protected String parameterListAsString() {
 		return StringUtils.join(parameters, ",");
 	}
-
-    public JMethod addMethod(String methodName, JClass returnClass) {
-        // Import the class
-        addImport(returnClass);
-        // OK
-        return addMethod(methodName, returnClass.getName());
-    }
 
     public void addImport(JClass cls) {
         String otherPackageName = cls.getPackageName();

@@ -168,6 +168,45 @@ public class GenerationToolTest {
 	}
 
 	@Test
+	public void javafx_anonymous() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/anonymous.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Registration
+		RecordingGenerationOutput registration = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("javafx").sources(sources).output(output)
+				.options(options)
+				.registrationOutput(registration)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Document.java",
+				"/test/output/javafx/anonymous/Document.java");
+		
+	}
+
+	@Test
 	public void pojo_simple_chained_setter() throws IOException {
 		GenerationTool tool = new GenerationTool();
 

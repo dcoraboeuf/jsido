@@ -5,32 +5,32 @@ import java.io.PrintWriter;
 
 public class JMethod extends JAbstractMethod<JMethod> {
 
-    private String returnType;
+    private JClass returnType;
     private final String name;
     private boolean staticMethod;
 
     public JMethod(JClass parent, String name) {
-        this(parent, name, "void");
+        this(parent, name, new JClass("", "void"));
     }
 
-    public JMethod(JClass parent, String name, String returnType) {
+    public JMethod(JClass parent, String name, JClass returnType) {
         super(parent);
         this.name = name;
         this.returnType = returnType;
     }
     
-    public JMethod setReturnType(String returnType) {
+    public JMethod setReturnType(JClass returnType) {
 		this.returnType = returnType;
 		return this;
 	}
 
     @Override
     protected void writeDecl(PrintWriter writer) throws IOException {
-        writer.format("%s%s %s", staticMethod ? "static " : "", returnType, name);
+        writer.format("%s%s %s", staticMethod ? "static " : "", returnType.getReferenceName(), name);
         writeParams(writer);
     }
 
-    public String getReturnType() {
+    public JClass getReturnType() {
         return returnType;
     }
 

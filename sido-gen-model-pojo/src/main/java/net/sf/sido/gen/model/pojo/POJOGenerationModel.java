@@ -83,7 +83,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		// Setter
 		JMethod setMethod = c.addMethod(getSetMethodName(property)).addParam(fieldClass, "pValue").addContent("%s = pValue;", fieldName);
 		if (generationContext.getOptions().getBoolean(CHAINED_SETTER, false)) {
-			setMethod.setReturnType(c.getName());
+			setMethod.setReturnType(c);
 			setMethod.addContent("return this;");
 		}
 	}

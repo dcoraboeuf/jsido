@@ -64,6 +64,20 @@ public class JClassTest {
 		c.addField(new JClass("test.api", "Model").addParameter(String.class), "model");
 		assertJClass(c, "/jclass/ParametersInFields.java", "parameters_in_fields");
 	}
+	
+	@Test
+	public void parameters_as_return () throws IOException {
+		JClass c = new JClass("test", "MyClass");
+		c.addMethod("getValue", new JClass("test.api", "Model").addParameter(String.class)).addContent("return null;");
+		assertJClass(c, "/jclass/ParametersAsReturn.java", "parameters_as_return");
+	}
+	
+	@Test
+	public void parameters_as_param () throws IOException {
+		JClass c = new JClass("test", "MyClass");
+		c.addMethod("setValue").addParam(new JClass("test.api", "Model").addParameter(String.class), "value").addContent("// Nothing");
+		assertJClass(c, "/jclass/ParametersAsParam.java", "parameters_as_param");
+	}
 
 	public void assertJClass(JClass c, String referenceResourcePath,
 			String testId) throws IOException {

@@ -11,27 +11,29 @@ import java.util.Map;
 
 public abstract class JAbstractMethod<T extends JAbstractMethod<T>> extends JMember<T> {
 
-    private final Map<String, String> params = new LinkedHashMap<String,String>();
+    private final Map<String, JClass> params = new LinkedHashMap<String,JClass>();
     private final List<String> content = new ArrayList<String>();
 
     protected JAbstractMethod(JClass parent) {
         super(parent);
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, JClass> getParams() {
         return params;
     }
 
-    @SuppressWarnings("unchecked")
     public T addParam (String type, String name) {
-        params.put(name, type);
-        return (T) this;
+    	return addParam (new JClass("", type), name);
     }
 
+    @SuppressWarnings("unchecked")
     public T addParam (JClass jClass, String name) {
-        // FIXME Import
+        // Import
+    	getParent().addImport(jClass);
+    	// Adding
+    	params.put(name, jClass);
         // OK
-        return addParam(jClass.getName(), name);
+        return (T) this;
     }
 
     public List<String> getContent() {
@@ -46,10 +48,10 @@ public abstract class JAbstractMethod<T extends JAbstractMethod<T>> extends JMem
 
     protected void writeParams(PrintWriter writer) throws IOException {
         List<String> list = new ArrayList<String>();
-        for (Map.Entry<String, String> param : params.entrySet()) {
+        for (Map.Entry<String, JClass> param : params.entrySet()) {
             String name = param.getKey();
-            String type = param.getValue();
-            list.add(String.format("%s %s", type, name));
+            JClass type = param.getValue();
+            list.add(String.format("%s %s", type.getReferenceName(), name));
         }
         writer.format(" (%s)", StringUtils.join(list, ", "));
     }
