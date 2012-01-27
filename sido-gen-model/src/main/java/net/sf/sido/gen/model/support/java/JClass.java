@@ -62,8 +62,7 @@ public class JClass extends JItem<JClass> {
         this.abstractClass = abstractClass;
     }
 
-    public void addImport(String s) {
-        // FIXME Checks for imported current package
+    protected void addImport(String s) {
         importNames.add(s);
     }
     
