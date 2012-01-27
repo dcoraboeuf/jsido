@@ -39,7 +39,7 @@ public class ComplexTest {
 	@Test
 	public void person_age() {
 		Person p = new Person();
-		assertNull(p.getAge());
+		assertEquals(Integer.valueOf(0), p.getAge());
 		p.setAge(12);
 		int age = p.getAge();
 		assertEquals(12, age);
