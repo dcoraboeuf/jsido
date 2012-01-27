@@ -4,6 +4,7 @@ a Person
 has
 	a name,
 	a nullable integer as age,
+	a long as id,
 	a nullable collection of string as phones,
 	an Address as mainAddress,
 	a collection of Address as addresses indexed by country

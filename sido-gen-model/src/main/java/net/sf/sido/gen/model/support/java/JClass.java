@@ -71,7 +71,7 @@ public class JClass extends JItem<JClass> {
     	return addParameter(new JClass(type));
     }
 
-    protected JClass addParameter(JClass type) {
+    public JClass addParameter(JClass type) {
     	addImport(type);
     	return addParameter(type.getName());
 	}

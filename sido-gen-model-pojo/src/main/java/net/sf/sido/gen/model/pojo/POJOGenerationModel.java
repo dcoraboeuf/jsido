@@ -8,13 +8,13 @@ import org.apache.commons.lang3.StringUtils;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
-import net.sf.sido.gen.model.support.java.AbstractPropertyBinder;
 import net.sf.sido.gen.model.support.java.BasicAnonymousPropertyBinder;
 import net.sf.sido.gen.model.support.java.BasicSimplePropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
 import net.sf.sido.gen.model.support.java.JField;
 import net.sf.sido.gen.model.support.java.JMethod;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
+import net.sf.sido.gen.model.support.java.BasicRefPropertyBinder;
 import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoRefProperty;
@@ -27,31 +27,9 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 	public static final String COLLECTION_INTERFACE = "collectionInterface";
 	public static final String COLLECTION_IMPLEMENTATION = "collectionImplementation";
 
-	protected class RefPropertyBinder extends AbstractPropertyBinder<SidoRefProperty> {
-
-		@Override
-		public JClass getFieldSingleClass(GenerationContext generationContext, SidoRefProperty property) {
-			return createClassRef(generationContext, property.getType());
-		}
-
-		@Override
-		public String getFieldSingleDefault(GenerationContext generationContext, SidoRefProperty property,
-				JClass propertyClass) {
-			SidoType type = property.getType();
-			if (type.isAbstractType()) {
-				// Cannot initialise an abstract type
-				return null;
-			} else {
-				JClass typeClass = createClassRef(generationContext, type);
-				return String.format("new %s()", typeClass.getName());
-			}
-		}
-
-	}
-
 	private final BasicSimplePropertyBinder simplePropertyBinder = new BasicSimplePropertyBinder();
 	private final BasicAnonymousPropertyBinder anonymousPropertyBinder = new BasicAnonymousPropertyBinder();
-	private final RefPropertyBinder refPropertyBinder = new RefPropertyBinder();
+	private final BasicRefPropertyBinder refPropertyBinder = new BasicRefPropertyBinder();
 
 	public POJOGenerationModel() {
 		super("pojo");

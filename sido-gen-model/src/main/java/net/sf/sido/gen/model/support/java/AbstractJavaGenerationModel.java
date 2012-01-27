@@ -45,7 +45,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	}
 
 	protected JClass createClass(GenerationContext generationContext, SidoType type) {
-		JClass c = createClassRef(generationContext, type);
+		JClass c = JClassUtils.createClassRef(generationContext, type);
 		// Abstraction?
 		if (type.isAbstractType()) {
 			c.setAbstractClass(true);
@@ -53,18 +53,14 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 		// Subclass?
 		SidoType parentType = type.getParentType();
 		if (parentType != null) {
-			String parentTypeName = getSimpleClassName(generationContext, parentType);
+			String parentTypeName = JClassUtils.getSimpleClassName(generationContext, parentType);
 			c.setParent(parentTypeName);
-			c.addImport(createClassRef(generationContext, parentType));
+			c.addImport(JClassUtils.createClassRef(generationContext, parentType));
 		}
 		// Constructors
 		generateConstructors(c, generationContext, type);
 		// OK
 		return c;
-	}
-
-	protected JClass createClassRef(GenerationContext generationContext, SidoType type) {
-		return new JClass(getPackage(generationContext, type), getSimpleClassName(generationContext, type));
 	}
 
 	/**
@@ -147,14 +143,6 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 
 	protected String getFieldName(SidoProperty property) {
 		return property.getName();
-	}
-
-	protected String getSimpleClassName(GenerationContext generationContext, SidoType type) {
-		return StringUtils.capitalize(type.getName());
-	}
-
-	protected String getPackage(GenerationContext generationContext, SidoType type) {
-		return type.getSchema().getUid();
 	}
 
 }

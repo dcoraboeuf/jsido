@@ -18,6 +18,7 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 
 	private final JavaFXSimplePropertyBinder simplePropertyBinder = new JavaFXSimplePropertyBinder();
 	private final JavaFXAnonymousPropertyBinder anonymousPropertyBinder = new JavaFXAnonymousPropertyBinder();
+	private final JavaFXRefPropertyBinder refPropertyBinder = new JavaFXRefPropertyBinder();
 
 	public JavaFXGenerationModel() {
 		super("javafx");
@@ -92,8 +93,7 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 	@Override
 	protected PropertyBinder<? extends SidoRefProperty> getRefPropertyBinder(
 			SidoRefProperty property) {
-		// TODO Auto-generated method stub
-		return null;
+		return refPropertyBinder;
 	}
 
 }
