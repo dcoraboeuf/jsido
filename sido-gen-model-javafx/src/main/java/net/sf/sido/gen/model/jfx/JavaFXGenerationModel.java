@@ -51,6 +51,8 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 					property, fieldClass);
 			if (StringUtils.isNotBlank(initialization)) {
 				field.setInitialisation(String.format("new %s(this, \"%s\", %s)", propertyClass.getReferenceName(), fieldName, initialization));
+			} else {
+				field.setInitialisation(String.format("new %s(this, \"%s\")", propertyClass.getReferenceName(), fieldName));
 			}
 		} else {
 			field.setInitialisation(String.format("new %s(this, \"%s\")", propertyClass.getReferenceName(), fieldName));
