@@ -82,14 +82,14 @@ public class JClass extends JItem<JClass> {
 	}
 
 	public JField addField(String type, String name) {
-        JField field = new JField(this, type, name);
-        fields.add(field);
-        return field;
+		return addField(new JClass("", type), name);
     }
 
     public JField addField(JClass type, String name) {
         addImport(type);
-        return addField(type.getName(), name);
+        JField field = new JField(this, type, name);
+        fields.add(field);
+        return field;
     }
 
     public JConstructor addConstructor() {
@@ -135,7 +135,7 @@ public class JClass extends JItem<JClass> {
         writer.format(" class %s", name);
         // Parameters
         if (!parameters.isEmpty()) {
-        	writer.format("<%s>", parameters);
+        	writer.format("<%s>", parameterListAsString());
         }
         // Separator
         writer.format(" ");
@@ -163,6 +163,10 @@ public class JClass extends JItem<JClass> {
         // End of class
         writer.format("}%n");
     }
+
+	protected String parameterListAsString() {
+		return StringUtils.join(parameters, ",");
+	}
 
     public JMethod addMethod(String methodName, JClass returnClass) {
         // Import the class
@@ -206,7 +210,7 @@ public class JClass extends JItem<JClass> {
 		if (parameters.isEmpty()) {
 			return getName();
 		} else {
-			return String.format("%s<%s>", getName(), parameters);
+			return String.format("%s<%s>", getName(), parameterListAsString());
 		}
 	}
 	

@@ -7,19 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 
 public class JField extends JMember<JField> {
 
-    private final String type;
+    private final JClass type;
     private final String name;
     
     private String initialisation; 
 
-    public JField(JClass parent, String type, String name) {
+    public JField(JClass parent, JClass type, String name) {
         super(parent);
         setScope("private");
         this.type = type;
         this.name = name;
     }
 
-    public String getType() {
+    public JClass getType() {
         return type;
     }
 
@@ -38,11 +38,11 @@ public class JField extends JMember<JField> {
 
 	@Override
     protected void writeDecl(PrintWriter writer) throws IOException {
-        writer.format("%s %s", type, name);
+        writer.format("%s %s", type.getReferenceName(), name);
         if (StringUtils.isNotBlank(initialisation)) {
         	writer.format(" = %s", initialisation);
         }
-        writer.format(";%n", type, name);
+        writer.format(";%n");
     }
 
     /**

@@ -27,6 +27,69 @@ import difflib.Patch;
  * Unit test for {@link JClass}.
  */
 public class JClassTest {
+	
+	@Test
+	public void referenceName_no_parameter() {
+		JClass c = new JClass("test", "MyClass");
+		assertEquals("MyClass", c.getReferenceName());
+	}
+	
+	@Test
+	public void referenceName_one_parameter() {
+		JClass c = new JClass("test", "MyClass").addParameter(new JClass("test.api", "Model"));
+		assertEquals("MyClass<Model>", c.getReferenceName());
+	}
+	
+	@Test
+	public void referenceName_two_parameters() {
+		JClass c = new JClass("test", "MyClass").addParameter(new JClass("test.api", "Model")).addParameter(String.class);
+		assertEquals("MyClass<Model,String>", c.getReferenceName());
+	}
+	
+	/**
+	 * Parameters in declaration
+	 */
+	@Test
+	public void parameters_in_declaration() throws IOException {
+		JClass c = new JClass("test", "MyClass").addParameter(new JClass("test.api", "Model"));
+		assertJClass(c, "/jclass/ParametersInDeclaration.java", "parameters_in_declaration");
+	}
+	
+	/**
+	 * Parameters in fields
+	 */
+	@Test
+	public void parameters_in_fields() throws IOException {
+		JClass c = new JClass("test", "MyClass");
+		c.addField(new JClass("test.api", "Model").addParameter(String.class), "model");
+		assertJClass(c, "/jclass/ParametersInFields.java", "parameters_in_fields");
+	}
+
+	public void assertJClass(JClass c, String referenceResourcePath,
+			String testId) throws IOException {
+		// Output
+		StringWriter s = new StringWriter();
+		PrintWriter writer = new PrintWriter(s);
+		// Generation
+		c.write(writer);
+		// Output
+		List<String> actual = readLines(s.toString());
+		// Gets the expected content
+		List<String> expected = readReference(referenceResourcePath);
+		// Difference between the two sets
+		Patch diff = DiffUtils.diff(expected, actual);
+		List<Delta> deltas = diff.getDeltas();
+		if (!deltas.isEmpty()) {
+			// Creates the diff
+			String original = StringUtils.join(expected, "\n");
+			String revised = StringUtils.join(actual, "\n");
+			List<String> unifiedDiff = DiffUtils.generateUnifiedDiff(original,
+					revised, expected, diff, 3);
+			String diffDisplay = StringUtils.join(unifiedDiff, "\n");
+			System.err.println(diffDisplay);
+			fail(testId);
+		}
+	}
 
 	/**
 	 * Primitive type
