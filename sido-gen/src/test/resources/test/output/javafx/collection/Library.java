@@ -1,24 +1,18 @@
 package sido.test;
 
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Library {
 
-	private List<Book> books = new ArrayList<Book>();
+	private final ObservableList<Book> books = FXCollections.observableArrayList();
 
-	public List<Book> getBooks () {
+	public ObservableList<Book> getBooks () {
 		return books;
 	}
 
 	public void addBooks (Book... pValues) {
-		for (Book pValue : pValues) {
-			books.add(pValue);
-		}
-	}
-
-	public void setBooks (List<Book> pValues) {
-		books = pValues;
+		books.addAll (pValues);
 	}
 
 }

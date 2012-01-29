@@ -28,7 +28,6 @@ import net.sf.sido.schema.support.DefaultSidoContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import difflib.Delta;
@@ -431,7 +430,6 @@ public class GenerationToolTest {
 	}
 
 	@Test
-	@Ignore
 	public void javafx_collection () throws IOException {
 		GenerationTool tool = new GenerationTool();
 

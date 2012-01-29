@@ -27,8 +27,46 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 	@Override
 	protected void generateCollectionProperty(SidoProperty property, JClass c,
 			GenerationContext generationContext, SidoType type) {
-		// TODO Auto-generated method stub
-
+		// Options
+		// Options options = generationContext.getOptions();
+		// boolean optionNonNullableCollectionFinal = options.getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
+		// Class<?> optionCollectionInterface = options.getClass(COLLECTION_INTERFACE, List.class);
+		// Class<?> optionCollectionImplementation = options.getClass(COLLECTION_IMPLEMENTATION, ArrayList.class);
+		// Field name
+		String fieldName = getFieldName(property);
+		// Field class
+		JClass fieldClass = getFieldCollectionClass(generationContext, property);
+		c.addImport(fieldClass);
+		// Collection type
+		JClass collectionType = new JClass("javafx.collections", "ObservableList").addParameter(fieldClass);
+		c.addImport(collectionType);
+		c.addImport(new JClass("javafx.collections", "FXCollections"));
+		// Field declaration
+		JField field = c.addField(collectionType, fieldName);
+		// If not nullable, initializes it
+		if (!property.isNullable()) {
+			field.addModifier("final");
+			// Initialization
+			field.setInitialisation("FXCollections.observableArrayList()");
+		}
+		// Getter
+		c.addMethod(getGetMethodName(property), collectionType).addContent("return %s;", fieldName);
+		// Adding a collection of elements
+		JMethod m = c.addMethod(getAddMethodName(property)).addParam(String.format("%s...", fieldClass.getReferenceName()), "pValues");
+		if (property.isNullable()) {
+			m
+					.addContent("if (%s == null) {", fieldName)
+						.addContent("\t%s = FXCollections.observableArrayList();", fieldName)
+						.addContent("}");
+		}
+		m.addContent("%s.addAll (pValues);", fieldName);
+		// Setter (only for nullable collection - configurable)
+		if (property.isNullable()) {
+			c
+					.addMethod(getSetMethodName(property))
+						.addParam(collectionType, "pValues")
+						.addContent("%s = pValues;", fieldName);
+		}
 	}
 
 	@Override
