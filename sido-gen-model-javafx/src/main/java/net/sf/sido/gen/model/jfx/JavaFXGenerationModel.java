@@ -11,6 +11,7 @@ import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
 import net.sf.sido.schema.SidoType;
+import net.sf.sido.schema.support.SidoIndexedCollectionNotSupportedException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,15 +24,17 @@ public class JavaFXGenerationModel extends AbstractJavaGenerationModel {
 	public JavaFXGenerationModel() {
 		super("javafx");
 	}
+	
+	@Override
+	protected void generateIndexedCollectionProperty(SidoRefProperty property,
+			JClass c, GenerationContext generationContext, SidoType type) {
+		throw new SidoIndexedCollectionNotSupportedException(getId());
+	}
 
 	@Override
 	protected void generateCollectionProperty(SidoProperty property, JClass c,
 			GenerationContext generationContext, SidoType type) {
 		// Options
-		// Options options = generationContext.getOptions();
-		// boolean optionNonNullableCollectionFinal = options.getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
-		// Class<?> optionCollectionInterface = options.getClass(COLLECTION_INTERFACE, List.class);
-		// Class<?> optionCollectionImplementation = options.getClass(COLLECTION_IMPLEMENTATION, ArrayList.class);
 		// Field name
 		String fieldName = getFieldName(property);
 		// Field class
