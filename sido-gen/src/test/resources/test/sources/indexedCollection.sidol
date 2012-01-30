@@ -1,0 +1,12 @@
+schema <sido.test>.
+
+a Library
+has
+	a collection of Book as books indexed by id
+	.
+
+a Book
+has
+	a long as id,
+	a title
+	.

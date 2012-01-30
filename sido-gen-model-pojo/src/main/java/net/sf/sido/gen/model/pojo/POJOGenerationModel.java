@@ -1,16 +1,20 @@
 package net.sf.sido.gen.model.pojo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.sf.sido.collections.IndexedList;
+import net.sf.sido.collections.support.IndexedLists;
 import net.sf.sido.gen.model.GenerationContext;
 import net.sf.sido.gen.model.Options;
 import net.sf.sido.gen.model.support.java.AbstractJavaGenerationModel;
 import net.sf.sido.gen.model.support.java.BasicAnonymousPropertyBinder;
 import net.sf.sido.gen.model.support.java.BasicSimplePropertyBinder;
 import net.sf.sido.gen.model.support.java.JClass;
+import net.sf.sido.gen.model.support.java.JClassUtils;
 import net.sf.sido.gen.model.support.java.JField;
 import net.sf.sido.gen.model.support.java.JMethod;
 import net.sf.sido.gen.model.support.java.PropertyBinder;
@@ -140,6 +144,72 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 			c
 					.addMethod(getSetMethodName(property))
 						.addParam(collectionTypeName, "pValues")
+						.addContent("%s = pValues;", fieldName);
+		}
+	}
+
+	/**
+	 * Generates an {@IndexedList} field.
+	 */
+	@Override
+	protected void generateIndexedCollectionProperty(SidoRefProperty property, JClass c, GenerationContext generationContext,
+			SidoType type) {
+		// Options
+		Options options = generationContext.getOptions();
+		boolean optionNonNullableCollectionFinal = options.getBoolean(NON_NULLABLE_COLLECTION_FINAL, false);
+		
+		// Field name
+		String fieldName = getFieldName(property);
+		// Field class
+		SidoType fieldSidoType = property.getType();
+		JClass fieldClass = JClassUtils.createClassRef(generationContext, fieldSidoType);
+		// Index class
+		String indexName = property.getCollectionIndex();
+		SidoProperty indexProperty = fieldSidoType.getProperty(indexName, true);
+		JClass indexClass = getFieldCollectionClass(generationContext, indexProperty);
+		JClass indexSimpleClass = getFieldSingleClass(generationContext, indexProperty);
+		
+		// Collection type
+		JClass collectionType = new JClass(IndexedList.class);
+		// ... element type
+		collectionType.addParameter(fieldClass);
+		// ... index type
+		collectionType.addParameter(indexClass);
+		
+		// Field declaration
+		JField field = c.addField(collectionType, fieldName);
+		// If not nullable, initializes it
+		if (!property.isNullable()) {
+			// Final field (optional)
+			if (optionNonNullableCollectionFinal) {
+				field.addModifier("final");
+			}
+			// Initialization
+			c.addImport(IndexedLists.class);
+			field.setInitialisation("IndexedLists.indexedList(\"%s\")", indexName);
+		}
+		
+		// Getter
+		c.addMethod(getGetMethodName(property), collectionType).addContent("return %s;", fieldName);
+		// GetByIndex
+		c.addMethod(getGetByIndexMethodName(property), fieldClass)
+			.addParam(indexSimpleClass, "pKey")
+			.addContent("return %s.getByIndex(pKey);", fieldName);
+		// Adding a collection of elements
+		JMethod m = c.addMethod(getAddMethodName(property)).addParam(String.format("%s...", fieldClass.getReferenceName()), "pValues");
+		if (property.isNullable()) {
+			m
+					.addContent("if (%s == null) {", fieldName)
+					.addContent("\t%s = IndexedLists.indexedList(\"%s\");", fieldName, indexName)
+					.addContent("}");
+		}
+		c.addImport(Arrays.class);
+		m.addContent("%s.addAll(Arrays.asList(pValues));", fieldName);
+		// Setter (only for nullable collection - configurable)
+		if (property.isNullable() || !optionNonNullableCollectionFinal) {
+			c
+					.addMethod(getSetMethodName(property))
+						.addParam(collectionType, "pValues")
 						.addContent("%s = pValues;", fieldName);
 		}
 	}

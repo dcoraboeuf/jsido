@@ -85,7 +85,7 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 	protected void generateProperty(SidoProperty property, JClass c, GenerationContext generationContext, SidoType type) {
 		if (property.isCollection()) {
 			if (StringUtils.isNotBlank(property.getCollectionIndex())) {
-				// FIXME generateIndexedCollectionProperty(property, c, generationContext, type);
+				generateIndexedCollectionProperty((SidoRefProperty) property, c, generationContext, type);
 			} else {
 				generateCollectionProperty(property, c, generationContext, type);
 			}
@@ -93,6 +93,9 @@ public abstract class AbstractJavaGenerationModel extends AbstractGenerationMode
 			generateSingleProperty(property, c, generationContext, type);
 		}
 	}
+
+	protected abstract void generateIndexedCollectionProperty(SidoRefProperty property, JClass c, GenerationContext generationContext,
+			SidoType type);
 
 	protected abstract void generateCollectionProperty(SidoProperty property, JClass c, GenerationContext generationContext,
 			SidoType type);
