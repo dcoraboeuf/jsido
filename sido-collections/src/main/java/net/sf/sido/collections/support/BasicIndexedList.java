@@ -47,7 +47,7 @@ public class BasicIndexedList<T, K> extends ForwardingList<T> implements
 		}
 	}
 
-	protected synchronized void reindex() {
+	protected void reindex() {
 		indexLock.writeLock().lock();
 		try {
 			this.index = Maps.uniqueIndex(this.support, indexer);

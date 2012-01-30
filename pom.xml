@@ -299,5 +299,6 @@
 		<module>sido-gen-cli</module>
 		<module>sido-datetime</module>
 		<module>sido-gen-model-javafx</module>
+		<module>sido-javafx-support</module>
 	</modules>
 </project>

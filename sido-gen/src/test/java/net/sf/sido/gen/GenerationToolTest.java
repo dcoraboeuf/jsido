@@ -24,7 +24,6 @@ import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 import net.sf.sido.gen.support.ResourceGenerationInput;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.support.DefaultSidoContext;
-import net.sf.sido.schema.support.SidoIndexedCollectionNotSupportedException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -533,7 +532,7 @@ public class GenerationToolTest {
 				"/test/output/javafx/collection/Library.java");
 	}
 
-	@Test(expected = SidoIndexedCollectionNotSupportedException.class)
+	@Test
 	public void javafx_indexed_collection() throws IOException {
 		GenerationTool tool = new GenerationTool();
 

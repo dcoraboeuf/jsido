@@ -35,6 +35,10 @@ public class IndexedLists {
 		}
 
 	}
+	
+	public static <T, K> Function<T, K> propertyFunction (String name) {
+		return new PropertyFunction<T, K>(name);
+	}
 
 	public static <T, K> IndexedList<T, K> indexedList(List<T> support,
 			Function<T, K> indexer) {

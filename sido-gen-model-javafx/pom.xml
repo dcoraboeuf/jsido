@@ -20,6 +20,11 @@
 			<artifactId>sido-gen-model</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sido-javafx-support</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	
 </project>

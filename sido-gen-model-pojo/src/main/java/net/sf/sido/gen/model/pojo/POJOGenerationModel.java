@@ -198,6 +198,7 @@ public class POJOGenerationModel extends AbstractJavaGenerationModel {
 		// Adding a collection of elements
 		JMethod m = c.addMethod(getAddMethodName(property)).addParam(String.format("%s...", fieldClass.getReferenceName()), "pValues");
 		if (property.isNullable()) {
+			c.addImport(IndexedLists.class);
 			m
 					.addContent("if (%s == null) {", fieldName)
 					.addContent("\t%s = IndexedLists.indexedList(\"%s\");", fieldName, indexName)
