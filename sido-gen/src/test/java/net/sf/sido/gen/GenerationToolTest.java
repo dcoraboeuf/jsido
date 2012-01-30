@@ -24,6 +24,7 @@ import net.sf.sido.gen.support.GenerationConfigurationBuilder;
 import net.sf.sido.gen.support.ResourceGenerationInput;
 import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.support.DefaultSidoContext;
+import net.sf.sido.schema.support.SidoIndexedCollectionNotSupportedException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -530,6 +531,40 @@ public class GenerationToolTest {
 		Map<String, String> files = output.getFiles();
 		checkOutput(files, "sido.test.Library.java",
 				"/test/output/javafx/collection/Library.java");
+	}
+
+	@Test(expected = SidoIndexedCollectionNotSupportedException.class)
+	public void javafx_indexed_collection() throws IOException {
+		GenerationTool tool = new GenerationTool();
+
+		// Mock listener
+		GenerationListener listener = mock(GenerationListener.class);
+
+		// Sources
+		GenerationInput source = new ResourceGenerationInput(
+				"/test/sources/indexedCollection.sidol");
+		Collection<GenerationInput> sources = Collections.singleton(source);
+
+		// Output
+		RecordingGenerationOutput output = new RecordingGenerationOutput();
+		
+		// Options
+		Map<String, String> map = new HashMap<String, String>();
+		Options options = new MapOptions(map);
+
+		// Configuration
+		GenerationConfiguration configuration = GenerationConfigurationBuilder
+				.create().modelId("javafx").sources(sources).output(output)
+				.options(options)
+				.build();
+
+		// Call
+		tool.generate(configuration, listener);
+
+		// Checks the output
+		Map<String, String> files = output.getFiles();
+		checkOutput(files, "sido.test.Library.java",
+				"/test/output/javafx/indexed_collection/Library.java");
 	}
 
 	private void checkOutput(Map<String, String> files, String filePath,
