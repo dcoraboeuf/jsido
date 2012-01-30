@@ -10,6 +10,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import net.sf.sido.collections.IndexedList;
 
+import org.apache.commons.lang3.Validate;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Maps;
@@ -24,6 +26,8 @@ public class BasicIndexedList<T, K> extends ForwardingList<T> implements
 	private final ReadWriteLock indexLock = new ReentrantReadWriteLock();
 
 	public BasicIndexedList(List<T> support, Function<T, K> indexer) {
+		Validate.notNull(support, "Support list is required");
+		Validate.notNull(indexer, "Indexer function is required");
 		this.support = support;
 		this.indexer = indexer;
 		this.index = Maps.uniqueIndex(this.support, indexer);
