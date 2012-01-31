@@ -242,6 +242,10 @@ public class JClassTest {
 
 	private List<String> readLines(String content) {
 		String[] lines = StringUtils.splitPreserveAllTokens(content, "\n");
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			lines[i] = StringUtils.stripEnd(line, "\r");
+		}
 		return Arrays.asList(lines);
 	}
 
