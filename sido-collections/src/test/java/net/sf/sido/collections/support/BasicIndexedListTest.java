@@ -64,6 +64,16 @@ public class BasicIndexedListTest {
 	}
 	
 	@Test
+	public void add_index() {
+		BasicIndexedList<User, String> list = asIndexedList(new User(10, "Bernard"));
+		assertNull(list.getByIndex("Albert"));
+		User albert = new User(1, "Albert");
+		list.add(0, albert);
+		assertSame(albert, list.getByIndex("Albert"));
+		assertEquals(0, list.indexOf(albert));
+	}
+	
+	@Test
 	public void addAll() {
 		BasicIndexedList<User, String> list = asIndexedList(new User(10, "Bernard"));
 		assertNull(list.getByIndex("Albert"));

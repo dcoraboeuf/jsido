@@ -11,6 +11,9 @@ import org.apache.commons.beanutils.PropertyUtils;
 import com.google.common.base.Function;
 
 public class IndexedLists {
+	
+	private IndexedLists () {
+	}
 
 	public static class PropertyFunction<T, K> implements Function<T, K> {
 
@@ -50,6 +53,6 @@ public class IndexedLists {
 	}
 
 	public static <T, K> IndexedList<T, K> indexedList (String name) {
-		return indexedList(new PropertyFunction<T,K>(name));
+		return indexedList(IndexedLists.<T,K>propertyFunction(name));
 	}
 }
