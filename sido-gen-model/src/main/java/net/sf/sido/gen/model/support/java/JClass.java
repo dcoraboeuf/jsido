@@ -121,15 +121,59 @@ public class JClass extends JItem<JClass> {
         // Package
         writer.format("package %s;%n%n", packageName);
         // Imports
-        if (!importNames.isEmpty()) {
+        writeClassImports(writer);
+        // Class doc
+        writeDoc(writer, 0);
+        // Class body
+        writeClassBody(writer);
+    }
+
+	protected void writeClassImports(PrintWriter writer) {
+		if (!importNames.isEmpty()) {
 	        for (String importName : importNames) {
 	            writer.format("import %s;%n", importName);
 	        }
 	        writer.println();
         }
-        // Class doc
-        writeDoc(writer, 0);
-        // Class declaration
+	}
+
+	protected void writeClassBody(PrintWriter writer) throws IOException {
+		// Class declaration
+        writeClassDeclaration(writer);
+        // Fields
+        writeClassFields(writer);
+        // Constructors
+        writeClassConstructors(writer);
+        // Methods
+        writeClassMethods(writer);
+        // End of class
+        writer.format("}%n");
+	}
+
+	protected void writeClassMethods(PrintWriter writer) throws IOException {
+		for (JMethod method : methods) {
+            method.write(writer);
+        }
+	}
+
+	protected void writeClassConstructors(PrintWriter writer)
+			throws IOException {
+		for (JConstructor constructor : constructors) {
+            constructor.write(writer);
+        }
+	}
+
+	protected void writeClassFields(PrintWriter writer) throws IOException {
+		if (!fields.isEmpty()) {
+	        for (JField field : fields) {
+	            field.write(writer);
+	        }
+	        writer.format("%n");
+        }
+	}
+
+	protected void writeClassDeclaration(PrintWriter writer) {
+		// Class declaration
         writer.print("public");
         // Modifiers
         if (abstractClass) {
@@ -149,24 +193,7 @@ public class JClass extends JItem<JClass> {
         }
         // Start of class
         writer.format("{%n%n");
-        // Fields
-        if (!fields.isEmpty()) {
-	        for (JField field : fields) {
-	            field.write(writer);
-	        }
-	        writer.format("%n");
-        }
-        // Constructors
-        for (JConstructor constructor : constructors) {
-            constructor.write(writer);
-        }
-        // Methods
-        for (JMethod method : methods) {
-            method.write(writer);
-        }
-        // End of class
-        writer.format("}%n");
-    }
+	}
 
 	protected String parameterListAsString() {
 		return StringUtils.join(parameters, ",");
