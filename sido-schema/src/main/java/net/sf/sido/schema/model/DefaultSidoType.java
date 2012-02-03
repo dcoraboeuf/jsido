@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
+
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoProperty;
 import net.sf.sido.schema.SidoSchema;
@@ -22,6 +24,8 @@ public class DefaultSidoType extends AbstractSidoItem implements SidoType {
 	private boolean abstractType;
 
 	public DefaultSidoType(SidoSchema schema, String name) {
+		Validate.notNull(schema, "Schema is required");
+		Validate.notBlank(name, "Type name is required");
 		this.schema = schema;
 		this.name = name;
 	}

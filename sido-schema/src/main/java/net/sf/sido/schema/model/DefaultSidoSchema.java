@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
+
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
@@ -17,6 +19,8 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	private Map<String, SidoType> types = new HashMap<String, SidoType>();
 
 	public DefaultSidoSchema(SidoContext context, String uid) {
+		Validate.notNull(context, "Context is required");
+		Validate.notBlank(uid, "Schema UID is required");
 		this.context = context;
 		this.uid = uid;
 	}
@@ -52,6 +56,7 @@ public class DefaultSidoSchema extends AbstractSidoItem implements SidoSchema {
 	}
 
 	public void addType(SidoType type) {
+		checkNotClosed();
 		types.put(type.getName(), type);
 	}
 

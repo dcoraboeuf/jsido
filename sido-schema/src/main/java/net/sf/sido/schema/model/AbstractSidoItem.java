@@ -1,6 +1,6 @@
 package net.sf.sido.schema.model;
 
-import net.sf.sido.schema.support.SideClosedItemException;
+import net.sf.sido.schema.support.SidoClosedItemException;
 
 public abstract class AbstractSidoItem {
 	
@@ -12,7 +12,7 @@ public abstract class AbstractSidoItem {
 	
 	protected void checkNotClosed() {
 		if (closed) {
-			throw new SideClosedItemException();
+			throw new SidoClosedItemException();
 		}
 	}
 

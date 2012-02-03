@@ -1,5 +1,7 @@
 package net.sf.sido.schema.model;
 
+import org.apache.commons.lang3.Validate;
+
 import net.sf.sido.schema.SidoProperty;
 
 public abstract class AbstractSidoProperty implements SidoProperty {
@@ -22,6 +24,7 @@ public abstract class AbstractSidoProperty implements SidoProperty {
 	}
 	
 	protected AbstractSidoProperty(String name, boolean nullable, boolean collection, String collectionIndex) {
+		Validate.notBlank(name, "Property name is required");
 		this.name = name;
 		this.nullable = nullable;
 		this.collection = collection;
