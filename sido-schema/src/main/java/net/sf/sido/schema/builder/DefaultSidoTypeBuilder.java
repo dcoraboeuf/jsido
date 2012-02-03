@@ -1,5 +1,7 @@
 package net.sf.sido.schema.builder;
 
+import org.apache.commons.lang3.Validate;
+
 import net.sf.sido.schema.SidoAnonymousProperty;
 import net.sf.sido.schema.SidoRefProperty;
 import net.sf.sido.schema.SidoSimpleProperty;
@@ -16,6 +18,7 @@ public class DefaultSidoTypeBuilder implements SidoTypeBuilder {
 	private final DefaultSidoType type;
 
 	public DefaultSidoTypeBuilder(SidoSchemaBuilder schemaBuilder, String name) {
+		Validate.notNull(schemaBuilder, "Schema builder is required");
 		this.schemaBuilder = schemaBuilder;
 		this.type = new DefaultSidoType(schemaBuilder.getSchema(), name);
 	}
