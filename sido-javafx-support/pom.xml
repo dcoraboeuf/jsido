@@ -24,6 +24,7 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx-runtime</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	

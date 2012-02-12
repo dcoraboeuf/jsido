@@ -25,6 +25,12 @@
 			<artifactId>sido-javafx-support</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!--  JavaFX -->
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>javafx-runtime</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	
 </project>

@@ -135,9 +135,7 @@
 			<dependency>
 				<groupId>com.oracle</groupId>
 				<artifactId>javafx-runtime</artifactId>
-				<version>2.1</version>
-				<scope>system</scope>
-				<systemPath>${fx.home}/lib/jfxrt.jar</systemPath>
+				<version>2.1b11</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

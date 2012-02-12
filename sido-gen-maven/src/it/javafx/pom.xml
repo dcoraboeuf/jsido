@@ -33,6 +33,7 @@
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx-runtime</artifactId>
 			<version>${javafxVersion}</version>
+			<scope>provided</scope>
 		</dependency>
     </dependencies>
 
