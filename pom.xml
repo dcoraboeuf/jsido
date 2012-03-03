@@ -132,11 +132,6 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.13</version>
 			</dependency>
-			<dependency>
-				<groupId>com.oracle</groupId>
-				<artifactId>javafx-runtime</artifactId>
-				<version>2.1b11</version>
-			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -296,7 +291,5 @@
 		<module>sido-gen-model-pojo</module>
 		<module>sido-gen-cli</module>
 		<module>sido-datetime</module>
-		<module>sido-gen-model-javafx</module>
-		<module>sido-javafx-support</module>
 	</modules>
 </project>
