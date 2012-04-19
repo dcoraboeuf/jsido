@@ -5,9 +5,11 @@ import net.sf.sido.parser.discovery.SidoSchemaDiscovery;
 public class DefaultSidoSchemaDiscovery implements SidoSchemaDiscovery {
 
 	private final String uid;
+	private final String model;
 
-	public DefaultSidoSchemaDiscovery(String uid) {
+	public DefaultSidoSchemaDiscovery(String uid, String model) {
 		this.uid = uid;
+		this.model = model;
 	}
 
 	@Override
@@ -16,8 +18,13 @@ public class DefaultSidoSchemaDiscovery implements SidoSchemaDiscovery {
 	}
 	
 	@Override
+	public String getModel() {
+		return model;
+	}
+	
+	@Override
 	public String toString() {
-		return uid;
+		return String.format("%s model=%s", uid, model);
 	}
 
 }
