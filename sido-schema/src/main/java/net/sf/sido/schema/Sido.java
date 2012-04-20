@@ -15,8 +15,10 @@ public final class Sido {
 		DEFAULT = context;
 	}
 	
-	public static void setContext (SidoContext context) {
+	public static SidoContext setContext (SidoContext context) {
+		SidoContext old = CONTEXT.get();
 		CONTEXT.set(context);
+		return old;
 	}
 	
 	public static SidoContext getContext () {

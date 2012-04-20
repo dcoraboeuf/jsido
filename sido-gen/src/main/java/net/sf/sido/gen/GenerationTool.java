@@ -23,6 +23,7 @@ import net.sf.sido.schema.Sido;
 import net.sf.sido.schema.SidoContext;
 import net.sf.sido.schema.SidoSchema;
 import net.sf.sido.schema.SidoType;
+import net.sf.sido.schema.support.DefaultSidoContext;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -65,7 +66,14 @@ public class GenerationTool {
 		// Searches for the generation model
 		GenerationModel<? extends GenerationResult> generationModel = lookupGenerationModel(configuration, listener);
 		listener.log("Using generator: %s --> %s", configuration.getModelId(), generationModel);
-		generate(configuration, listener, generationModel);
+		// Context
+		SidoContext formerContext = Sido.setContext(new DefaultSidoContext());
+		try {
+			// Generation
+			generate(configuration, listener, generationModel);
+		} finally {
+			Sido.setContext(formerContext);
+		}
 	}
 
 	protected <R extends GenerationResult> void generate(GenerationConfiguration configuration,
