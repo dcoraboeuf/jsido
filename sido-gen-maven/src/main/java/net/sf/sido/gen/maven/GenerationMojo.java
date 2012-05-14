@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.sf.jstring.JStrings;
 import net.sf.sido.gen.GenerationConfiguration;
 import net.sf.sido.gen.GenerationInput;
 import net.sf.sido.gen.GenerationTool;
@@ -106,6 +107,9 @@ public class GenerationMojo extends AbstractMojo {
         // Summary
 		log("SiDO generation.");
     	log("Model: %s", model);
+    	
+    	// Strings
+    	JStrings.add("net.sf.sido.parser.Strings");
 
         // Gets all SiDOL files in the source directory
         Set<File> sidolFiles;
