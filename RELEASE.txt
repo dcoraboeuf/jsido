@@ -1,0 +1,12 @@
+Release preparation
+-------------------
+
+1) Open a Sourceforge Shell (https://sourceforge.net/apps/trac/sourceforge/wiki/Shell%20service)
+2) Get the latest version (git pull) (**)
+3) Prepare the release (*):
+   mvn release:prepare -P sonatype-oss-release -DautoVersionSubmodules=true -Dresume=false
+4) Perform the release (*):
+   mvn release:perform -P sonatype-oss-release
+   
+(*) when requested, enter the GPG passphrase for the signature of artifacts
+(**) Make sure to have the date of the OS synchronized
